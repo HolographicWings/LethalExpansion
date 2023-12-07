@@ -4,7 +4,7 @@
 
  Features :
  - A mod menu with 21 settings to customize your game.
- - A support to load modules made with my SDK (will upload it later) to add new Scraps and Moons. (More soon)
+ - A support to load modules made with [my SDK](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalSDK/) to add new Scraps and Moons. (More soon)
  - A new Moon Catalogue ready for modded moons.
  - A Landmine extension to finally allow players to drop heavy items on them to avoid explosion, based on the weight of the items. (Disabled by default)
  - An optional automatic deadline system that increase the lenght of the expedition as much as the quota increase. (Disabled by default)
