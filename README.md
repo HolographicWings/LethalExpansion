@@ -13,10 +13,10 @@
  - Compatible with vanilla players. (Follow the "Vanilla Compatibility" chapter lower.
  - Settings to display hour in 24H format and carried weight in KG.
 
-![Mod Menu](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings2.png "Mod Menu")
+![Mod Menu](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings.png "Mod Menu")
 Settings list :
-- GlobalTimeSpeedMultiplier: Change the global time speed
-- LengthOfHours: Change amount of seconds in one hour
+- GlobalTimeSpeedMultiplier: Change the global time speed.
+- LengthOfHours: Change amount of seconds in one hour.
 - NumberOfHours: Max lenght of an Expedition in hours. (Begin at 6 AM | 18 = Midnight)
 - DeadlineDaysAmount: Change amount of days for the Quota.
 - StartingCredits: Change amount of starting Credit.
@@ -36,6 +36,10 @@ Settings list :
 - AutomaticDeadlineStage: Increase the quota deadline of one day each time the quota exceeds this value.
 - LoadModules: Load SDK Modules that add new content to the game. Disable it to play with Vanilla players. (RESTART REQUIRED)
 - MaxItemsInShip: Change the Items cap can be kept in the ship.
+
+## Vanilla Compatibility :
+To make the mod compatible with vanilla players, keep default every setting that have "Mod required by client: Yes" in their description. (Keep mouse on a setting to see it's description)
+![Mod Menu 2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings2.png "Mod Menu 2")
 
 ![Scraps2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps2.png "Scraps2")
 ![Scraps1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps1.png "Scraps1")
