@@ -39,4 +39,4 @@ Settings list :
 
 ![Scraps2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps2.png "Scraps2")
 ![Scraps1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps1.png "Scraps1")
-![MoonCatalogue](https://github.com/HolographicWings/LethalExpansion/blob/main/Screenshots/MoonCatalogue.png "MoonCatalogue")
+![MoonCatalogue](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/MoonCatalogue.png "MoonCatalogue")
