@@ -8,14 +8,6 @@ namespace LethalExpansion.Patches
     internal class StartOfRound_Patch
     {
         [HarmonyPatch(nameof(StartOfRound.StartGame))]
-        [HarmonyPrefix]
-        public static bool Awake_Prefix(StartOfRound __instance)
-        {
-            LethalExpansion.Log.LogInfo("Game starting.");
-            return true;
-        }
-
-        [HarmonyPatch(nameof(StartOfRound.StartGame))]
         [HarmonyPostfix]
         public static void Awake_Postfix(StartOfRound __instance)
         {

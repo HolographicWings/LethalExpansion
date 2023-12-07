@@ -13,13 +13,6 @@ namespace LethalExpansion.Patches
     {
         [HarmonyPatch(nameof(GrabbableObject.GrabItem))]
         [HarmonyPrefix]
-        public static bool GrabItem_Prefix(GrabbableObject __instance)
-        {
-            LethalExpansion.Log.LogInfo("Item Grabbing.");
-            return true;
-        }
-        [HarmonyPatch(nameof(GrabbableObject.GrabItem))]
-        [HarmonyPrefix]
         public static void GrabItem_Postfix(GrabbableObject __instance)
         {
             if (__instance.GetIsOnLandmine())

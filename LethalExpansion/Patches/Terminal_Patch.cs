@@ -19,20 +19,6 @@ namespace LethalExpansion.Patches
 
         public static Dictionary<int, Moon> newMoons = new Dictionary<int, Moon>();
 
-        [HarmonyPatch(nameof(Terminal.BeginUsingTerminal))]
-        [HarmonyPrefix]
-        public static bool Awake_Prefix(Terminal __instance)
-        {
-            LethalExpansion.Log.LogInfo("Terminal Using Prefix.");
-            return true;
-        }
-
-        [HarmonyPatch(nameof(Terminal.BeginUsingTerminal))]
-        [HarmonyPostfix]
-        public static void Awake_Postfix(Terminal __instance)
-        {
-            LethalExpansion.Log.LogInfo("Terminal Using Postfix.");
-        }
         public static void MainPatch(Terminal __instance)
         {
             scrapsPatched = false;

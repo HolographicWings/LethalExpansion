@@ -184,7 +184,6 @@
     <Compile Include="Patches\EntranceTeleport_Patch.cs" />
     <Compile Include="Patches\GameNetworkManager_Patch.cs" />
     <Compile Include="Patches\HUDManager_Patch.cs" />
-    <Compile Include="Patches\ItemCharge_Patch.cs" />
     <Compile Include="LethalExpansion.cs" />
     <Compile Include="Patches\Landmine_Patch.cs" />
     <Compile Include="Patches\MenuManager_Patch.cs" />
@@ -213,9 +212,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\$(TargetName)"
