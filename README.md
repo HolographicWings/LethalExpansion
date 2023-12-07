@@ -10,8 +10,10 @@
  - An optional automatic deadline system that increase the lenght of the expedition as much as the quota increase. (Disabled by default)
  - Added a space light to see the orbited planet though the ship camera.
  - A network system to synchronize your settings with the host.
- - Compatible with vanilla players. (Follow the "Vanilla Compatibility" chapter lower.
+ - Compatible with vanilla players. (Follow the "Vanilla Compatibility" section.
  - Settings to display hour in 24H format and carried weight in KG.
+
+If you have any issue, please read the "Report a bug" section
 
 ![Mod Menu](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings.png "Mod Menu")
 Settings list :
@@ -41,6 +43,18 @@ Settings list :
 To make the mod compatible with vanilla players, keep default every setting that have "Mod required by client: Yes" in their description. (Keep mouse on a setting to see it's description)
 ![Mod Menu 2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings2.png "Mod Menu 2")
 
+## Report a bug :
+I will maybe open a Discord for support if the mod gets a lot of users, meanwhile you can use the [github's issue tab](https://github.com/HolographicWings/LethalSDK-Unity-Project/issues).
+Please enable the fellowing settings in the "BepInEx.cfg" setting file from the "Lethal Company\BepInEx\config\" folder:
+[Logging]
+- UnityLogListening = true
+[Logging.Console]
+- Enabled = true
+[Logging.Disk]
+- WriteUnityLog = true
+Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in the bug report.
+
+## More screenshots :
 ![Scraps2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps2.png "Scraps2")
 ![Scraps1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps1.png "Scraps1")
 ![MoonCatalogue](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/MoonCatalogue.png "MoonCatalogue")
