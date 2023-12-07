@@ -54,6 +54,9 @@ Please enable the fellowing settings in the "BepInEx.cfg" setting file from the 
 - WriteUnityLog = true
 Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in the bug report.
 
+## Changes :
+- 1.0.1 : Removed useless patches
+
 ## More screenshots :
 ![Scraps2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps2.png "Scraps2")
 ![Scraps1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps1.png "Scraps1")
