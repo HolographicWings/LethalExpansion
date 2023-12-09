@@ -43,7 +43,7 @@ namespace LethalExpansion.Patches
 
                             Item tmpItem = (Item)ScriptableObject.CreateInstance(typeof(Item));
 
-                            tmpItem.name = newScrap.itemName;
+                            tmpItem.name = newScrap.name;
                             tmpItem.itemName = newScrap.itemName;
                             tmpItem.canBeGrabbedBeforeGameStart = true;
                             tmpItem.isScrap = true;

@@ -1,6 +1,6 @@
 {
   "name": "LethalExpansion",
-  "version_number": "1.1.0",
+  "version_number": "1.1.1",
   "website_url": "https://github.com/HolographicWings/LethalExpansion",
   "description": "Large game expansion with SDK support and a plenty of features.",
   "dependencies": [

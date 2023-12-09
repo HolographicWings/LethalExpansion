@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
 namespace LethalExpansion.Patches
 {
@@ -154,6 +155,7 @@ namespace LethalExpansion.Patches
                                 }
                             }
                         }
+                        AssetGather.Instance.AddScrap(tmpItem);
                         LethalExpansion.Log.LogInfo(newScrap.itemName + " Scrap added.");
                     }
                 }
@@ -231,9 +233,16 @@ namespace LethalExpansion.Patches
 
                         var tmpSpawnableScrap1 = newMoon.SpawnableScrap();
                         List<SpawnableItemWithRarity> tmpSpawnableScrap2 = new List<SpawnableItemWithRarity>();
-                        foreach(var item in tmpSpawnableScrap1)
+                        foreach (var item in tmpSpawnableScrap1)
                         {
-                            tmpSpawnableScrap2.Add(new SpawnableItemWithRarity() { spawnableItem = AssetGather.Instance.scraps[item.ObjectName], rarity = item.SpawnWeight });
+                            try
+                            {
+                                tmpSpawnableScrap2.Add(new SpawnableItemWithRarity() { spawnableItem = AssetGather.Instance.scraps[item.ObjectName], rarity = item.SpawnWeight });
+                            }
+                            catch (Exception ex)
+                            {
+                                LethalExpansion.Log.LogError(ex.Message);
+                            }
                         }
                         newLevel.spawnableScrap = tmpSpawnableScrap2;
 

@@ -61,9 +61,11 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - when deadline remaining days is over 3 days, outside monsters spawn more
 
 ## Changes :
+- 1.1.1 :
+	- Fixed critical issue that prevent the mod to load.
 - 1.1.0 :
- - Support for 1.1.0 version of SDK (Full custom moons support)
- - Removed useless assets and compressed the main skybox
+	- Support for 1.1.0 version of SDK (Full custom moons support)
+	- Removed useless assets and compressed the main skybox
 - 1.0.1 : Removed useless patches
 
 ## Planned features :
