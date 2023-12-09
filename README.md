@@ -56,8 +56,20 @@ Please enable the fellowing settings in the "BepInEx.cfg" setting file from the 
 - WriteUnityLog = true
 Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in the bug report.
 
+## Known issues :
+- hoarding big killed when grabbed an item from a mine don't drop the item that make it irrecoverable
+- when deadline remaining days is over 3 days, outside monsters spawn more
+
 ## Changes :
+- 1.1.0 :
+ - Support for 1.1.0 version of SDK (Full custom moons support)
+ - Removed useless assets and compressed the main skybox
 - 1.0.1 : Removed useless patches
+
+## Planned features :
+- New landmine system network rework
+- Update checked
+- Mod version compatibility checker
 
 ## More screenshots :
 ![Scraps2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps2.png "Scraps2")
