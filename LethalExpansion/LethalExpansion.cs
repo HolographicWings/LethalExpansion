@@ -50,13 +50,7 @@ namespace LethalExpansion
 
         public static NetworkManager networkManager;
 
-        /*public static Dictionary<String, String> assetBundlesPaths = new Dictionary<String, String>();
-        public static Dictionary<String, AssetBundle> assetBundles = new Dictionary<String, AssetBundle>();*/
-
-        //public static Dictionary<String, String> scrapsList = new Dictionary<String, String>();
-
         public GameObject SpaceLight;
-        //public GameObject StarsSphere;
 
         private void Awake()
         {
@@ -92,27 +86,6 @@ namespace LethalExpansion
             Config.SettingChanged += ConfigSettingChanged;
 
             AssetBundlesManager.Instance.LoadAllAssetBundles();
-
-            /*assetBundlesPaths.Add("Scenes", "LethalExpansion.scenes");
-            assetBundlesPaths.Add("Assets", "LethalExpansion");
-            foreach (var path in assetBundlesPaths)
-            {
-                if (path.Value != null)
-                {
-                    assetBundles.Add(path.Key, AssetBundle.LoadFromFile(Assembly.GetExecutingAssembly().Location.Replace("LethalExpansion.dll", @"Ressources\" + path.Value)));
-                }
-            }
-            foreach (var bundle in assetBundles)
-            {
-                if (bundle.Value != null)
-                {
-                    Logger.LogInfo("Loaded " + bundle.Key + " AssetBundle!");
-                }
-                else
-                {
-                    Logger.LogWarning("Failed to load " + bundle.Key + " AssetBundle!");
-                }
-            }*/
 
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
@@ -152,12 +125,6 @@ namespace LethalExpansion
                 Logger.LogError("HDRenderPipelineAsset not found.");
             }
 
-            /*scrapsList.Add("battery", "Assets/Mods/LethalExpansion/Items/Scraps/battery/battery.prefab");
-            scrapsList.Add("cannedfood", "Assets/Mods/LethalExpansion/Items/Scraps/cannedfood/cannedfood.prefab");
-            scrapsList.Add("matchbox", "Assets/Mods/LethalExpansion/Items/Scraps/matchbox/matchbox.prefab");
-            scrapsList.Add("pills", "Assets/Mods/LethalExpansion/Items/Scraps/pills/pills.prefab");
-            scrapsList.Add("tape", "Assets/Mods/LethalExpansion/Items/Scraps/tape/tape.prefab");*/
-
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loaded.");
         }
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -192,10 +159,6 @@ namespace LethalExpansion
             {
                 SpaceLight = Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/SpaceLight.prefab"));
                 SceneManager.MoveGameObjectToScene(SpaceLight, scene);
-
-                /*SpaceLight = GameObject.Find("Systems/Rendering/StarsSphere");
-                SpaceLight.transform.localScale = new Vector3(150,150,150);
-                SpaceLight.SetActive(true);*/
 
                 Mesh FixedMonitorWallMesh = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Meshes/MonitorWall.fbx").GetComponent<MeshFilter>().mesh;
                 GameObject MonitorWall = GameObject.Find("Environment/HangarShip/ShipModels2b/MonitorWall/Cube");

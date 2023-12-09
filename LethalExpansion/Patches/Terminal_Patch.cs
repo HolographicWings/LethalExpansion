@@ -208,11 +208,93 @@ namespace LethalExpansion.Patches
                         newLevel.timeToArrive = newMoon.TimeToArrive;
                         newLevel.DaySpeedMultiplier = newMoon.DaySpeedMultiplier;
                         newLevel.planetHasTime = newMoon.PlanetHasTime;
-                        newLevel.factorySizeMultiplier = 1f;
-                        newLevel.dungeonFlowTypes = new IntWithRarity[]
+                        newLevel.factorySizeMultiplier = newMoon.FactorySizeMultiplier;
+
+                        newLevel.overrideWeather = newMoon.OverwriteWeather;
+                        newLevel.overrideWeatherType = (LevelWeatherType)(int)newMoon.OverwriteWeatherType;
+                        newLevel.currentWeather = LevelWeatherType.None;
+
+                        var tmpRandomWeatherTypes1 = newMoon.RandomWeatherTypes();
+                        List<RandomWeatherWithVariables> tmpRandomWeatherTypes2 = new List<RandomWeatherWithVariables>();
+                        foreach (var item in tmpRandomWeatherTypes1)
                         {
-                            new IntWithRarity(){id = 0, rarity = 300}
-                        };
+                            tmpRandomWeatherTypes2.Add(new RandomWeatherWithVariables() { weatherType = (LevelWeatherType)(int)item.Weather, weatherVariable = item.WeatherVariable1, weatherVariable2 = item.WeatherVariable2 });
+                        }
+                        newLevel.randomWeathers = tmpRandomWeatherTypes2.ToArray();
+
+                        var tmpDungeonFlowTypes1 = newMoon.DungeonFlowTypes();
+                        List<IntWithRarity> tmpDungeonFlowTypes2 = new List<IntWithRarity>();
+                        foreach (var item in tmpDungeonFlowTypes1)
+                        {
+                            tmpDungeonFlowTypes2.Add(new IntWithRarity() { id = item.ID, rarity = item.Rarity });
+                        }
+                        newLevel.dungeonFlowTypes = tmpDungeonFlowTypes2.ToArray();
+
+                        var tmpSpawnableScrap1 = newMoon.SpawnableScrap();
+                        List<SpawnableItemWithRarity> tmpSpawnableScrap2 = new List<SpawnableItemWithRarity>();
+                        foreach(var item in tmpSpawnableScrap1)
+                        {
+                            tmpSpawnableScrap2.Add(new SpawnableItemWithRarity() { spawnableItem = AssetGather.Instance.scraps[item.ObjectName], rarity = item.SpawnWeight });
+                        }
+                        newLevel.spawnableScrap = tmpSpawnableScrap2;
+
+                        newLevel.minScrap = newMoon.MinScrap;
+                        newLevel.maxScrap = newMoon.MaxScrap;
+
+                        newLevel.levelAmbienceClips = AssetGather.Instance.levelAmbiances[newMoon.LevelAmbienceClips];
+
+                        newLevel.maxEnemyPowerCount = newMoon.MaxEnemyPowerCount;
+
+                        var tmpEnemies1 = newMoon.Enemies();
+                        List<SpawnableEnemyWithRarity> tmpEnemies2 = new List<SpawnableEnemyWithRarity>();
+                        foreach (var item in tmpEnemies1)
+                        {
+                            tmpEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
+                        }
+                        newLevel.Enemies = tmpEnemies2;
+
+                        newLevel.enemySpawnChanceThroughoutDay = newMoon.EnemySpawnChanceThroughoutDay;
+                        newLevel.spawnProbabilityRange = newMoon.SpawnProbabilityRange;
+
+                        var tmpSpawnableMapObjects1 = newMoon.SpawnableMapObjects();
+                        List<SpawnableMapObject> tmpSpawnableMapObjects2 = new List<SpawnableMapObject>();
+                        foreach (var item in tmpSpawnableMapObjects1)
+                        {
+                            tmpSpawnableMapObjects2.Add(new SpawnableMapObject() { prefabToSpawn = AssetGather.Instance.mapObjects[item.ObjectName], spawnFacingAwayFromWall = item.SpawnFacingAwayFromWall, numberToSpawn = item.SpawnRate });
+                        }
+                        newLevel.spawnableMapObjects = tmpSpawnableMapObjects2.ToArray();
+
+                        var tmpSpawnableOutsideObjects1 = newMoon.SpawnableOutsideObjects();
+                        List<SpawnableOutsideObjectWithRarity> tmpSpawnableOutsideObjects2 = new List<SpawnableOutsideObjectWithRarity>();
+                        foreach (var item in tmpSpawnableOutsideObjects1)
+                        {
+                            tmpSpawnableOutsideObjects2.Add(new SpawnableOutsideObjectWithRarity() { spawnableObject = AssetGather.Instance.outsideObjects[item.ObjectName], randomAmount = item.SpawnRate });
+                        }
+                        newLevel.spawnableOutsideObjects = tmpSpawnableOutsideObjects2.ToArray();
+
+                        newLevel.maxOutsideEnemyPowerCount = newMoon.MaxOutsideEnemyPowerCount;
+                        newLevel.maxDaytimeEnemyPowerCount = newMoon.MaxDaytimeEnemyPowerCount;
+
+                        var tmpOutsideEnemies1 = newMoon.OutsideEnemies();
+                        List<SpawnableEnemyWithRarity> tmpOutsideEnemies2 = new List<SpawnableEnemyWithRarity>();
+                        foreach (var item in tmpOutsideEnemies1)
+                        {
+                            tmpOutsideEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
+                        }
+                        newLevel.OutsideEnemies = tmpOutsideEnemies2;
+
+                        var tmpDaytimeEnemies1 = newMoon.DaytimeEnemies();
+                        List<SpawnableEnemyWithRarity> tmpDaytimeEnemies2 = new List<SpawnableEnemyWithRarity>();
+                        foreach (var item in tmpDaytimeEnemies1)
+                        {
+                            tmpDaytimeEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
+                        }
+                        newLevel.DaytimeEnemies = tmpDaytimeEnemies2;
+
+                        newLevel.outsideEnemySpawnChanceThroughDay = newMoon.OutsideEnemySpawnChanceThroughDay;
+                        newLevel.daytimeEnemySpawnChanceThroughDay = newMoon.DaytimeEnemySpawnChanceThroughDay;
+                        newLevel.daytimeEnemiesProbabilityRange = newMoon.DaytimeEnemiesProbabilityRange;
+                        newLevel.levelIncludesSnowFootprints = newMoon.LevelIncludesSnowFootprints;
 
                         __instance.moonsCatalogueList = __instance.moonsCatalogueList.AddItem(newLevel).ToArray();
 
@@ -249,7 +331,6 @@ namespace LethalExpansion.Patches
 
                         StartOfRound.Instance.levels = StartOfRound.Instance.levels.AddItem(newLevel).ToArray();
 
-                        LethalExpansion.Log.LogInfo(newLevel.levelID);
                         newMoons.Add(newLevel.levelID, newMoon);
 
                         LethalExpansion.Log.LogInfo(newMoon.MoonName + " Moon added.");

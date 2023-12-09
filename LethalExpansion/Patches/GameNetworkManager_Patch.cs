@@ -20,9 +20,9 @@ namespace LethalExpansion.Patches
         {
             if (!LethalExpansion.CompatibleGameVersions.Contains(__instance.gameVersionNum))
             {
-                LethalExpansion.Log.LogError("Warning, this mod is not made for this Game Version, this could cause unexpected behaviors.");
-                LethalExpansion.Log.LogError(string.Format("Game version: {0}", __instance.gameVersionNum));
-                LethalExpansion.Log.LogError(string.Format("Compatible mod versions: {0}", string.Join(",", LethalExpansion.CompatibleGameVersions)));
+                LethalExpansion.Log.LogWarning("Warning, this mod is not made for this Game Version, this could cause unexpected behaviors.");
+                LethalExpansion.Log.LogWarning(string.Format("Game version: {0}", __instance.gameVersionNum));
+                LethalExpansion.Log.LogWarning(string.Format("Compatible mod versions: {0}", string.Join(",", LethalExpansion.CompatibleGameVersions)));
             }
             if (ConfigManager.Instance.FindItemValue<bool>("LoadModules"))
             {
