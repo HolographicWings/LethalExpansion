@@ -63,6 +63,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - A recent change broke the entire new Landmines system.
 
 ## Changes :
+- 1.1.2 :
+	- Fixed new landmine system wasn't working.
+	- Fixed orbited moons stopping to show after leaving the Company Building.
 - 1.1.1 :
 	- Fixed critical issue that prevent the mod to load.
 - 1.1.0 :
