@@ -35,11 +35,10 @@ namespace LethalExpansion.Patches
 
                         foreach (var newScrap in bundle2.Item2.scraps)
                         {
-                            if(newScrap == null)
+                            if (newScrap == null)
                             {
-                                return;
+                                break;
                             }
-                            //GameObject newItem = bundle2.Item1.LoadAsset<GameObject>($"Assets/Mods/{bundle.Key}/{newScrap.ScrapPath}");
 
                             Item tmpItem = (Item)ScriptableObject.CreateInstance(typeof(Item));
 
