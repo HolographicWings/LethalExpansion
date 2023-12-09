@@ -59,6 +59,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 ## Known issues :
 - hoarding big killed when grabbed an item from a mine don't drop the item that make it irrecoverable
 - when deadline remaining days is over 3 days, outside monsters spawn more
+- Landmines stills bip if a player walk on them when theres already an item placed on it
+- A recent change broke the entire new Landmines system.
 
 ## Changes :
 - 1.1.1 :
