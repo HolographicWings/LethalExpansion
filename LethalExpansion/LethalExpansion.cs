@@ -262,7 +262,7 @@ namespace LethalExpansion
             {
                 Logger.LogInfo("Unloading scene: " + scene.name);
             }
-            if (scene.name.StartsWith("Level") || (scene.name == "InitSceneLaunchOptions" && isInGame))
+            if (scene.name.StartsWith("Level") || scene.name == "CompanyBuilding" || (scene.name == "InitSceneLaunchOptions" && isInGame))
             {
                 if(SpaceLight != null)
                 {
