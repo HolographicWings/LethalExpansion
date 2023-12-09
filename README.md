@@ -1,6 +1,6 @@
 # LethalExpansion
 
- This mod is an expansion project to add several settings and features, it come with an SDK to add new Scraps and Moons yourself.
+ This mod is an expansion project to add several settings and features, it come with an SDK to add new Scraps and Moons yourself.  
  [Thunderstore.io link](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/)
 
  Features :
