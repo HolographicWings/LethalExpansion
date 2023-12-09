@@ -29,12 +29,12 @@ namespace LethalExpansion
     {
         private const string MyGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.1.3";
+        private const string VersionString = "1.1.4";
         private readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 1, 3)
+            new Version(1, 1, 4)
         };
-        public static readonly int[] CompatibleGameVersions = {40};
+        public static readonly int[] CompatibleGameVersions = {40, 45};
 
         public static bool sessionWaiting = true;
         public static bool hostDataWaiting = true;
@@ -205,16 +205,19 @@ namespace LethalExpansion
                     obj.SetActive(false);
                 }
 
-                GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
-                if (mainPrefab != null)
+                if(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
                 {
-                    SceneManager.MoveGameObjectToScene(mainPrefab, scene);
+                    GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
+                    if (mainPrefab != null)
+                    {
+                        SceneManager.MoveGameObjectToScene(mainPrefab, scene);
+                    }
                 }
 
                 String[] _tmp = { "MapPropsContainer", "OutsideAINode", "SpawnDenialPoint", "ItemShipLandingNode", "OutsideLevelNavMesh" };
                 foreach(string s in _tmp)
                 {
-                    if (GameObject.FindGameObjectWithTag(s) == null)
+                    if (GameObject.FindGameObjectWithTag(s) == null || GameObject.FindGameObjectsWithTag(s).Any(o => o.scene.name != "InitSceneLaunchOptions"))
                     {
                         GameObject obj = new GameObject();
                         obj.name = s;

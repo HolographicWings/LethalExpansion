@@ -64,6 +64,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - A recent change broke the entire new Landmines system.
 
 ## Changes :
+- 1.1.4 :
+	- Game Version 45 Ready.
 - 1.1.3 :
 	- Fixed bundle loading issue.
 - 1.1.2 :

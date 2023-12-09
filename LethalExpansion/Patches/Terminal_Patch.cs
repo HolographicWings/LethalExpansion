@@ -31,6 +31,7 @@ namespace LethalExpansion.Patches
             ResetMoonsRoutePrices(__instance);
             UpdateMoonsRoutePrices(__instance);
             LethalExpansion.Log.LogInfo("Terminal Main Patch.");
+            AssetGather.Instance.GetList();
         }
         private static void GatherAssets(Terminal __instance)
         {
@@ -70,6 +71,10 @@ namespace LethalExpansion.Patches
                             return;
                         }
 
+                        if(newScrap.prefab == null)
+                        {
+                            break;
+                        }
                         Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
 
                         AudioSource audioSource = newScrap.prefab.GetComponent<AudioSource>();

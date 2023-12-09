@@ -65,6 +65,10 @@ namespace LethalExpansion.Patches
                             tmpItem.materialVariants = newScrap.materialVariants;
                             tmpItem.canBeInspected = false;
 
+                            if (newScrap.prefab == null)
+                            {
+                                break;
+                            }
                             PhysicsProp physicsProp = newScrap.prefab.AddComponent<PhysicsProp>();
                             physicsProp.grabbable = true;
                             physicsProp.itemProperties = tmpItem;
