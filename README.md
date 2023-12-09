@@ -10,7 +10,7 @@
  - An optional automatic deadline system that increase the lenght of the expedition as much as the quota increase. (Disabled by default)
  - Added a space light to see the orbited planet though the ship camera.
  - A network system to synchronize your settings with the host.
- - Compatible with vanilla players. (Follow the "Vanilla Compatibility" section.
+ - Compatible with vanilla players. (Follow the "Vanilla Compatibility" section)
  - Settings to display hour in 24H format and carried weight in KG.
 
 [![Downloads badge](https://img.shields.io/github/downloads/HolographicWings/LethalExpansion/total.svg?style=for-the-badge)](https://github.com/HolographicWings/LethalExpansion/releases)
