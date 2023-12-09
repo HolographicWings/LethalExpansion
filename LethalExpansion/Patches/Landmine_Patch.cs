@@ -15,6 +15,8 @@ namespace LethalExpansion.Patches
     [HarmonyPatch("OnDestroy")]
     internal class Landmine_Patch
     {
+        [HarmonyPatch("OnTriggerEnter")]
+        [HarmonyPrefix]
         static bool LandmineOnTriggerEnter_Prefix(Landmine __instance, Collider other)
         {
             if (ConfigManager.Instance.FindItemValue<bool>("PreventMineToExplodeWithItems"))

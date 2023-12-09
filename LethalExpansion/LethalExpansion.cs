@@ -99,6 +99,7 @@ namespace LethalExpansion
             Harmony.PatchAll(typeof(HUDManager_Patch));
             Harmony.PatchAll(typeof(StartOfRound_Patch));
             Harmony.PatchAll(typeof(EntranceTeleport_Patch));
+            Harmony.PatchAll(typeof(Landmine_Patch));
             Harmony harmony = new Harmony("LethalExpansion");
             MethodInfo BaboonBirdAI_GrabScrap_Method = AccessTools.Method(typeof(BaboonBirdAI), "GrabScrap", null, null);
             MethodInfo HoarderBugAI_GrabItem_Method = AccessTools.Method(typeof(HoarderBugAI), "GrabItem", null, null);
