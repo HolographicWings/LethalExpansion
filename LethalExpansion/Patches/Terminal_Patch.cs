@@ -25,7 +25,6 @@ namespace LethalExpansion.Patches
             moonsPatched = false;
             //RemoveMoon(__instance, "Experimentation");
             Hotfix_DoubleRoutes(__instance);
-            //TestBlankScene(__instance);
             GatherAssets(__instance);
             AddScraps(__instance);
             AddMoons(__instance);
@@ -363,13 +362,6 @@ namespace LethalExpansion.Patches
             __instance.terminalNodes.allKeywords.First(node => node.name == "Route").compatibleNouns = uniqueNouns.ToArray();
 
             LethalExpansion.Log.LogDebug("Hotfix: " + duplicateCount + " duplicated route(s) removed");
-        }
-        private static void TestBlankScene(Terminal __instance)
-        {
-            foreach (var test in __instance.moonsCatalogueList)
-            {
-                test.sceneName = "InitSceneLaunchOptions";
-            }
         }
         private static void UpdateMoonsRoutePrices(Terminal __instance)
         {
