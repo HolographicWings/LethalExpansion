@@ -31,7 +31,7 @@ namespace LethalExpansion.Patches
             ResetMoonsRoutePrices(__instance);
             UpdateMoonsRoutePrices(__instance);
             LethalExpansion.Log.LogInfo("Terminal Main Patch.");
-            AssetGather.Instance.GetList();
+            //AssetGather.Instance.GetList();
         }
         private static void GatherAssets(Terminal __instance)
         {
