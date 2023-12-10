@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
 namespace LethalExpansion.Patches
 {

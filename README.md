@@ -66,6 +66,10 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - A recent change broke the entire new Landmines system.
 
 ## Changes :
+- 1.1.6 :
+	- Renamed the Old Sea Port moon into Wateridge
+	- Added Orbit prefab and description for Wateridge
+	- Edited Wateridge scraps and monsters.
 - 1.1.5 :
 	- Support for 1.1.5 version of SDK.
 	- Minor fixes.
