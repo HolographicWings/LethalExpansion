@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
 namespace LethalExpansion.Patches
 {
@@ -13,6 +14,7 @@ namespace LethalExpansion.Patches
     internal class Terminal_Patch
     {
         private static int[] defaultMoonRoutePrices;
+        private static TerminalKeyword[] defaultTerminalKeywords;
         public static bool scrapsPatched = false;
         public static bool moonsPatched = false;
 
@@ -26,6 +28,7 @@ namespace LethalExpansion.Patches
             Hotfix_DoubleRoutes(__instance);
             GatherAssets(__instance);
             AddScraps(__instance);
+            ResetTerminalKeywords(__instance);
             AddMoons(__instance);
             UpdateMoonsCatalogue(__instance);
             ResetMoonsRoutePrices(__instance);
@@ -52,6 +55,20 @@ namespace LethalExpansion.Patches
                 level.Enemies.ForEach(e => AssetGather.Instance.AddEnemies(e.enemyType));
                 level.OutsideEnemies.ForEach(e => AssetGather.Instance.AddEnemies(e.enemyType));
                 level.DaytimeEnemies.ForEach(e => AssetGather.Instance.AddEnemies(e.enemyType));
+            }
+            foreach (KeyValuePair<String, (AssetBundle, ModManifest)> bundle in AssetBundlesManager.Instance.assetBundles)
+            {
+                (AssetBundle, ModManifest) _tmp = AssetBundlesManager.Instance.Load(bundle.Key);
+                if (_tmp.Item2.assetBank != null)
+                {
+                    foreach (var p in _tmp.Item2.assetBank.PlanetPrefabs())
+                    {
+                        var prefab = bundle.Value.Item1.LoadAsset<GameObject>(p.PlanetPrefabPath);
+                        var animator = prefab.AddComponent<Animator>();
+                        animator = AssetGather.Instance.planetPrefabs.First().Value.GetComponent<Animator>();
+                        AssetGather.Instance.AddPlanetPrefabs(prefab);
+                    }
+                }
             }
         }
         public static void AddScraps(Terminal __instance)
@@ -167,6 +184,7 @@ namespace LethalExpansion.Patches
         }
         public static void AddMoons(Terminal __instance)
         {
+            newMoons = new Dictionary<int, Moon>();
             if (ConfigManager.Instance.FindItemValue<bool>("LoadModules") && !moonsPatched)
             {
                 foreach (KeyValuePair<String, (AssetBundle, ModManifest)> bundle in AssetBundlesManager.Instance.assetBundles)
@@ -316,6 +334,7 @@ namespace LethalExpansion.Patches
 
                         TerminalKeyword moonKeyword = (TerminalKeyword)ScriptableObject.CreateInstance(typeof(TerminalKeyword));
                         moonKeyword.word = newMoon.RouteWord != null || newMoon.RouteWord.Length >= 3 ? newMoon.RouteWord.ToLower() : Regex.Replace(newMoon.MoonName, @"\s", "").ToLower();
+                        moonKeyword.name = newMoon.MoonName;
                         moonKeyword.defaultVerb = routeKeyword;
                         __instance.terminalNodes.allKeywords = __instance.terminalNodes.allKeywords.AddItem(moonKeyword).ToArray();
 
@@ -341,11 +360,15 @@ namespace LethalExpansion.Patches
                         };
 
                         CompatibleNoun moonNoun = new CompatibleNoun();
+
                         moonNoun.noun = moonKeyword;
                         moonNoun.result = moonRoute;
                         routeKeyword.compatibleNouns = routeKeyword.compatibleNouns.AddItem(moonNoun).ToArray();
 
                         StartOfRound.Instance.levels = StartOfRound.Instance.levels.AddItem(newLevel).ToArray();
+                        LethalExpansion.Log.LogError(newLevel.levelID);
+                        LethalExpansion.Log.LogError(newMoon == null);
+                        LethalExpansion.Log.LogError(newMoon.MoonName);
 
                         newMoons.Add(newLevel.levelID, newMoon);
 
@@ -407,6 +430,18 @@ namespace LethalExpansion.Patches
                 }
                 LethalExpansion.Log.LogInfo("Moon route price reset.");
             }
+        }
+        private static void ResetTerminalKeywords(Terminal __instance)
+        {
+            if(defaultTerminalKeywords == null || defaultTerminalKeywords.Length == 0)
+            {
+                defaultTerminalKeywords = __instance.terminalNodes.allKeywords;
+            }
+            else
+            {
+                __instance.terminalNodes.allKeywords = defaultTerminalKeywords;
+            }
+            LethalExpansion.Log.LogInfo("Terminal reset.");
         }
 
         private static void UpdateMoonsCatalogue(Terminal __instance)

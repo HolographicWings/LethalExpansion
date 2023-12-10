@@ -28,5 +28,15 @@ namespace LethalExpansion.Patches
                 LethalExpansion.Log.LogInfo("LethalExpansion Client Started.");
             }
         }
+        [HarmonyPatch(nameof(StartOfRound.SetMapScreenInfoToCurrentLevel))]
+        [HarmonyPostfix]
+        static void SetMapScreenInfoToCurrentLevel_Postfix(StartOfRound __instance)
+        {
+            AutoScrollText obj = __instance.screenLevelDescription.GetComponent<AutoScrollText>();
+            if (obj != null)
+            {
+                obj.ResetScrolling();
+            }
+        }
     }
 }

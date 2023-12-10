@@ -202,6 +202,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MonoBehaviours\AutoScrollText.cs" />
     <Compile Include="MonoBehaviours\TooltipHandler.cs" />
     <Compile Include="Patches\EntranceTeleport_Patch.cs" />
     <Compile Include="Patches\GameNetworkManager_Patch.cs" />

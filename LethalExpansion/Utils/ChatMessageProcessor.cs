@@ -9,6 +9,7 @@ namespace LethalExpansion.Utils
         {
             if (Regex.IsMatch(message, @"^\[sync\].*\[sync\]$"))
             {
+                LethalExpansion.Log.LogInfo(message);
                 string content = Regex.Match(message, @"^\[sync\](.*)\[sync\]$").Groups[1].Value;
 
                 string[] parts = content.Split(':');
