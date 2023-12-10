@@ -56,5 +56,20 @@ namespace LethalExpansion.Utils
                 }
             }
         }
+        public bool BundleLoaded(string bundleName)
+        {
+            return assetBundles.ContainsKey(bundleName.ToLower());
+        }
+        public bool BundlesLoaded(string[] bundleNames)
+        {
+            foreach(string bundleName in bundleNames)
+            {
+                if (!assetBundles.ContainsKey(bundleName.ToLower()))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

@@ -21,6 +21,12 @@ using UnityEngine.Audio;
 using DunGen;
 using UnityEngine.UIElements;
 using DunGen.Adapters;
+using LethalSDK.Component;
+using UnityEngine.AI;
+using Unity.AI.Navigation;
+using UnityEngine.Video;
+using Unity.Netcode.Components;
+using LethalSDK.Utils;
 
 namespace LethalExpansion
 {
@@ -29,10 +35,10 @@ namespace LethalExpansion
     {
         private const string MyGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.1.4";
+        private const string VersionString = "1.1.5";
         private readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 1, 4)
+            new Version(1, 1, 5)
         };
         public static readonly int[] CompatibleGameVersions = {40, 45};
 
@@ -166,6 +172,13 @@ namespace LethalExpansion
 
                 MeshRenderer MonitorWallMeshRenderer = MonitorWall.GetComponent<MeshRenderer>();
 
+                var waterSurface = GameObject.Instantiate(GameObject.Find("Systems/GameSystems/TimeAndWeather/Flooding"));
+                DestroyImmediate(waterSurface.GetComponent<FloodWeather>());
+                waterSurface.name = "WaterSurface";
+                waterSurface.transform.position = Vector3.zero;
+                waterSurface.SetActive(false);
+                SpawnPrefab.Instance.waterSurface = waterSurface;
+
                 /*Material BlueScreenMaterial = new Material(MonitorWallMeshRenderer.materials[1]);
                 BlueScreenMaterial.SetColor("_BaseColor", new Color32(0,0,80, 255));*/
 
@@ -205,12 +218,19 @@ namespace LethalExpansion
                     obj.SetActive(false);
                 }
 
+
+                List<Type> whitelist = new List<Type> { typeof(MeshRenderer), typeof(Transform), typeof(Rigidbody) };
+
                 if(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
                 {
-                    GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
-                    if (mainPrefab != null)
+                    if(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
                     {
-                        SceneManager.MoveGameObjectToScene(mainPrefab, scene);
+                        CheckAndRemoveIllegalComponents(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform);
+                        GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
+                        if (mainPrefab != null)
+                        {
+                            SceneManager.MoveGameObjectToScene(mainPrefab, scene);
+                        }
                     }
                 }
 
@@ -257,6 +277,130 @@ namespace LethalExpansion
                 rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
                 SceneManager.MoveGameObjectToScene(OutOfBounds, scene);
 
+            }
+        }
+        public List<Type> whitelist = new List<Type> {
+            //Base
+            typeof(Transform),
+            //Mesh
+            typeof(MeshFilter),
+            typeof(MeshRenderer),
+            typeof(SkinnedMeshRenderer),
+            //Physics
+            typeof(MeshCollider),
+            typeof(BoxCollider),
+            typeof(SphereCollider),
+            typeof(CapsuleCollider),
+            typeof(SphereCollider),
+            typeof(TerrainCollider),
+            typeof(WheelCollider),
+            typeof(ArticulationBody),
+            typeof(ConstantForce),
+            typeof(ConfigurableJoint),
+            typeof(FixedJoint),
+            typeof(HingeJoint),
+            typeof(Cloth),
+            typeof(Rigidbody),
+            //Netcode
+            typeof(NetworkObject),
+            typeof(NetworkRigidbody),
+            typeof(NetworkTransform),
+            typeof(NetworkAnimator),
+            //Animation
+            typeof(Animator),
+            typeof(Animation),
+            //Terrain
+            typeof(Terrain),
+            typeof(Tree),
+            typeof(WindZone),
+            //Rendering
+            typeof(DecalProjector),
+            typeof(LODGroup),
+            typeof(Light),
+            typeof(HDAdditionalLightData),
+            typeof(LightProbeGroup),
+            typeof(LightProbeProxyVolume),
+            typeof(LocalVolumetricFog),
+            typeof(OcclusionArea),
+            typeof(OcclusionPortal),
+            typeof(ReflectionProbe),
+            typeof(PlanarReflectionProbe),
+            typeof(HDAdditionalReflectionData),
+            typeof(Skybox),
+            typeof(SortingGroup),
+            typeof(SpriteRenderer),
+            typeof(Volume),
+            //Audio
+            typeof(AudioSource),
+            typeof(AudioReverbZone),
+            typeof(AudioReverbFilter),
+            typeof(AudioChorusFilter),
+            typeof(AudioDistortionFilter),
+            typeof(AudioEchoFilter),
+            typeof(AudioHighPassFilter),
+            typeof(AudioLowPassFilter),
+            typeof(AudioListener),
+            //Effect
+            typeof(LensFlare),
+            typeof(TrailRenderer),
+            typeof(LineRenderer),
+            typeof(ParticleSystem),
+            typeof(ParticleSystemRenderer),
+            typeof(ParticleSystemForceField),
+            typeof(Projector),
+            //Video
+            typeof(VideoPlayer),
+            //Navigation
+            typeof(NavMeshSurface),
+            typeof(NavMeshModifier),
+            typeof(NavMeshModifierVolume),
+            typeof(NavMeshLink),
+            typeof(NavMeshObstacle),
+            typeof(OffMeshLink),
+            typeof(NetworkObject),
+            //LethalSDK
+            typeof(SI_AudioReverbPresets),
+            typeof(SI_AudioReverbTrigger),
+            typeof(SI_DungeonGenerator),
+            typeof(SI_MatchLocalPlayerPosition),
+            typeof(SI_AnimatedSun),
+            typeof(SI_EntranceTeleport),
+            typeof(SI_ScanNodeEntrance),
+            typeof(SI_ScanNodeShip),
+            typeof(SI_ScanNode),
+            typeof(SI_DoorLock),
+            typeof(SI_WaterSurface),
+            typeof(SI_Ladder),
+            typeof(LockPosition)
+        };
+
+        void CheckAndRemoveIllegalComponents(Transform root)
+        {
+            var allChildren = new List<Transform>();
+
+            foreach (Transform child in root)
+            {
+                allChildren.Add(child);
+            }
+
+            foreach (Transform child in allChildren)
+            {
+                var components = child.GetComponents<Component>();
+
+                foreach (var component in components)
+                {
+                    if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
+                    {
+                        Logger.LogWarning($"Removed illegal {component.GetType().Name} component.");
+                        DestroyImmediate(component);
+                        break;
+                    }
+                }
+
+                if (child.childCount > 0)
+                {
+                    CheckAndRemoveIllegalComponents(child);
+                }
             }
         }
         private void OnSceneUnloaded(Scene scene)

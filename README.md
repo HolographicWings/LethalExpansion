@@ -66,6 +66,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - A recent change broke the entire new Landmines system.
 
 ## Changes :
+- 1.1.5 :
+	- Support for 1.1.5 version of SDK.
+	- Minor fixes.
 - 1.1.4 :
 	- Game Version 45 Ready.
 	- Added some error catches for SDK.

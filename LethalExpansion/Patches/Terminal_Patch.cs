@@ -68,7 +68,7 @@ namespace LethalExpansion.Patches
                     {
                         if (newScrap == null)
                         {
-                            return;
+                            break;
                         }
 
                         if(newScrap.prefab == null)
@@ -177,16 +177,21 @@ namespace LethalExpansion.Patches
                     {
                         if (newMoon == null)
                         {
-                            return;
+                            break;
+                        }
+                        if (!AssetBundlesManager.Instance.BundlesLoaded(newMoon.RequiredBundles))
+                        {
+                            LethalExpansion.Log.LogWarning(newMoon.MoonName + " can't be added, missing bundles.");
+                            break;
                         }
 
                         TerminalKeyword confirmKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "confirm");
                         TerminalKeyword denyKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "deny");
                         TerminalKeyword routeKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "route");
                         TerminalNode cancelRouteNode = null;
-                        foreach (var noun in routeKeyword.compatibleNouns)
+                        foreach (CompatibleNoun noun in routeKeyword.compatibleNouns)
                         {
-                            foreach (var option in noun.result.terminalOptions)
+                            foreach (CompatibleNoun option in noun.result.terminalOptions)
                             {
                                 if (option.result.name == "CancelRoute")
                                 {
