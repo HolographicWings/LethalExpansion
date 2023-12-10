@@ -72,6 +72,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 	- Edited Wateridge scraps and monsters.
 	- Fixed network desync with global time speed.
 	- Added auto scroll in ship main monitor to see read text.
+	- Fixed an issue that prevent the new moons to load after returned from lobby to main menu.
 - 1.1.5 :
 	- Support for 1.1.5 version of SDK.
 	- Minor fixes.

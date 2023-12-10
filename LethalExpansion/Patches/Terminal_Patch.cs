@@ -365,9 +365,6 @@ namespace LethalExpansion.Patches
                         routeKeyword.compatibleNouns = routeKeyword.compatibleNouns.AddItem(moonNoun).ToArray();
 
                         StartOfRound.Instance.levels = StartOfRound.Instance.levels.AddItem(newLevel).ToArray();
-                        LethalExpansion.Log.LogError(newLevel.levelID);
-                        LethalExpansion.Log.LogError(newMoon == null);
-                        LethalExpansion.Log.LogError(newMoon.MoonName);
 
                         newMoons.Add(newLevel.levelID, newMoon);
 
