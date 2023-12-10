@@ -70,6 +70,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 	- Renamed the Old Sea Port moon into Wateridge
 	- Added Orbit prefab and description for Wateridge
 	- Edited Wateridge scraps and monsters.
+	- Fixed network desync with global time speed.
+	- Added auto scroll in ship main monitor to see read text.
 - 1.1.5 :
 	- Support for 1.1.5 version of SDK.
 	- Minor fixes.
