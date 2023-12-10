@@ -49,12 +49,14 @@ To make the mod compatible with vanilla players, keep default every setting that
 ## Report a bug :
 I will maybe open a Discord for support if the mod gets a lot of users, meanwhile you can use the [github's issue tab](https://github.com/HolographicWings/LethalSDK-Unity-Project/issues).
 Please enable the fellowing settings in the "BepInEx.cfg" setting file from the "Lethal Company\BepInEx\config\" folder:  
+  
 [Logging]  
-- UnityLogListening = true  
+UnityLogListening = true  
 [Logging.Console]  
-- Enabled = true  
+Enabled = true  
 [Logging.Disk]  
-- WriteUnityLog = true  
+WriteUnityLog = true  
+  
 Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in the bug report.  
 
 ## Known issues :
