@@ -66,6 +66,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - A recent change broke the entire new Landmines system.
 
 ## Changes :
+- 1.1.7 :
+	- Reworked the Modules loader to make it compatible with LC_API and R2Modman.
+	- New file extension for Modules.
 - 1.1.6 :
 	- Renamed the Old Sea Port moon into Wateridge
 	- Added Orbit prefab and description for Wateridge
