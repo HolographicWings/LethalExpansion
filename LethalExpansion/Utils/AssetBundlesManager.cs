@@ -21,7 +21,7 @@ namespace LethalExpansion.Utils
                 return _instance;
             }
         }
-        public AssetBundle mainAssetBundle = AssetBundle.LoadFromFile(Assembly.GetExecutingAssembly().Location.Replace("LethalExpansion.dll", "lethalexpansion"));
+        public AssetBundle mainAssetBundle = AssetBundle.LoadFromFile(Assembly.GetExecutingAssembly().Location.Replace("LethalExpansion.dll", "lethalexpansion.lem"));
         public Dictionary<String, (AssetBundle, ModManifest)> assetBundles = new Dictionary<String, (AssetBundle, ModManifest)>();
         public (AssetBundle, ModManifest) Load(string name)
         {
@@ -34,25 +34,25 @@ namespace LethalExpansion.Utils
                 AssetBundle loadedBundle = AssetBundle.LoadFromFile(file);
                 if (loadedBundle != null)
                 {
-                    Debug.Log("AssetBundle loaded: " + Path.GetFileName(file));
+                    LethalExpansion.Log.LogInfo("AssetBundle loaded: " + Path.GetFileName(file));
 
-                    string manifestPath = $"Assets/Mods/{Path.GetFileName(file)}/ModManifest.asset";
+                    string manifestPath = $"Assets/Mods/{Path.GetFileNameWithoutExtension(file)}/ModManifest.asset";
 
                     ModManifest modManifest = loadedBundle.LoadAsset<ModManifest>(manifestPath);
                     if (modManifest != null)
                     {
-                        Debug.Log("ModManifest found: " + modManifest.modName);
+                        LethalExpansion.Log.LogInfo("ModManifest found: " + modManifest.modName);
 
                         assetBundles.Add(Path.GetFileName(file).ToLower(), (loadedBundle, modManifest));
                     }
                     else
                     {
-                        Debug.Log("AssetBundle have no ModManifest: " + Path.GetFileName(file));
+                        LethalExpansion.Log.LogWarning("AssetBundle have no ModManifest: " + Path.GetFileName(file));
                     }
                 }
                 else
                 {
-                    Debug.Log("File is not an AssetBundle: " + Path.GetFileName(file));
+                    LethalExpansion.Log.LogWarning("File is not an AssetBundle: " + Path.GetFileName(file));
                 }
             }
         }
