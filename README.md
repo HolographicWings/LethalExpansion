@@ -67,7 +67,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 
 ## Changes :
 - 1.1.8 :
-	- Fixed urgent bug with new Modules loader.
+	- Fixed urgent bug with the new Modules loader.
 - 1.1.7 :
 	- Reworked the Modules loader to make it compatible with LC_API and R2Modman.
 	- New file extension for Modules.
