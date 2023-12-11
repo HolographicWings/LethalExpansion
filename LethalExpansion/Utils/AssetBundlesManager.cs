@@ -33,7 +33,7 @@ namespace LethalExpansion.Utils
             string localPath;
             if (Assembly.GetExecutingAssembly().Location.Contains("HolographicWings-LethalExpansion"))
             {
-                localPath = Assembly.GetExecutingAssembly().Location.Replace(@"HolographicWings-LethalExpansion\LethalExpansion\LethalExpansion.dll", string.Empty);
+                localPath = Assembly.GetExecutingAssembly().Location.Replace(@"HolographicWings-LethalExpansion\LethalExpansion.dll", string.Empty);
                 if(Directory.Exists(Application.dataPath.Replace("Lethal Company_Data", @"BepInEx\plugins")))
                 {
                     foreach (string file in Directory.GetFiles(Application.dataPath.Replace("Lethal Company_Data", @"BepInEx\plugins"), "*.lem", SearchOption.AllDirectories))
@@ -44,7 +44,7 @@ namespace LethalExpansion.Utils
             }
             else
             {
-                localPath = Assembly.GetExecutingAssembly().Location.Replace(@"LethalExpansion\LethalExpansion.dll", string.Empty);
+                localPath = Assembly.GetExecutingAssembly().Location.Replace(@"LethalExpansion.dll", string.Empty);
             }
             foreach (string file in Directory.GetFiles(localPath, "*.lem", SearchOption.AllDirectories))
             {
