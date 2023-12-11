@@ -36,7 +36,7 @@ namespace LethalExpansion
     {
         private const string MyGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.1.6";
+        private const string VersionString = "1.1.7";
         private readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
             new Version(1, 1, 6)
@@ -63,11 +63,11 @@ namespace LethalExpansion
             Log = Logger;
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loading...");
 
-            List<PluginInfo> loadedPlugins = GetLoadedPlugins();
+            /*List<PluginInfo> loadedPlugins = GetLoadedPlugins();
             foreach (var plugin in loadedPlugins)
             {
                 Logger.LogInfo($"Plugin: {plugin.Metadata.GUID} - Version: {plugin.Metadata.Version}");
-            }
+            }*/
 
             config = Config;
 
