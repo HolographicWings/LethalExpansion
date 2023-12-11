@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 using LethalSDK.ScriptableObjects;
+using System.Linq;
 
 namespace LethalExpansion.Utils
 {
@@ -29,30 +30,76 @@ namespace LethalExpansion.Utils
         }
         public void LoadAllAssetBundles()
         {
-            foreach (string file in Directory.GetFiles(Assembly.GetExecutingAssembly().Location.Replace("LethalExpansion.dll", @"Modules\")))
+            string localPath;
+            if (Assembly.GetExecutingAssembly().Location.Contains("HolographicWings-LethalExpansion"))
             {
-                AssetBundle loadedBundle = AssetBundle.LoadFromFile(file);
-                if (loadedBundle != null)
+                localPath = Assembly.GetExecutingAssembly().Location.Replace(@"HolographicWings-LethalExpansion\LethalExpansion\LethalExpansion.dll", string.Empty);
+                foreach (string file in Directory.GetFiles(Application.dataPath.Replace("Lethal Company_Data", @"BepInEx\plugins"), "*.lem", SearchOption.AllDirectories))
                 {
-                    LethalExpansion.Log.LogInfo("AssetBundle loaded: " + Path.GetFileName(file));
-
-                    string manifestPath = $"Assets/Mods/{Path.GetFileNameWithoutExtension(file)}/ModManifest.asset";
-
-                    ModManifest modManifest = loadedBundle.LoadAsset<ModManifest>(manifestPath);
-                    if (modManifest != null)
+                    LoadBundle(file);
+                }
+            }
+            else
+            {
+                localPath = Assembly.GetExecutingAssembly().Location.Replace(@"LethalExpansion\LethalExpansion.dll", string.Empty);
+            }
+            foreach (string file in Directory.GetFiles(localPath, "*.lem", SearchOption.AllDirectories))
+            {
+                LoadBundle(file);
+            }
+        }
+        public void LoadBundle(string file)
+        {
+            if (Path.GetFileName(file) != "lethalexpansion.lem")
+            {
+                if (!assetBundles.ContainsKey(Path.GetFileNameWithoutExtension(file)))
+                {
+                    AssetBundle loadedBundle = null;
+                    try
                     {
-                        LethalExpansion.Log.LogInfo("ModManifest found: " + modManifest.modName);
+                        loadedBundle = AssetBundle.LoadFromFile(file);
+                    }
+                    catch (Exception e)
+                    {
+                        LethalExpansion.Log.LogError(e);
+                    }
+                    if (loadedBundle != null)
+                    {
+                        LethalExpansion.Log.LogInfo("AssetBundle loaded: " + Path.GetFileName(file));
 
-                        assetBundles.Add(Path.GetFileName(file).ToLower(), (loadedBundle, modManifest));
+                        string manifestPath = $"Assets/Mods/{Path.GetFileNameWithoutExtension(file)}/ModManifest.asset";
+
+                        ModManifest modManifest = loadedBundle.LoadAsset<ModManifest>(manifestPath);
+                        if (modManifest != null)
+                        {
+                            if(!assetBundles.Any(b => b.Value.Item2.modName == modManifest.modName))
+                            {
+                                LethalExpansion.Log.LogInfo("ModManifest found: " + modManifest.modName);
+
+                                assetBundles.Add(Path.GetFileNameWithoutExtension(file).ToLower(), (loadedBundle, modManifest));
+                            }
+                            else
+                            {
+                                LethalExpansion.Log.LogWarning("Another mod with same name is already loaded: " + modManifest.modName);
+                                loadedBundle.Unload(true);
+                                LethalExpansion.Log.LogInfo("AssetBundle unloaded: " + Path.GetFileName(file));
+                            }
+                        }
+                        else
+                        {
+                            LethalExpansion.Log.LogWarning("AssetBundle have no ModManifest: " + Path.GetFileName(file));
+                            loadedBundle.Unload(true);
+                            LethalExpansion.Log.LogInfo("AssetBundle unloaded: " + Path.GetFileName(file));
+                        }
                     }
                     else
                     {
-                        LethalExpansion.Log.LogWarning("AssetBundle have no ModManifest: " + Path.GetFileName(file));
+                        LethalExpansion.Log.LogWarning("File is not an AssetBundle: " + Path.GetFileName(file));
                     }
                 }
                 else
                 {
-                    LethalExpansion.Log.LogWarning("File is not an AssetBundle: " + Path.GetFileName(file));
+                    LethalExpansion.Log.LogWarning("AssetBundle with same name already loaded: " + Path.GetFileName(file));
                 }
             }
         }
