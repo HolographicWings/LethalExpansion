@@ -64,8 +64,12 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - when deadline remaining days is over 3 days, outside monsters spawn more
 - Landmines stills bip if a player walk on them when theres already an item placed on it
 - A recent change broke the entire new Landmines system.
+- Terrain in new moons from SDK made the game crash.
+- Eclypse in new moons from SDK appears purple.
 
 ## Changes :
+- 1.1.9 :
+	- Fixed terrain shader making the game crash when loading a moon with a terrain.
 - 1.1.8 :
 	- Fixed urgent bug with the new Modules loader.
 - 1.1.7 :

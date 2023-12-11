@@ -36,9 +36,10 @@ namespace LethalExpansion
     {
         private const string MyGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.1.8";
+        private const string VersionString = "1.1.9";
         private readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
+            new Version(1, 1, 9),
             new Version(1, 1, 8)
         };
         public static readonly int[] CompatibleGameVersions = {40, 45};
@@ -57,6 +58,7 @@ namespace LethalExpansion
         public static NetworkManager networkManager;
 
         public GameObject SpaceLight;
+        public GameObject terrainfixer;
 
         private void Awake()
         {
@@ -144,6 +146,30 @@ namespace LethalExpansion
         {
             return Chainloader.PluginInfos.Values.ToList();
         }
+        private int width = 256;
+        private int height = 256;
+        private int depth = 20;
+        private float scale = 20f;
+        float[,] GenerateHeights()
+        {
+            float[,] heights = new float[width, height];
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    heights[x, y] = CalculateHeight(x, y);
+                }
+            }
+            return heights;
+        }
+
+        float CalculateHeight(int x, int y)
+        {
+            float xCoord = (float)x / width * scale;
+            float yCoord = (float)y / height * scale;
+
+            return Mathf.PerlinNoise(xCoord, yCoord);
+        }
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             Logger.LogInfo("Loading scene: " + scene.name);
@@ -171,6 +197,7 @@ namespace LethalExpansion
                 waitForSession().GetAwaiter();
 
                 SpaceLight.SetActive(false);
+                terrainfixer.SetActive(false);
             }
             if (scene.name == "SampleSceneRelay")
             {
@@ -215,6 +242,18 @@ namespace LethalExpansion
 
                 AssetGather.Instance.AddAudioMixer(GameObject.Find("Systems/Audios/DiageticBackground").GetComponent<AudioSource>().outputAudioMixerGroup.audioMixer);
 
+                terrainfixer = new GameObject();
+                terrainfixer.name = "terrainfixer";
+                terrainfixer.transform.position = new Vector3(0, -500, 0);
+                Terrain terrain = terrainfixer.AddComponent<Terrain>();
+                TerrainData terrainData = new TerrainData();
+                terrainData.heightmapResolution = width + 1;
+                terrainData.size = new Vector3(width, depth, height);
+                terrainData.SetHeights(0, 0, GenerateHeights());
+                Logger.LogWarning(terrain.terrainData == null);
+                Logger.LogWarning(terrainData == null);
+                terrain.terrainData = terrainData;
+
                 waitForSession().GetAwaiter();
 
                 isInGame = true;
@@ -222,10 +261,12 @@ namespace LethalExpansion
             if (scene.name.StartsWith("Level"))
             {
                 SpaceLight.SetActive(false);
+                terrainfixer.SetActive(false);
             }
             if (scene.name == "InitSceneLaunchOptions" && isInGame)
             {
                 SpaceLight.SetActive(false);
+                terrainfixer.SetActive(false);
                 foreach (GameObject obj in scene.GetRootGameObjects())
                 {
                     obj.SetActive(false);
