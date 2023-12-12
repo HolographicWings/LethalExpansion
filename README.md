@@ -14,7 +14,8 @@
  - Compatible with vanilla players. (Follow the "Vanilla Compatibility" section)
  - Settings to display the clock in 24H format and carried weight in KG.
 
-[![Downloads badge](https://img.shields.io/github/downloads/HolographicWings/LethalExpansion/total.svg?style=for-the-badge)](https://github.com/HolographicWings/LethalExpansion/releases)
+[Download it on the Thunderstore](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/)
+<!--[![Downloads badge](https://img.shields.io/github/downloads/HolographicWings/LethalExpansion/total.svg?style=for-the-badge)](https://github.com/HolographicWings/LethalExpansion/releases) -->
 
 If you have any issue, please read the "Report a bug" section
 
