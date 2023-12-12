@@ -61,12 +61,13 @@ WriteUnityLog = true
 Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in the bug report.  
 
 ## Known issues :
-- hoarding big killed when grabbed an item from a mine don't drop the item that make it irrecoverable
-- when deadline remaining days is over 3 days, outside monsters spawn more
+- Hoarding big killed when grabbed an item from a mine don't drop the item that make it irrecoverable
+- When deadline remaining days is over 3 days, outside monsters spawn more
 - Landmines stills bip if a player walk on them when theres already an item placed on it
 - A recent change broke the entire new Landmines system.
 - Terrain in new moons from SDK made the game crash.
 - Eclypse in new moons from SDK appears purple.
+- Drop pod are not implemented yet in new moons.
 
 ## Changes :
 - 1.1.9 :
