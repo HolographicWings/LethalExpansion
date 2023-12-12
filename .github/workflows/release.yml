@@ -17,10 +17,13 @@ jobs:
       run: sudo apt-get install p7zip-full
 
     - name: Extract Version from Tag
-      run: echo "VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\/v//')" >> $GITHUB_ENV
+      run: echo "VERSION=${GITHUB_REF##*/}" | sed 's/^v//' >> $GITHUB_ENV
 
     - name: Zip files
-      run: 7z a -mx=9 ./Releases/LethalExpansion_${{ env.VERSION }}.zip ./Build/*
+      run: 7z a -mx=9 ./Releases/LethalExpansion_v${{ env.VERSION }}.zip ./Build/*
+
+    - name: 7z files
+      run: 7z a -mx=9 ./Releases/LethalExpansion_v${{ env.VERSION }}.7z ./Build/*
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
@@ -28,6 +31,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.LETHAL_EXPANSION_SECRET }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./Releases/LethalExpansion_${{ env.VERSION }}.zip
-        asset_name: LethalExpansion_${{ env.VERSION }}.zip
+        asset_path: ./Releases/LethalExpansion_v${{ env.VERSION }}.zip
+        asset_name: LethalExpansion_v${{ env.VERSION }}.zip
         asset_content_type: application/zip
