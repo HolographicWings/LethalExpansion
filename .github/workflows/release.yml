@@ -45,25 +45,25 @@ jobs:
         # asset_name: LethalExpansion_v${{ env.VERSION }}.7z
         # asset_content_type: application/x-7z-compressed
 
-    # - name: Upload Release Asset Zip
-      # uses: GreenTF/upload-thunderstore-package@v4.1
-      # with:
-        # namespace: HolographicWings
-        # description: Large game expansion with SDK support and a plenty of features.
-        # token: ${{ secrets.THUNDERSTORE_TOKEN }}
-        # name: LethalExpansion
-        # version: ${{ env.VERSION }}
-        # community: lethal-company
-        # categories: |
-          # bepinex
-          # clientside
-          # serverside
-          # items
-          # moons
-          # mods
-          # audio
-          # misc
-        # deps: |
-          # BepInEx-BepInExPack-5.4.2100
-        # website: https://github.com/HolographicWings/LethalExpansion
-        # file: ./Releases/LethalExpansion_v${{ env.VERSION }}.zip
+    - name: Upload Release Asset Zip
+      uses: GreenTF/upload-thunderstore-package@v4.1
+      with:
+        namespace: HolographicWings
+        description: Large game expansion with SDK support and a plenty of features.
+        token: ${{ secrets.THUNDERSTORE_TOKEN }}
+        name: LethalExpansion
+        version: ${{ env.VERSION }}
+        community: lethal-company
+        categories: |
+          bepinex
+          clientside
+          serverside
+          items
+          moons
+          mods
+          audio
+          misc
+        deps: |
+          BepInEx-BepInExPack-5.4.2100
+        website: https://github.com/HolographicWings/LethalExpansion
+        file: ./Releases/LethalExpansion_v${{ env.VERSION }}.zip
