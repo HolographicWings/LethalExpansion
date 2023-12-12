@@ -1,9 +1,0 @@
-{
-  "name": "LethalExpansion",
-  "version_number": "1.1.9",
-  "website_url": "https://github.com/HolographicWings/LethalExpansion",
-  "description": "Large game expansion with SDK support and a plenty of features.",
-  "dependencies": [
-    "BepInEx-BepInExPack-5.4.2100"
-  ]
-}
