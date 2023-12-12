@@ -300,7 +300,8 @@ namespace LethalExpansion
                         SceneManager.MoveGameObjectToScene(obj, scene);
                     }
                 }
-                if (GameObject.FindObjectOfType<RuntimeDungeon>(false) == null)
+                RuntimeDungeon DungeonGenerator = GameObject.FindObjectOfType<RuntimeDungeon>(false);
+                if (DungeonGenerator == null)
                 {
                     GameObject dungeonGenerator = new GameObject();
                     dungeonGenerator.name = "DungeonGenerator";
@@ -316,6 +317,16 @@ namespace LethalExpansion
                     dungeonNavMesh.BakeMode = UnityNavMeshAdapter.RuntimeNavMeshBakeMode.FullDungeonBake;
                     dungeonNavMesh.LayerMask = 35072; //256 + 2048 + 32768 = 35072
                     SceneManager.MoveGameObjectToScene(dungeonGenerator, scene);
+                }
+                else
+                {
+                    if(DungeonGenerator.Root == null && DungeonGenerator.Root.scene == null)
+                    {
+                        GameObject dungeonRoot = new GameObject();
+                        dungeonRoot.name = "LevelGenerationRoot";
+                        dungeonRoot.transform.position = new Vector3(0, -200, 0);
+                        DungeonGenerator.Root = dungeonRoot;
+                    }
                 }
                 GameObject OutOfBounds = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 OutOfBounds.name = "OutOfBounds";

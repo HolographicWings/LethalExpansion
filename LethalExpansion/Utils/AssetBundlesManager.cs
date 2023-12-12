@@ -68,8 +68,6 @@ namespace LethalExpansion.Utils
                     }
                     if (loadedBundle != null)
                     {
-                        LethalExpansion.Log.LogInfo("AssetBundle loaded: " + Path.GetFileName(file));
-
                         string manifestPath = $"Assets/Mods/{Path.GetFileNameWithoutExtension(file)}/ModManifest.asset";
 
                         ModManifest modManifest = loadedBundle.LoadAsset<ModManifest>(manifestPath);
@@ -77,7 +75,7 @@ namespace LethalExpansion.Utils
                         {
                             if(!assetBundles.Any(b => b.Value.Item2.modName == modManifest.modName))
                             {
-                                LethalExpansion.Log.LogInfo("ModManifest found: " + modManifest.modName);
+                                LethalExpansion.Log.LogInfo("Module found: " + modManifest.modName);
 
                                 assetBundles.Add(Path.GetFileNameWithoutExtension(file).ToLower(), (loadedBundle, modManifest));
                             }
