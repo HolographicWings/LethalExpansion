@@ -32,15 +32,15 @@ jobs:
         asset_name: LethalExpansion_v${{ env.VERSION }}.zip
         asset_content_type: application/zip
 
-    - name: 7z files
-      run: 7z a -t7z -mx=9 ./Releases/LethalExpansion_v${{ env.VERSION }}.7z ./Build/*
+    # - name: 7z files
+      # run: 7z a -t7z -mx=9 ./Releases/LethalExpansion_v${{ env.VERSION }}.7z ./Build/*
         
-    - name: Upload Release Asset 7z
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.LETHAL_EXPANSION_SECRET }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./Releases/LethalExpansion_v${{ env.VERSION }}.7z
-        asset_name: LethalExpansion_v${{ env.VERSION }}.7z
-        asset_content_type: application/x-7z-compressed
+    # - name: Upload Release Asset 7z
+      # uses: actions/upload-release-asset@v1
+      # env:
+        # GITHUB_TOKEN: ${{ secrets.LETHAL_EXPANSION_SECRET }}
+      # with:
+        # upload_url: ${{ github.event.release.upload_url }}
+        # asset_path: ./Releases/LethalExpansion_v${{ env.VERSION }}.7z
+        # asset_name: LethalExpansion_v${{ env.VERSION }}.7z
+        # asset_content_type: application/x-7z-compressed
