@@ -23,5 +23,16 @@ namespace LethalExpansion.Patches
             LethalExpansion.sessionWaiting = false;
             LethalExpansion.Log.LogInfo("LethalExpansion LAN Client Started.");
         }
+
+        [HarmonyPatch("Awake")]
+        [HarmonyPostfix]
+        public static void Awake_Postfix(MenuManager __instance)
+        {
+            if(__instance.versionNumberText != null)
+            {
+                __instance.versionNumberText.enableWordWrapping = false;
+                __instance.versionNumberText.text += $"     LEv{LethalExpansion.ModVersion.ToString()}";
+            }
+        }
     }
 }

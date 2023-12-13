@@ -12,7 +12,6 @@ using LethalExpansion.Utils;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(Landmine))]
-    [HarmonyPatch("OnDestroy")]
     internal class Landmine_Patch
     {
         [HarmonyPatch("OnTriggerEnter")]

@@ -58,15 +58,27 @@ WriteUnityLog = true
 Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in the bug report.  
 
 ## Known issues :
-- Hoarding big killed when grabbed an item from a mine don't drop the item that make it irrecoverable
-- When deadline remaining days is over 3 days, outside monsters spawn more
-- Landmines stills bip if a player walk on them when theres already an item placed on it
+- Hoarding big killed when grabbed an item from a mine don't drop the item that make it irrecoverable.
+- When deadline remaining days is over 3 days, outside monsters spawn more.
+- Landmines stills bip if a player walk on them when theres already an item placed on it.
 - A recent change broke the entire new Landmines system.
-- Terrain in new moons from SDK made the game crash.
 - Eclypse in new moons from SDK appears purple.
 - Drop pod are not implemented yet in new moons.
+- Custom moons are desync between players.
 
 ## Changes :
+- 1.2.0
+	- Added a workaround when playing with HDLethalCompany and using new moons with a missing Volume Profile.
+	- Added support for more Fire Exits in maps done with SDK.
+	- Added Item Drop Ship support for moons done with SDK.
+	- Fixed an issue that could break the new moons loading when missing modules.
+	- Increased the mods setting menu size to be able to read the last settings' description.
+	- Added settings to show or hide the Moons Current Weather, Dangeer Rank and Route Price.
+	- Removed the Labyrinth added the Company Building, it was a test.
+	- Added mod version to the Main Menu (compatible with MoreCompany).
+	- Added a Configurable Popup hud for Contextual Notifications. :
+	- Added a Version Checker.
+	- Fixed Moon Route prices getting wrong after returned to Main Menu then joined a new Lobby.
 - 1.1.9 :
 	- Fixed terrain shader making the game crash when loading a moon with a terrain.
 - 1.1.8 :

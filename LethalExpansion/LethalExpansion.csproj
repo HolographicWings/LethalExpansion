@@ -42,12 +42,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\core\BepInEx.dll</HintPath>
+    <Reference Include="BepInEx, Version=5.4.22.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Holog\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\Default\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="LethalSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\LethalSDK\LethalSDK\bin\Debug\LethalSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="MoreCompany">
+      <HintPath>C:\Users\Holog\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\Default\BepInEx\plugins\notnotnotswipez-MoreCompany\MoreCompany.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -190,6 +194,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.UIModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.VehiclesModule">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
     </Reference>
@@ -202,6 +210,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extenders\DungeonFlow_Extender.cs" />
     <Compile Include="MonoBehaviours\AutoScrollText.cs" />
     <Compile Include="MonoBehaviours\TooltipHandler.cs" />
     <Compile Include="Patches\EntranceTeleport_Patch.cs" />
@@ -213,6 +222,7 @@
     <Compile Include="Patches\GrabbableObject_Patch.cs" />
     <Compile Include="Patches\Monsters\MonsterGrabItem_Patch.cs" />
     <Compile Include="Patches\RoundManager_Patch.cs" />
+    <Compile Include="Extenders\SelectableLevel_Extender.cs" />
     <Compile Include="Patches\StartOfRound_Patch.cs" />
     <Compile Include="Patches\Terminal_Patch.cs" />
     <Compile Include="Patches\TimeOfDay_Patch.cs" />
@@ -226,6 +236,8 @@
     <Compile Include="Utils\ModUtils.cs" />
     <Compile Include="Utils\NetworkPacketManager.cs" />
     <Compile Include="Utils\HUD\SettingsMenu.cs" />
+    <Compile Include="Utils\PopupManager.cs" />
+    <Compile Include="Utils\VersionChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lethalexpansion.lem">

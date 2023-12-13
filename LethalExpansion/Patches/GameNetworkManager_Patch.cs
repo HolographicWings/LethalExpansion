@@ -8,6 +8,14 @@ using System.Reflection;
 using System.Collections.Generic;
 using LethalExpansion.Utils;
 using LethalSDK.ScriptableObjects;
+using BepInEx.Bootstrap;
+using LethalSDK.Component;
+using Unity.AI.Navigation;
+using Unity.Netcode.Components;
+using UnityEngine.AI;
+using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Rendering;
+using UnityEngine.Video;
 
 namespace LethalExpansion.Patches
 {
@@ -20,9 +28,17 @@ namespace LethalExpansion.Patches
         {
             if (!LethalExpansion.CompatibleGameVersions.Contains(__instance.gameVersionNum))
             {
-                LethalExpansion.Log.LogWarning("Warning, this mod is not made for this Game Version, this could cause unexpected behaviors.");
-                LethalExpansion.Log.LogWarning(string.Format("Game version: {0}", __instance.gameVersionNum));
-                LethalExpansion.Log.LogWarning(string.Format("Compatible mod versions: {0}", string.Join(",", LethalExpansion.CompatibleGameVersions)));
+                bool showWarning = true;
+                if (Chainloader.PluginInfos.ContainsKey("me.swipez.melonloader.morecompany") && __instance.gameVersionNum == 9999)
+                {
+                    showWarning = false;
+                }
+                if(showWarning)
+                {
+                    LethalExpansion.Log.LogWarning("Warning, this mod is not made for this Game Version, this could cause unexpected behaviors.");
+                    LethalExpansion.Log.LogWarning(string.Format("Game version: {0}", __instance.gameVersionNum));
+                    LethalExpansion.Log.LogWarning(string.Format("Compatible mod versions: {0}", string.Join(",", LethalExpansion.CompatibleGameVersions)));
+                }
             }
             if (ConfigManager.Instance.FindItemValue<bool>("LoadModules"))
             {
@@ -40,7 +56,7 @@ namespace LethalExpansion.Patches
                                 break;
                             }
 
-                            Item tmpItem = (Item)ScriptableObject.CreateInstance(typeof(Item));
+                            Item tmpItem = ScriptableObject.CreateInstance<Item>();
 
                             tmpItem.name = newScrap.name;
                             tmpItem.itemName = newScrap.itemName;
@@ -49,7 +65,10 @@ namespace LethalExpansion.Patches
                             tmpItem.minValue = newScrap.minValue;
                             tmpItem.maxValue = newScrap.maxValue;
                             tmpItem.weight = (float)newScrap.weight/100 + 1;
+
+                            CheckAndRemoveIllegalComponents(newScrap.prefab.transform);
                             tmpItem.spawnPrefab = newScrap.prefab;
+
                             tmpItem.requiresBattery = newScrap.requiresBattery;
                             tmpItem.itemIcon = scrapSprite;
                             tmpItem.syncGrabFunction = false;
@@ -101,6 +120,88 @@ namespace LethalExpansion.Patches
                 {
                     LethalExpansion.Log.LogError(ex.Message);
                 }
+            }
+        }
+        private static List<Type> whitelist = new List<Type> {
+            //Base
+            typeof(Transform),
+            //Mesh
+            typeof(MeshFilter),
+            typeof(MeshRenderer),
+            typeof(SkinnedMeshRenderer),
+            //Physics
+            typeof(MeshCollider),
+            typeof(BoxCollider),
+            typeof(SphereCollider),
+            typeof(CapsuleCollider),
+            typeof(SphereCollider),
+            typeof(TerrainCollider),
+            typeof(WheelCollider),
+            typeof(ArticulationBody),
+            typeof(ConstantForce),
+            typeof(ConfigurableJoint),
+            typeof(FixedJoint),
+            typeof(HingeJoint),
+            typeof(Cloth),
+            typeof(Rigidbody),
+            //Netcode
+            typeof(NetworkObject),
+            typeof(NetworkRigidbody),
+            typeof(NetworkTransform),
+            typeof(NetworkAnimator),
+            //Animation
+            typeof(Animator),
+            typeof(Animation),
+            //Rendering
+            typeof(DecalProjector),
+            typeof(LODGroup),
+            typeof(Light),
+            typeof(HDAdditionalLightData),
+            typeof(LightProbeGroup),
+            typeof(LightProbeProxyVolume),
+            typeof(LocalVolumetricFog),
+            typeof(OcclusionArea),
+            typeof(OcclusionPortal),
+            typeof(ReflectionProbe),
+            typeof(PlanarReflectionProbe),
+            typeof(HDAdditionalReflectionData),
+            typeof(SortingGroup),
+            typeof(SpriteRenderer),
+            //Audio
+            typeof(AudioSource),
+            typeof(AudioReverbZone),
+            typeof(AudioReverbFilter),
+            typeof(AudioChorusFilter),
+            typeof(AudioDistortionFilter),
+            typeof(AudioEchoFilter),
+            typeof(AudioHighPassFilter),
+            typeof(AudioLowPassFilter),
+            typeof(AudioListener),
+            //Effect
+            typeof(LensFlare),
+            typeof(TrailRenderer),
+            typeof(LineRenderer),
+            typeof(ParticleSystem),
+            typeof(ParticleSystemRenderer),
+            typeof(ParticleSystemForceField),
+            //Video
+            typeof(VideoPlayer)
+        };
+        static void CheckAndRemoveIllegalComponents(Transform prefab)
+        {
+            var components = prefab.GetComponents<Component>();
+            foreach (var component in components)
+            {
+                if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
+                {
+                    LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
+                    GameObject.DestroyImmediate(component);
+                }
+            }
+
+            foreach (Transform child in prefab)
+            {
+                CheckAndRemoveIllegalComponents(child);
             }
         }
     }

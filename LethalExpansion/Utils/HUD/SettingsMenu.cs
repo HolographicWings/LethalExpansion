@@ -51,9 +51,9 @@ namespace LethalExpansion.Utils.HUD
             ModSettings.transform.Find("Text (TMP)").GetComponent<TMP_Text>().text = "> Mod Settings";
             ModSettings.GetComponent<RectTransform>().anchoredPosition = SettingsButton.GetComponent<RectTransform>().anchoredPosition - new Vector2(0, 38.5f);
 
-            GameObject ModSettingsPanel = GameObject.Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/Settings/ModSettings.prefab"));
-            GameObject ModSettingsEntry = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/Settings/SettingEntry.prefab");
-            GameObject ModSettingsCategory = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/Settings/SettingCategory.prefab");
+            GameObject ModSettingsPanel = GameObject.Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Settings/ModSettings.prefab"));
+            GameObject ModSettingsEntry = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Settings/SettingEntry.prefab");
+            GameObject ModSettingsCategory = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Settings/SettingCategory.prefab");
             ModSettingsPanel.transform.SetParent(menuContainer.transform);
             ModSettingsPanel.transform.localPosition = Vector3.zero;
             ModSettingsPanel.transform.localScale = Vector3.one;
@@ -147,7 +147,8 @@ namespace LethalExpansion.Utils.HUD
                 y -= 20;
             }
             ModSettingsAllDefaultButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, y-5);
-            ModSettingsContentRectTransform.sizeDelta = new Vector2(380, Mathf.Abs(y-25));
+            //ModSettingsContentRectTransform.sizeDelta = new Vector2(380, Mathf.Abs(y-25));
+            ModSettingsContentRectTransform.sizeDelta = new Vector2(380, Mathf.Abs(y-25-110));
 
             ModSettingsToolTipPanel.transform.SetAsLastSibling();
             initialized = true;

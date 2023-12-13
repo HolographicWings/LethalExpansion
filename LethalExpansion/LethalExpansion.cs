@@ -32,12 +32,13 @@ using BepInEx.Bootstrap;
 namespace LethalExpansion
 {
     [BepInPlugin(MyGUID, PluginName, VersionString)]
+    [BepInDependency("me.swipez.melonloader.morecompany", BepInDependency.DependencyFlags.SoftDependency)]
     public class LethalExpansion : BaseUnityPlugin
     {
         private const string MyGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
         private const string VersionString = "1.1.9";
-        private readonly Version ModVersion = new Version(VersionString);
+        public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
             new Version(1, 1, 9),
             new Version(1, 1, 8)
@@ -65,11 +66,11 @@ namespace LethalExpansion
             Log = Logger;
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loading...");
 
-            /*List<PluginInfo> loadedPlugins = GetLoadedPlugins();
+            List<PluginInfo> loadedPlugins = GetLoadedPlugins();
             foreach (var plugin in loadedPlugins)
             {
-                Logger.LogInfo($"Plugin: {plugin.Metadata.GUID} - Version: {plugin.Metadata.Version}");
-            }*/
+                Logger.LogInfo($"Other plugin: {plugin.Metadata.GUID} - Version: {plugin.Metadata.Version}");
+            }
 
             config = Config;
 
@@ -94,6 +95,9 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("AutomaticDeadlineStage", 300, "Expeditions", "Increase the quota deadline of one day each time the quota exceeds this value.", 100, 1000));
             ConfigManager.Instance.AddItem(new ConfigItem("LoadModules", true, "Modules", "Load SDK Modules that add new content to the game. Disable it to play with Vanilla players. (RESTART REQUIRED)", sync:false, optional: false, requireRestart:true));
             ConfigManager.Instance.AddItem(new ConfigItem("MaxItemsInShip", 45, "Expeditions", "Change the Items cap can be kept in the ship.", 10, 500));
+            ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonWeatherInCatalogue", true, "HUD", "Display the current weather of Moons in the Terminal's Moon Catalogue.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonRankInCatalogue", false, "HUD", "Display the rank of Moons in the Terminal's Moon Catalogue.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonPriceInCatalogue", false, "HUD", "Display the route price of Moons in the Terminal's Moon Catalogue.", sync: true));
 
             ConfigManager.Instance.ReadConfig();
 
@@ -114,6 +118,7 @@ namespace LethalExpansion
             Harmony.PatchAll(typeof(StartOfRound_Patch));
             Harmony.PatchAll(typeof(EntranceTeleport_Patch));
             Harmony.PatchAll(typeof(Landmine_Patch));
+            Harmony.PatchAll(typeof(RuntimeDungeon));
             Harmony harmony = new Harmony("LethalExpansion");
             MethodInfo BaboonBirdAI_GrabScrap_Method = AccessTools.Method(typeof(BaboonBirdAI), "GrabScrap", null, null);
             MethodInfo HoarderBugAI_GrabItem_Method = AccessTools.Method(typeof(HoarderBugAI), "GrabItem", null, null);
@@ -189,11 +194,13 @@ namespace LethalExpansion
                 AssetGather.Instance.AddAudioMixer(GameObject.Find("Canvas/MenuManager").GetComponent<AudioSource>().outputAudioMixerGroup.audioMixer);
 
                 SettingsMenu.Instance.InitSettingsMenu();
+
+                VersionChecker.CheckVersion().GetAwaiter();
             }
             if (scene.name == "CompanyBuilding")
             {
-                GameObject Labyrinth = Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/labyrinth.prefab"));
-                SceneManager.MoveGameObjectToScene(Labyrinth, scene);
+                /*GameObject Labyrinth = Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/labyrinth.prefab"));
+                SceneManager.MoveGameObjectToScene(Labyrinth, scene);*/
                 waitForSession().GetAwaiter();
 
                 SpaceLight.SetActive(false);
@@ -250,9 +257,19 @@ namespace LethalExpansion
                 terrainData.heightmapResolution = width + 1;
                 terrainData.size = new Vector3(width, depth, height);
                 terrainData.SetHeights(0, 0, GenerateHeights());
-                Logger.LogWarning(terrain.terrainData == null);
-                Logger.LogWarning(terrainData == null);
                 terrain.terrainData = terrainData;
+
+                Terminal_Patch.ResetFireExitAmounts();
+
+                UnityEngine.Object[] array = Resources.FindObjectsOfTypeAll(typeof(Volume));
+
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if((array[i] as Volume).sharedProfile == null)
+                    {
+                        (array[i] as Volume).sharedProfile = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<VolumeProfile>("Assets/Mods/LethalExpansion/Sky and Fog Global Volume Profile.asset");
+                    }
+                }
 
                 waitForSession().GetAwaiter();
 
@@ -271,10 +288,6 @@ namespace LethalExpansion
                 {
                     obj.SetActive(false);
                 }
-
-
-                List<Type> whitelist = new List<Type> { typeof(MeshRenderer), typeof(Transform), typeof(Rigidbody) };
-
                 if(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
                 {
                     if(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
@@ -284,6 +297,7 @@ namespace LethalExpansion
                         if (mainPrefab != null)
                         {
                             SceneManager.MoveGameObjectToScene(mainPrefab, scene);
+                            mainPrefab.transform.Find("Systems/Audio/DiageticBackground").GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
                         }
                     }
                 }
@@ -300,6 +314,13 @@ namespace LethalExpansion
                         SceneManager.MoveGameObjectToScene(obj, scene);
                     }
                 }
+                GameObject DropShip = GameObject.Find("ItemShipAnimContainer");
+                if (DropShip != null)
+                {
+                    DropShip.transform.Find("ItemShip").GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                    DropShip.transform.Find("ItemShip/Music").GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                    DropShip.transform.Find("ItemShip/Music/Music (1)").GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                }
                 RuntimeDungeon DungeonGenerator = GameObject.FindObjectOfType<RuntimeDungeon>(false);
                 if (DungeonGenerator == null)
                 {
@@ -313,21 +334,15 @@ namespace LethalExpansion
                     runtimeDungeon.Generator.PauseBetweenRooms = 0.2f;
                     runtimeDungeon.GenerateOnStart = false;
                     runtimeDungeon.Root = dungeonGenerator;
+                    runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
                     UnityNavMeshAdapter dungeonNavMesh = dungeonGenerator.AddComponent<UnityNavMeshAdapter>();
                     dungeonNavMesh.BakeMode = UnityNavMeshAdapter.RuntimeNavMeshBakeMode.FullDungeonBake;
                     dungeonNavMesh.LayerMask = 35072; //256 + 2048 + 32768 = 35072
                     SceneManager.MoveGameObjectToScene(dungeonGenerator, scene);
                 }
-                else
-                {
-                    if(DungeonGenerator.Root == null && DungeonGenerator.Root.scene == null)
-                    {
-                        GameObject dungeonRoot = new GameObject();
-                        dungeonRoot.name = "LevelGenerationRoot";
-                        dungeonRoot.transform.position = new Vector3(0, -200, 0);
-                        DungeonGenerator.Root = dungeonRoot;
-                    }
-                }
+
+                DungeonGenerator.Generator.DungeonFlow.GlobalProps.First(p => p.ID == 1231).Count = new IntRange(RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite(), RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite());
+
                 GameObject OutOfBounds = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 OutOfBounds.name = "OutOfBounds";
                 OutOfBounds.layer = 13;
@@ -344,7 +359,7 @@ namespace LethalExpansion
 
             }
         }
-        public List<Type> whitelist = new List<Type> {
+        private List<Type> whitelist = new List<Type> {
             //Base
             typeof(Transform),
             //Mesh
@@ -422,7 +437,6 @@ namespace LethalExpansion
             typeof(NavMeshLink),
             typeof(NavMeshObstacle),
             typeof(OffMeshLink),
-            typeof(NetworkObject),
             //LethalSDK
             typeof(SI_AudioReverbPresets),
             typeof(SI_AudioReverbTrigger),
@@ -430,42 +444,29 @@ namespace LethalExpansion
             typeof(SI_MatchLocalPlayerPosition),
             typeof(SI_AnimatedSun),
             typeof(SI_EntranceTeleport),
-            typeof(SI_ScanNodeEntrance),
-            typeof(SI_ScanNodeShip),
             typeof(SI_ScanNode),
             typeof(SI_DoorLock),
             typeof(SI_WaterSurface),
             typeof(SI_Ladder),
+            typeof(SI_ItemDropship),
             typeof(LockPosition)
         };
 
         void CheckAndRemoveIllegalComponents(Transform root)
         {
-            var allChildren = new List<Transform>();
+            var components = root.GetComponents<Component>();
+            foreach (var component in components)
+            {
+                if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
+                {
+                    LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
+                    GameObject.DestroyImmediate(component);
+                }
+            }
 
             foreach (Transform child in root)
             {
-                allChildren.Add(child);
-            }
-
-            foreach (Transform child in allChildren)
-            {
-                var components = child.GetComponents<Component>();
-
-                foreach (var component in components)
-                {
-                    if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
-                    {
-                        Logger.LogWarning($"Removed illegal {component.GetType().Name} component.");
-                        DestroyImmediate(component);
-                        break;
-                    }
-                }
-
-                if (child.childCount > 0)
-                {
-                    CheckAndRemoveIllegalComponents(child);
-                }
+                CheckAndRemoveIllegalComponents(child);
             }
         }
         private void OnSceneUnloaded(Scene scene)
@@ -480,6 +481,7 @@ namespace LethalExpansion
                 {
                     SpaceLight.SetActive(true);
                 }
+                Terminal_Patch.ResetFireExitAmounts();
             }
         }
         private async Task waitForSession()
