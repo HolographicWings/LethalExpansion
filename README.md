@@ -69,6 +69,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmine instand explode when a player walk on them (Vanilla bug).
 
 ## Changes :
+- 1.2.5
+	- Better sound loader for new scraps and SDK asset banks.
 - 1.2.4
 	- Added two settings to configure the quota increment.
 	- Finished the Workaround for moons made with old versions of the SDK.

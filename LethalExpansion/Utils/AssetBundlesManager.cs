@@ -75,32 +75,32 @@ namespace LethalExpansion.Utils
                         {
                             if(!assetBundles.Any(b => b.Value.Item2.modName == modManifest.modName))
                             {
-                                LethalExpansion.Log.LogInfo("Module found: " + modManifest.modName);
+                                LethalExpansion.Log.LogInfo($"Module found: {modManifest.modName} v{modManifest.GetVersion()}");
 
                                 assetBundles.Add(Path.GetFileNameWithoutExtension(file).ToLower(), (loadedBundle, modManifest));
                             }
                             else
                             {
-                                LethalExpansion.Log.LogWarning("Another mod with same name is already loaded: " + modManifest.modName);
+                                LethalExpansion.Log.LogWarning($"Another mod with same name is already loaded: {modManifest.modName}");
                                 loadedBundle.Unload(true);
-                                LethalExpansion.Log.LogInfo("AssetBundle unloaded: " + Path.GetFileName(file));
+                                LethalExpansion.Log.LogInfo($"AssetBundle unloaded: {Path.GetFileName(file)}");
                             }
                         }
                         else
                         {
-                            LethalExpansion.Log.LogWarning("AssetBundle have no ModManifest: " + Path.GetFileName(file));
+                            LethalExpansion.Log.LogWarning($"AssetBundle have no ModManifest: {Path.GetFileName(file)}");
                             loadedBundle.Unload(true);
-                            LethalExpansion.Log.LogInfo("AssetBundle unloaded: " + Path.GetFileName(file));
+                            LethalExpansion.Log.LogInfo($"AssetBundle unloaded: {Path.GetFileName(file)}");
                         }
                     }
                     else
                     {
-                        LethalExpansion.Log.LogWarning("File is not an AssetBundle: " + Path.GetFileName(file));
+                        LethalExpansion.Log.LogWarning($"File is not an AssetBundle: {Path.GetFileName(file)}");
                     }
                 }
                 else
                 {
-                    LethalExpansion.Log.LogWarning("AssetBundle with same name already loaded: " + Path.GetFileName(file));
+                    LethalExpansion.Log.LogWarning($"AssetBundle with same name already loaded: {Path.GetFileName(file)}");
                 }
             }
         }
