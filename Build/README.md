@@ -67,6 +67,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 
 ## Changes :
 - 1.2.0
+	- Network sync Rework.
 	- Added a workaround when playing with HDLethalCompany and using new moons with a missing Volume Profile.
 	- Added support for more Fire Exits in maps done with SDK.
 	- Added Item Drop Ship support for moons done with SDK.
