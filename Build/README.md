@@ -76,7 +76,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 	- Added settings to show or hide the Moons Current Weather, Dangeer Rank and Route Price.
 	- Removed the Labyrinth added the Company Building, it was a test.
 	- Added mod version to the Main Menu (compatible with MoreCompany).
-	- Added a Configurable Popup hud for Contextual Notifications. :
+	- Added a Configurable Popup hud for Contextual Notifications.
 	- Added a Version Checker.
 	- Fixed Moon Route prices getting wrong after returned to Main Menu then joined a new Lobby.
 - 1.1.9 :

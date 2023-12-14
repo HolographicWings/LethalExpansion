@@ -61,7 +61,7 @@ namespace LethalExpansion.Utils
                         string configPacket = $"{LethalExpansion.ModVersion.ToString()}-";
                         foreach (var bundle in AssetBundlesManager.Instance.assetBundles)
                         {
-                            configPacket += $"{bundle.Key}&";
+                            configPacket += $"{bundle.Key}v{bundle.Value.Item2.GetVersion().ToString()}&";
                         }
                         configPacket = configPacket.Remove(configPacket.Length - 1);
                         NetworkPacketManager.Instance.sendPacket(packetType.data, "clientinfo", configPacket, 0);
@@ -90,7 +90,7 @@ namespace LethalExpansion.Utils
                         string bundles = string.Empty;
                         foreach (var bundle in AssetBundlesManager.Instance.assetBundles)
                         {
-                            bundles += $"{bundle.Key}&";
+                            bundles += $"{bundle.Key}v{bundle.Value.Item2.GetVersion().ToString()}&";
                         }
                         bundles = bundles.Remove(bundles.Length - 1);
                         if (values[0] != LethalExpansion.ModVersion.ToString())
