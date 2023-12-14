@@ -72,6 +72,10 @@ namespace LethalExpansion.Patches
                     (AssetBundle, ModManifest) _tmp = AssetBundlesManager.Instance.Load(bundle.Key);
                     if (_tmp.Item2.assetBank != null)
                     {
+                        foreach (var a in _tmp.Item2.assetBank.AudioClips())
+                        {
+                            AssetGather.Instance.AddAudioClip(bundle.Value.Item1.LoadAsset<AudioClip>(a.AudioClipPath));
+                        }
                         foreach (var p in _tmp.Item2.assetBank.PlanetPrefabs())
                         {
                             var prefab = bundle.Value.Item1.LoadAsset<GameObject>(p.PlanetPrefabPath);
@@ -96,100 +100,65 @@ namespace LethalExpansion.Patches
 
                     foreach (var newScrap in _tmp.Item2.scraps)
                     {
-                        if (newScrap == null)
+                        if (newScrap != null && newScrap.prefab != null)
                         {
-                            break;
-                        }
+                            Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
 
-                        if(newScrap.prefab == null)
-                        {
-                            break;
-                        }
-                        Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
+                            AudioSource audioSource = newScrap.prefab.GetComponent<AudioSource>();
+                            audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master");
 
-                        AudioSource audioSource = newScrap.prefab.GetComponent<AudioSource>();
-                        audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master");
-
-                        AudioClip _tpmGrabSFX = null;
-                        if (newScrap.grabSFX.Length > 0)
-                        {
-                            if (bundle.Value.Item2.assetBank != null)
-                            {
-                                if (bundle.Value.Item2.assetBank.HaveAudioClip(newScrap.grabSFX))
-                                {
-                                    _tpmGrabSFX = _tmp.Item1.LoadAsset<AudioClip>(bundle.Value.Item2.assetBank.AudioClipPath(newScrap.grabSFX));
-                                }
-                                else
-                                {
-                                    _tpmGrabSFX = AssetGather.Instance.audioClips[newScrap.grabSFX];
-                                }
-                            }
-                            else
+                            AudioClip _tpmGrabSFX = null;
+                            if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.grabSFX))
                             {
                                 _tpmGrabSFX = AssetGather.Instance.audioClips[newScrap.grabSFX];
                             }
-                        }
-                        tmpItem.grabSFX = _tpmGrabSFX != null ? _tpmGrabSFX : defaultGrabSound;
-                        AudioClip _tpmDropSFX = null;
-                        if (newScrap.dropSFX.Length > 0)
-                        {
-                            if(bundle.Value.Item2.assetBank != null)
+                            tmpItem.grabSFX = _tpmGrabSFX != null ? _tpmGrabSFX : defaultGrabSound;
+                            AudioClip _tpmDropSFX = null;
+                            if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.dropSFX))
                             {
-                                if (bundle.Value.Item2.assetBank.HaveAudioClip(newScrap.dropSFX))
+                                _tpmDropSFX = AssetGather.Instance.audioClips[newScrap.dropSFX];
+                            }
+                            tmpItem.dropSFX = _tpmDropSFX != null ? _tpmDropSFX : defaultDropSound;
+
+                            StartOfRound.Instance.allItemsList.itemsList.Add(tmpItem);
+
+                            if (newScrap.useGlobalSpawnRate)
+                            {
+                                SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                itemRarity.spawnableItem = tmpItem;
+                                itemRarity.rarity = newScrap.globalSpawnWeight;
+                                foreach (SelectableLevel level in __instance.moonsCatalogueList)
                                 {
-                                    _tpmDropSFX = _tmp.Item1.LoadAsset<AudioClip>(bundle.Value.Item2.assetBank.AudioClipPath(newScrap.dropSFX));
-                                }
-                                else
-                                {
-                                    _tpmDropSFX = AssetGather.Instance.audioClips[newScrap.dropSFX];
+                                    level.spawnableScrap.Add(itemRarity);
                                 }
                             }
                             else
                             {
-                                _tpmDropSFX = AssetGather.Instance.audioClips[newScrap.dropSFX];
-                            }
-                        }
-                        tmpItem.dropSFX = _tpmDropSFX != null ? _tpmDropSFX : defaultDropSound;
-
-                        StartOfRound.Instance.allItemsList.itemsList.Add(tmpItem);
-
-
-                        if (newScrap.useGlobalSpawnRate)
-                        {
-                            SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
-                            itemRarity.spawnableItem = tmpItem;
-                            itemRarity.rarity = newScrap.globalSpawnWeight;
-                            foreach (SelectableLevel level in __instance.moonsCatalogueList)
-                            {
-                                level.spawnableScrap.Add(itemRarity);
-                            }
-                        }
-                        else
-                        {
-                            var ddqdz = newScrap.perPlanetSpawnWeight();
-                            foreach (SelectableLevel level in __instance.moonsCatalogueList)
-                            {
-                                try
+                                var ddqdz = newScrap.perPlanetSpawnWeight();
+                                foreach (SelectableLevel level in __instance.moonsCatalogueList)
                                 {
-                                    if (ddqdz.Any(l => l.SceneName == level.PlanetName))
+                                    try
                                     {
-                                        var tmp = ddqdz.First(l => l.SceneName == level.PlanetName);
+                                        if (ddqdz.Any(l => l.SceneName == level.PlanetName))
+                                        {
+                                            var tmp = ddqdz.First(l => l.SceneName == level.PlanetName);
 
-                                        SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
-                                        itemRarity.spawnableItem = tmpItem;
-                                        itemRarity.rarity = tmp.SpawnWeight;
+                                            SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                            itemRarity.spawnableItem = tmpItem;
+                                            itemRarity.rarity = tmp.SpawnWeight;
 
-                                        level.spawnableScrap.Add(itemRarity);
+                                            level.spawnableScrap.Add(itemRarity);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        LethalExpansion.Log.LogError(ex.Message);
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    LethalExpansion.Log.LogError(ex.Message);
-                                }
                             }
+                            AssetGather.Instance.AddScrap(tmpItem);
+                            LethalExpansion.Log.LogInfo(newScrap.itemName + " Scrap added.");
                         }
-                        AssetGather.Instance.AddScrap(tmpItem);
-                        LethalExpansion.Log.LogInfo(newScrap.itemName + " Scrap added.");
                     }
                 }
                 scrapsPatched = true;
