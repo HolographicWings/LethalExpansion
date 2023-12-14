@@ -38,10 +38,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.2.2";
+        private const string VersionString = "1.2.3";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 2, 2)
+            new Version(1, 2, 3)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -489,19 +489,26 @@ namespace LethalExpansion
 
         void CheckAndRemoveIllegalComponents(Transform root)
         {
-            var components = root.GetComponents<Component>();
-            foreach (var component in components)
+            try
             {
-                if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
+                var components = root.GetComponents<Component>();
+                foreach (var component in components)
                 {
-                    LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
-                    GameObject.DestroyImmediate(component);
+                    if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
+                    {
+                        LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
+                        GameObject.DestroyImmediate(component);
+                    }
+                }
+
+                foreach (Transform child in root)
+                {
+                    CheckAndRemoveIllegalComponents(child);
                 }
             }
-
-            foreach (Transform child in root)
+            catch (Exception ex)
             {
-                CheckAndRemoveIllegalComponents(child);
+                LethalExpansion.Log.LogError(ex.Message);
             }
         }
         private void OnSceneUnloaded(Scene scene)

@@ -283,19 +283,26 @@ namespace LethalExpansion.Patches
         };
         static void CheckAndRemoveIllegalComponents(Transform prefab, List<Type> whitelist)
         {
-            var components = prefab.GetComponents<Component>();
-            foreach (var component in components)
+            try
             {
-                if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
+                var components = prefab.GetComponents<Component>();
+                foreach (var component in components)
                 {
-                    LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
-                    GameObject.DestroyImmediate(component);
+                    if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
+                    {
+                        LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
+                        GameObject.DestroyImmediate(component);
+                    }
+                }
+
+                foreach (Transform child in prefab)
+                {
+                    CheckAndRemoveIllegalComponents(child, whitelist);
                 }
             }
-
-            foreach (Transform child in prefab)
+            catch (Exception ex)
             {
-                CheckAndRemoveIllegalComponents(child, whitelist);
+                LethalExpansion.Log.LogError(ex.Message);
             }
         }
     }

@@ -66,6 +66,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Entrance and ship scannodes don't work.
 
 ## Changes :
+- 1.2.3
+	- Added a Workaround to keep minimal compatibility with moons made with old versions of the SDK and avoid crashing.
 - 1.2.2
 	- Forgot to change the version number, occuring to always tell the mod is outdated.
 	- Added a second fire exit to Wateridge to test the Fire Exit Amount implementation of the SDK
