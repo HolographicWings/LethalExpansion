@@ -66,6 +66,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmines stills bip if a player walk on them when theres already an item placed on it.
 - Eclypse in new moons from SDK appears purple.
 - Landmine instand explode when a player walk on them (Vanilla bug).
+- Landmine instand explode when a player walk on them (Vanilla bug).
 
 ## Changes :
 - 1.2.0
