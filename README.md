@@ -66,7 +66,6 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmines stills bip if a player walk on them when theres already an item placed on it.
 - A recent change broke the entire new Landmines system.
 - Eclypse in new moons from SDK appears purple.
-- Drop pod are not implemented yet in new moons.
 - Custom moons are desync between players.
 
 ## Changes :
@@ -116,7 +115,6 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 
 ## Planned features :
 - New landmine system network rework
-- Update checked
 - Mod version compatibility checker
 
 ## More screenshots :

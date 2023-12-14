@@ -28,21 +28,39 @@ using UnityEngine.Video;
 using Unity.Netcode.Components;
 using LethalSDK.Utils;
 using BepInEx.Bootstrap;
+using System.Net.Sockets;
 
 namespace LethalExpansion
 {
-    [BepInPlugin(MyGUID, PluginName, VersionString)]
+    [BepInPlugin(PluginGUID, PluginName, VersionString)]
     [BepInDependency("me.swipez.melonloader.morecompany", BepInDependency.DependencyFlags.SoftDependency)]
     public class LethalExpansion : BaseUnityPlugin
     {
-        private const string MyGUID = "LethalExpansion";
+        private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
         private const string VersionString = "1.2.0";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
             new Version(1, 2, 0)
         };
-        public static readonly int[] CompatibleGameVersions = {40, 45};
+        private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
+        {
+            { "com.sinai.unityexplorer",compatibility.medium },
+            { "HDLethalCompany",compatibility.good },
+            { "LC_API",compatibility.good },
+            { "me.swipez.melonloader.morecompany",compatibility.unknown }
+        };
+        private enum compatibility
+        {
+            unknown = 0,
+            perfect = 1,
+            good = 2,
+            medium = 3,
+            bad = 4,
+            critical = 5,
+            incompatible = 6
+        }
+        public static readonly int[] CompatibleGameVersions = {45};
 
         public static bool sessionWaiting = true;
         public static bool hostDataWaiting = true;
@@ -50,7 +68,9 @@ namespace LethalExpansion
         public static bool alreadypatched = false;
         public static bool isInGame = false;
 
-        private static readonly Harmony Harmony = new Harmony(MyGUID);
+        public static string lastKickReason = string.Empty;
+
+        private static readonly Harmony Harmony = new Harmony(PluginGUID);
         public static ManualLogSource Log = new ManualLogSource(PluginName);
 
         public static ConfigFile config;
@@ -65,10 +85,22 @@ namespace LethalExpansion
             Log = Logger;
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loading...");
 
+
+            Logger.LogInfo("Getting other plugins list");
             List<PluginInfo> loadedPlugins = GetLoadedPlugins();
             foreach (var plugin in loadedPlugins)
             {
-                Logger.LogInfo($"Other plugin: {plugin.Metadata.GUID} - Version: {plugin.Metadata.Version}");
+                if (plugin.Metadata.GUID != PluginGUID)
+                {
+                    if (CompatibleMods.ContainsKey(plugin.Metadata.GUID))
+                    {
+                        Logger.LogInfo($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                    }
+                    else
+                    {
+                        Logger.LogInfo($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {compatibility.unknown}");
+                    }
+                }
             }
 
             config = Config;
@@ -195,12 +227,16 @@ namespace LethalExpansion
                 SettingsMenu.Instance.InitSettingsMenu();
 
                 VersionChecker.CheckVersion().GetAwaiter();
+
+                if(lastKickReason != null && lastKickReason.Length > 0)
+                {
+                    PopupManager.Instance.InstantiatePopup("Kicked from Lobby", $"You have been kicked\r\nReason: {lastKickReason}", button2: "Ignore");
+                }
             }
             if (scene.name == "CompanyBuilding")
             {
                 /*GameObject Labyrinth = Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/labyrinth.prefab"));
                 SceneManager.MoveGameObjectToScene(Labyrinth, scene);*/
-                waitForSession().GetAwaiter();
 
                 SpaceLight.SetActive(false);
                 terrainfixer.SetActive(false);
@@ -492,10 +528,10 @@ namespace LethalExpansion
 
             if (!ishost)
             {
-                while (hostDataWaiting)
+                while (!sessionWaiting && hostDataWaiting)
                 {
-                    NetworkPacketManager.Instance.sendPacket("command:requestConfig");
-                    await Task.Delay(1000);
+                    NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "hostconfig", string.Empty, 0);
+                    await Task.Delay(3000);
                 }
             }
             else

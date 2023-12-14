@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using LethalExpansion.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,13 +20,17 @@ namespace LethalExpansion.Patches
         }
         [HarmonyPatch("OnPlayerConnectedClientRpc")]
         [HarmonyPostfix]
-        static void OnPlayerConnectedClientRpc_Postfix(StartOfRound __instance)
+        static void OnPlayerConnectedClientRpc_Postfix(StartOfRound __instance, ulong clientId)
         {
             if (!LethalExpansion.ishost)
             {
                 LethalExpansion.ishost = false;
                 LethalExpansion.sessionWaiting = false;
-                LethalExpansion.Log.LogInfo("LethalExpansion Client Started.");
+                LethalExpansion.Log.LogInfo("LethalExpansion Client Started." + __instance.NetworkManager.LocalClientId);
+            }
+            else
+            {
+                NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "clientinfo", string.Empty, (long)clientId);
             }
         }
         [HarmonyPatch(nameof(StartOfRound.SetMapScreenInfoToCurrentLevel))]

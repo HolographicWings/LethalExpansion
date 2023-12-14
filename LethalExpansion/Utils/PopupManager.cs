@@ -27,7 +27,7 @@ namespace LethalExpansion.Utils
             }
         }
         List<PopupObject> popups = new List<PopupObject>();
-        public void InstantiatePopup(string title = "Popup", string content = "", string button1 = "Ok", string button2 = "Cancel", UnityAction button1Action = null, UnityAction button2Action = null, bool button1Destroy = true, bool button2Destroy = true)
+        public void InstantiatePopup(string title = "Popup", string content = "", string button1 = "Ok", string button2 = "Cancel", UnityAction button1Action = null, UnityAction button2Action = null, bool button1Destroy = true, bool button2Destroy = true, bool dontDestroyOnLoad = false)
         {
             var canvas = GameObject.FindAnyObjectByType<Canvas>();
             if (canvas == null)
@@ -51,11 +51,15 @@ namespace LethalExpansion.Utils
                 }
                 if (button1Destroy)
                 {
-                    button1Action = new UnityAction(() => { GameObject.DestroyImmediate(_tmp); });
+                    _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
                 }
                 if(button2Destroy)
                 {
-                    button2Action = new UnityAction(() => { GameObject.DestroyImmediate(_tmp); });
+                    _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
+                }
+                if (dontDestroyOnLoad)
+                {
+                    GameObject.DontDestroyOnLoad(_tmp);
                 }
                 PopupObject _instance = new PopupObject(_tmp, _tmp.transform.Find("Title").GetComponent<TMP_Text>(), _tmp.transform.Find("Panel/MainContent").GetComponent<TMP_Text>(), _tmp.transform.Find("Button1/Text").GetComponent<TMP_Text>(), _tmp.transform.Find("Button2/Text").GetComponent<TMP_Text>());
                 _instance.title.text = title;
