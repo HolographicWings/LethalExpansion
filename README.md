@@ -64,13 +64,12 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Hoarding big killed when grabbed an item from a mine don't drop the item that make it irrecoverable.
 - When deadline remaining days is over 3 days, outside monsters spawn more.
 - Landmines stills bip if a player walk on them when theres already an item placed on it.
-- A recent change broke the entire new Landmines system.
 - Eclypse in new moons from SDK appears purple.
-- Custom moons are desync between players.
+- Landmine instand explode when a player walk on them (Vanilla bug).
 
 ## Changes :
 - 1.2.0
-	- Network sync Rework.
+	- Network sync Rework (should fix the map generation desync).
 	- Added a workaround when playing with HDLethalCompany and using new moons with a missing Volume Profile.
 	- Added support for more Fire Exits in maps done with SDK.
 	- Added Item Drop Ship support for moons done with SDK.
