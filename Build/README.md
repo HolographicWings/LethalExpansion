@@ -66,6 +66,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Entrance and ship scannodes don't work.
 
 ## Changes :
+- 1.2.2
+	- Forgot to change the version number, occuring to always tell the mod is outdated.
+	- Added a second fire exit to Wateridge to test the Fire Exit Amount implementation of the SDK
 - 1.2.1
 	- Removed a debug message.
 	- Nerfed Wateridge (less scraps, enemies spawn sooner).

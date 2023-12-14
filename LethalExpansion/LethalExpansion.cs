@@ -38,10 +38,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.2.0";
+        private const string VersionString = "1.2.2";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 2, 0)
+            new Version(1, 2, 2)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
