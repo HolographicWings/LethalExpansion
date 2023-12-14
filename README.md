@@ -69,6 +69,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmine instand explode when a player walk on them (Vanilla bug).
 
 ## Changes :
+- 1.2.1
+	- Removed a debug message.
+	- Nerfed Wateridge (less scraps, enemies spawn sooner).
 - 1.2.0
 	- Network sync Rework (should fix the map generation desync).
 	- Added a workaround when playing with HDLethalCompany and using new moons with a missing Volume Profile.
