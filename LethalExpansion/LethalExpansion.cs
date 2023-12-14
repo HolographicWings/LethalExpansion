@@ -129,7 +129,9 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonWeatherInCatalogue", true, "HUD", "Display the current weather of Moons in the Terminal's Moon Catalogue.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonRankInCatalogue", false, "HUD", "Display the rank of Moons in the Terminal's Moon Catalogue.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonPriceInCatalogue", false, "HUD", "Display the route price of Moons in the Terminal's Moon Catalogue.", sync: true));
-
+            ConfigManager.Instance.AddItem(new ConfigItem("QuotaIncreaseSteepness", 16, "Expeditions", "Change the Quota Increase Steepness (Highter = more exponential increase).", 0, 32, sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("QuotaBaseIncrease", 100, "Expeditions", "Change the Quota Base Increase.", 0, 300, sync: true));
+            
             ConfigManager.Instance.ReadConfig();
 
             Config.SettingChanged += ConfigSettingChanged;
@@ -323,7 +325,7 @@ namespace LethalExpansion
                 {
                     obj.SetActive(false);
                 }
-                if(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
+                if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
                 {
                     if(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
                     {
@@ -332,11 +334,14 @@ namespace LethalExpansion
                         if (mainPrefab != null)
                         {
                             SceneManager.MoveGameObjectToScene(mainPrefab, scene);
-                            mainPrefab.transform.Find("Systems/Audio/DiageticBackground").GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                            var DiageticBackground = mainPrefab.transform.Find("Systems/Audio/DiageticBackground");
+                            if(DiageticBackground != null)
+                            {
+                                DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                            }
                         }
                     }
                 }
-
                 String[] _tmp = { "MapPropsContainer", "OutsideAINode", "SpawnDenialPoint", "ItemShipLandingNode", "OutsideLevelNavMesh" };
                 foreach(string s in _tmp)
                 {
@@ -352,18 +357,30 @@ namespace LethalExpansion
                 GameObject DropShip = GameObject.Find("ItemShipAnimContainer");
                 if (DropShip != null)
                 {
-                    DropShip.transform.Find("ItemShip").GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
-                    DropShip.transform.Find("ItemShip/Music").GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
-                    DropShip.transform.Find("ItemShip/Music/Music (1)").GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                    var ItemShip = DropShip.transform.Find("ItemShip");
+                    if(ItemShip != null)
+                    {
+                        ItemShip.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                    }
+                    var ItemShipMusicClose = DropShip.transform.Find("ItemShip/Music");
+                    if(ItemShipMusicClose != null)
+                    {
+                        ItemShipMusicClose.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                    }
+                    var ItemShipMusicFar = DropShip.transform.Find("ItemShip/Music/Music (1)");
+                    if (ItemShipMusicFar != null)
+                    {
+                        ItemShipMusicFar.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                    }
                 }
-                RuntimeDungeon DungeonGenerator = GameObject.FindObjectOfType<RuntimeDungeon>(false);
-                if (DungeonGenerator == null)
+                RuntimeDungeon runtimeDungeon = GameObject.FindObjectOfType<RuntimeDungeon>(false);
+                if (runtimeDungeon == null)
                 {
                     GameObject dungeonGenerator = new GameObject();
                     dungeonGenerator.name = "DungeonGenerator";
                     dungeonGenerator.tag = "DungeonGenerator";
                     dungeonGenerator.transform.position = new Vector3(0, -200, 0);
-                    RuntimeDungeon runtimeDungeon = dungeonGenerator.AddComponent<RuntimeDungeon>();
+                    runtimeDungeon = dungeonGenerator.AddComponent<RuntimeDungeon>();
                     runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
                     runtimeDungeon.Generator.LengthMultiplier = 0.8f;
                     runtimeDungeon.Generator.PauseBetweenRooms = 0.2f;
@@ -375,8 +392,15 @@ namespace LethalExpansion
                     dungeonNavMesh.LayerMask = 35072; //256 + 2048 + 32768 = 35072
                     SceneManager.MoveGameObjectToScene(dungeonGenerator, scene);
                 }
+                else
+                {
+                    if (runtimeDungeon.Generator.DungeonFlow == null)
+                    {
+                        runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
+                    }
+                }
 
-                DungeonGenerator.Generator.DungeonFlow.GlobalProps.First(p => p.ID == 1231).Count = new IntRange(RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite(), RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite());
+                runtimeDungeon.Generator.DungeonFlow.GlobalProps.First(p => p.ID == 1231).Count = new IntRange(RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite(), RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite());
 
                 GameObject OutOfBounds = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 OutOfBounds.name = "OutOfBounds";
@@ -558,6 +582,8 @@ namespace LethalExpansion
             TimeOfDay.Instance.quotaVariables.deadlineDaysAmount = ConfigManager.Instance.FindItemValue<int>("DeadlineDaysAmount");
             TimeOfDay.Instance.quotaVariables.startingQuota = ConfigManager.Instance.FindItemValue<int>("StartingQuota");
             TimeOfDay.Instance.quotaVariables.startingCredits = ConfigManager.Instance.FindItemValue<int>("StartingCredits");
+            TimeOfDay.Instance.quotaVariables.increaseSteepness = ConfigManager.Instance.FindItemValue<int>("QuotaIncreaseSteepness");
+            TimeOfDay.Instance.quotaVariables.baseIncrease = ConfigManager.Instance.FindItemValue<int>("QuotaBaseIncrease");
             RoundManager.Instance.scrapAmountMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapAmountMultiplier");
             RoundManager.Instance.scrapValueMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapValueMultiplier");
             RoundManager.Instance.mapSizeMultiplier = ConfigManager.Instance.FindItemValue<float>("MapSizeMultiplier");

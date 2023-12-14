@@ -69,6 +69,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmine instand explode when a player walk on them (Vanilla bug).
 
 ## Changes :
+- 1.2.4
+	- Added two settings to configure the quota increment.
+	- Finished the Workaround for moons made with old versions of the SDK.
 - 1.2.3
 	- Added a Workaround to keep minimal compatibility with moons made with old versions of the SDK and avoid crashing.
 - 1.2.2
