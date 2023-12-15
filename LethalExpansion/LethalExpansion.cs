@@ -38,10 +38,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.2.5";
+        private const string VersionString = "1.2.6";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 2, 5)
+            new Version(1, 2, 6)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -337,7 +337,7 @@ namespace LethalExpansion
                             var DiageticBackground = mainPrefab.transform.Find("Systems/Audio/DiageticBackground");
                             if(DiageticBackground != null)
                             {
-                                DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                                DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                             }
                         }
                     }
@@ -360,17 +360,17 @@ namespace LethalExpansion
                     var ItemShip = DropShip.transform.Find("ItemShip");
                     if(ItemShip != null)
                     {
-                        ItemShip.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                        ItemShip.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                     }
                     var ItemShipMusicClose = DropShip.transform.Find("ItemShip/Music");
                     if(ItemShipMusicClose != null)
                     {
-                        ItemShipMusicClose.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                        ItemShipMusicClose.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                     }
                     var ItemShipMusicFar = DropShip.transform.Find("ItemShip/Music/Music (1)");
                     if (ItemShipMusicFar != null)
                     {
-                        ItemShipMusicFar.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(g => g.name == "Master");
+                        ItemShipMusicFar.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                     }
                 }
                 RuntimeDungeon runtimeDungeon = GameObject.FindObjectOfType<RuntimeDungeon>(false);

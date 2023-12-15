@@ -66,6 +66,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Entrance and ship scannodes don't work.
 
 ## Changes :
+- 1.2.6
+	- More retrocompatibility with outdated modules.
+	- Fixing some exceptions when missing ScanNode on new scraps.
 - 1.2.5
 	- Better sound loader for new scraps and SDK asset banks.
 - 1.2.4

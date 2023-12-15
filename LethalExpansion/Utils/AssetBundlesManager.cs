@@ -75,7 +75,7 @@ namespace LethalExpansion.Utils
                         {
                             if(!assetBundles.Any(b => b.Value.Item2.modName == modManifest.modName))
                             {
-                                LethalExpansion.Log.LogInfo($"Module found: {modManifest.modName} v{modManifest.GetVersion()}");
+                                LethalExpansion.Log.LogInfo($"Module found: {modManifest.modName} v{(modManifest.GetVersion() != null ? modManifest.GetVersion().ToString() : "0.0.0.0" )}");
 
                                 assetBundles.Add(Path.GetFileNameWithoutExtension(file).ToLower(), (loadedBundle, modManifest));
                             }

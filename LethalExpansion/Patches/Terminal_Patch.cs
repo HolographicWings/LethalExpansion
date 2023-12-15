@@ -105,7 +105,7 @@ namespace LethalExpansion.Patches
                             Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
 
                             AudioSource audioSource = newScrap.prefab.GetComponent<AudioSource>();
-                            audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master");
+                            audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
 
                             AudioClip _tpmGrabSFX = null;
                             if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.grabSFX))
@@ -157,7 +157,7 @@ namespace LethalExpansion.Patches
                                 }
                             }
                             AssetGather.Instance.AddScrap(tmpItem);
-                            LethalExpansion.Log.LogInfo(newScrap.itemName + " Scrap added.");
+                            LethalExpansion.Log.LogInfo($"{newScrap.itemName} Scrap added.");
                         }
                     }
                 }
@@ -179,7 +179,7 @@ namespace LethalExpansion.Patches
                         {
                             if (!AssetBundlesManager.Instance.BundlesLoaded(newMoon.RequiredBundles))
                             {
-                                LethalExpansion.Log.LogWarning(newMoon.MoonName + " can't be added, missing bundles.");
+                                LethalExpansion.Log.LogWarning($"{newMoon.MoonName} can't be added, missing bundles.");
                             }
                             else
                             {
@@ -379,7 +379,7 @@ namespace LethalExpansion.Patches
 
             routeKeyword.compatibleNouns = uniqueNouns.ToArray();
 
-            LethalExpansion.Log.LogDebug("Hotfix: " + duplicateCount + " duplicated route(s) removed");
+            LethalExpansion.Log.LogDebug($"Hotfix: {duplicateCount} duplicated route(s) removed");
         }
         private static void UpdateMoonsRoutePrices()
         {
@@ -460,7 +460,7 @@ namespace LethalExpansion.Patches
             CompatibleNoun[] nouns = routeKeyword.compatibleNouns;
             if (!__instance.moonsCatalogueList.Any(level => level.name.Contains(moonName)) && !nouns.Any(level => level.noun.name.Contains(moonName)))
             {
-                LethalExpansion.Log.LogInfo(moonName + " moon not exist.");
+                LethalExpansion.Log.LogInfo($"{moonName} moon not exist.");
                 return;
             }
             for (int i = 0; i < __instance.moonsCatalogueList.Length; i++)
@@ -480,11 +480,11 @@ namespace LethalExpansion.Patches
             if (!__instance.moonsCatalogueList.Any(level => level.name.Contains(moonName)) &&
                 !routeKeyword.compatibleNouns.Any(level => level.noun.name.Contains(moonName)))
             {
-                LethalExpansion.Log.LogInfo(moonName + " moon removed.");
+                LethalExpansion.Log.LogInfo($"{moonName} moon removed.");
             }
             else
             {
-                LethalExpansion.Log.LogInfo(moonName + " moon failed to remove.");
+                LethalExpansion.Log.LogInfo($"{moonName} moon failed to remove.");
             }
         }
         private static void SaveFireExitAmounts()
