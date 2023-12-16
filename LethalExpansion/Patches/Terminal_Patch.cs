@@ -76,7 +76,7 @@ namespace LethalExpansion.Patches
                         {
                             foreach (var a in _tmp.Item2.assetBank.AudioClips())
                             {
-                                AssetGather.Instance.AddAudioClip(bundle.Value.Item1.LoadAsset<AudioClip>(a.AudioClipPath));
+                                AssetGather.Instance.AddAudioClip(a.AudioClipName, bundle.Value.Item1.LoadAsset<AudioClip>(a.AudioClipPath));
                             }
                             foreach (var p in _tmp.Item2.assetBank.PlanetPrefabs())
                             {

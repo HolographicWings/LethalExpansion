@@ -94,6 +94,13 @@ namespace LethalExpansion.Utils
                 audioClips.Add(clip.name, clip);
             }
         }
+        public void AddAudioClip(string name, AudioClip clip)
+        {
+            if (clip != null && !audioClips.ContainsKey(name) && !audioClips.ContainsValue(clip))
+            {
+                audioClips.Add(name, clip);
+            }
+        }
         #endregion
         #region Audio Mixers
         public void AddAudioMixer(AudioMixer mixer)
@@ -118,6 +125,13 @@ namespace LethalExpansion.Utils
             if (prefab != null && !planetPrefabs.ContainsKey(prefab.name) && !planetPrefabs.ContainsValue(prefab))
             {
                 planetPrefabs.Add(prefab.name, prefab);
+            }
+        }
+        public void AddPlanetPrefabs(string name, GameObject prefab)
+        {
+            if (prefab != null && !planetPrefabs.ContainsKey(name) && !planetPrefabs.ContainsValue(prefab))
+            {
+                planetPrefabs.Add(name, prefab);
             }
         }
         #endregion

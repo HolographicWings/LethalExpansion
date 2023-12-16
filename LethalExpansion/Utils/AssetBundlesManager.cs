@@ -33,32 +33,37 @@ namespace LethalExpansion.Utils
         {
             return assetBundles[name.ToLower()];
         }
+        public DirectoryInfo modPath = new DirectoryInfo(Assembly.GetExecutingAssembly().Location);
+        public DirectoryInfo modDirectory;
+        public DirectoryInfo pluginsDirectory;
         public void LoadAllAssetBundles()
         {
-            string localPath;
-            if (Assembly.GetExecutingAssembly().Location.Contains("HolographicWings-LethalExpansion"))
+            modDirectory = modPath.Parent;
+            pluginsDirectory = modDirectory;
+
+            while (pluginsDirectory != null && pluginsDirectory.Name != "plugins")
             {
-                localPath = Assembly.GetExecutingAssembly().Location.Replace(@"HolographicWings-LethalExpansion\LethalExpansion.dll", string.Empty);
-                if(Directory.Exists(Application.dataPath.Replace("Lethal Company_Data", @"BepInEx\plugins")))
-                {
-                    foreach (string file in Directory.GetFiles(Application.dataPath.Replace("Lethal Company_Data", @"BepInEx\plugins"), "*.lem", SearchOption.AllDirectories))
-                    {
-                        LoadBundle(file);
-                    }
-                }
+                pluginsDirectory = pluginsDirectory.Parent;
+            }
+
+            if (pluginsDirectory != null)
+            {
+                LethalExpansion.Log.LogInfo("Plugins folder found: " + pluginsDirectory.FullName);
             }
             else
             {
-                localPath = Assembly.GetExecutingAssembly().Location.Replace(@"LethalExpansion.dll", string.Empty);
+                LethalExpansion.Log.LogWarning("Mod is not in a plugins folder.");
+                return;
             }
-            foreach (string file in Directory.GetFiles(localPath, "*.lem", SearchOption.AllDirectories))
+
+            foreach (string file in Directory.GetFiles(pluginsDirectory.FullName, "*.lem", SearchOption.AllDirectories))
             {
                 LoadBundle(file);
             }
         }
         public void LoadBundle(string file)
         {
-            if(forcedNative.Contains(Path.GetFileNameWithoutExtension(file)) && !(file.Contains(@"plugins\HolographicWings-LethalExpansion") || file.Contains(@"plugins\LethalExpansion")))
+            if (forcedNative.Contains(Path.GetFileNameWithoutExtension(file)) && !file.Contains(modDirectory.FullName))
             {
                 LethalExpansion.Log.LogWarning($"Illegal use of reserved Asset Bundle name: {Path.GetFileNameWithoutExtension(file)} at: {file}.");
                 return;
