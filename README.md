@@ -70,6 +70,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 
 ## Changes :
 - 1.2.7
+	- Wateridge optimization first pass.
 	- Added Brutal Company Plus Compatibility.
 	- Several improvement in scrap and moon loaders.
 	- Security against template module overwrite.
