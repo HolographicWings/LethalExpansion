@@ -66,6 +66,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.2.10
+	- Fixed broken quota settings from 1.2.7.
 - 1.2.9
 	- Reworked the assetbundles loading (again).
 	- Fixed audio file registered with another name don't register properly.

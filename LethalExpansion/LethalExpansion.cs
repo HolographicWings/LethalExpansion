@@ -39,12 +39,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.2.9";
+        private const string VersionString = "1.2.10";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 2, 7),
-            new Version(1, 2, 8),
-            new Version(1, 2, 9)
+            new Version(1, 2, 10)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -587,7 +585,7 @@ namespace LethalExpansion
             TimeOfDay.Instance.globalTimeSpeedMultiplier = ConfigManager.Instance.FindItemValue<float>("GlobalTimeSpeedMultiplier");
             TimeOfDay.Instance.lengthOfHours = ConfigManager.Instance.FindItemValue<int>("LengthOfHours");
             TimeOfDay.Instance.numberOfHours = ConfigManager.Instance.FindItemValue<int>("NumberOfHours");
-            if(ConfigManager.Instance.FindItemValue<bool>("BrutalCompanyPlusCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "BrutalCompanyPlus"))
+            if(!ConfigManager.Instance.FindItemValue<bool>("BrutalCompanyPlusCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "BrutalCompanyPlus"))
             {
                 TimeOfDay.Instance.quotaVariables.deadlineDaysAmount = ConfigManager.Instance.FindItemValue<int>("DeadlineDaysAmount");
                 TimeOfDay.Instance.quotaVariables.startingQuota = ConfigManager.Instance.FindItemValue<int>("StartingQuota");
