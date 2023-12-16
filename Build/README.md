@@ -66,6 +66,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.2.8
+	- Ajusted default spawn weight for new scraps.
+	- Ajusted version checker.
 - 1.2.7
 	- Overall micro optimizations of assets made with SDK.
 	- Wateridge optimization first pass.
