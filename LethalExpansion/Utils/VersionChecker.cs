@@ -31,7 +31,7 @@ namespace LethalExpansion.Utils
 
         private static void CompareVersions(string onlineVersion)
         {
-            if (!LethalExpansion.ModVersion.ToString().Equals(onlineVersion))
+            if (LethalExpansion.ModVersion < Version.Parse(onlineVersion))
             {
                 PopupManager.Instance.InstantiatePopup("Update", "Lethal Expansion is not up to date " + onlineVersion, "Update", "Ignore", new UnityAction(() => { Application.OpenURL("https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/"); }));
             }
