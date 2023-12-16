@@ -24,6 +24,11 @@ namespace LethalExpansion.Utils
         }
         public AssetBundle mainAssetBundle = AssetBundle.LoadFromFile(Assembly.GetExecutingAssembly().Location.Replace("LethalExpansion.dll", "lethalexpansion.lem"));
         public Dictionary<String, (AssetBundle, ModManifest)> assetBundles = new Dictionary<String, (AssetBundle, ModManifest)>();
+        public readonly string[] forcedNative = new string[]
+        {
+            "templatemod",
+            "oldseaport"
+        };
         public (AssetBundle, ModManifest) Load(string name)
         {
             return assetBundles[name.ToLower()];
@@ -53,6 +58,11 @@ namespace LethalExpansion.Utils
         }
         public void LoadBundle(string file)
         {
+            if(forcedNative.Contains(Path.GetFileNameWithoutExtension(file)) && !(file.Contains(@"plugins\HolographicWings-LethalExpansion") || file.Contains(@"plugins\LethalExpansion")))
+            {
+                LethalExpansion.Log.LogWarning($"Illegal use of reserved Asset Bundle name: {Path.GetFileNameWithoutExtension(file)} at: {file}.");
+                return;
+            }
             if (Path.GetFileName(file) != "lethalexpansion.lem")
             {
                 if (!assetBundles.ContainsKey(Path.GetFileNameWithoutExtension(file)))
@@ -118,6 +128,17 @@ namespace LethalExpansion.Utils
                 }
             }
             return true;
+        }
+        public bool IncompatibleBundlesLoaded(string[] bundleNames)
+        {
+            foreach(string bundleName in bundleNames)
+            {
+                if (assetBundles.ContainsKey(bundleName.ToLower()))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

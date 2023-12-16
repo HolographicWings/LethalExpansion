@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace LethalExpansion.Utils
@@ -27,7 +28,7 @@ namespace LethalExpansion.Utils
             }
         }
         List<PopupObject> popups = new List<PopupObject>();
-        public void InstantiatePopup(string title = "Popup", string content = "", string button1 = "Ok", string button2 = "Cancel", UnityAction button1Action = null, UnityAction button2Action = null, bool button1Destroy = true, bool button2Destroy = true, bool dontDestroyOnLoad = false)
+        public void InstantiatePopup(string title = "Popup", string content = "", string button1 = "Ok", string button2 = "Cancel", UnityAction button1Action = null, UnityAction button2Action = null, bool button1Destroy = true, bool button2Destroy = true, Scene sceneFocus = default, bool dontDestroyOnLoad = false)
         {
             var canvas = GameObject.FindAnyObjectByType<Canvas>();
             if (canvas == null)
@@ -56,6 +57,10 @@ namespace LethalExpansion.Utils
                 if(button2Destroy)
                 {
                     _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
+                }
+                if(sceneFocus != null && sceneFocus != default && sceneFocus.isLoaded)
+                {
+                    SceneManager.MoveGameObjectToScene(_tmp, sceneFocus);
                 }
                 if (dontDestroyOnLoad)
                 {

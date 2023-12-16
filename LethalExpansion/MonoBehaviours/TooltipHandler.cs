@@ -33,7 +33,7 @@ public class TooltipHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         if (isPointerOver)
         {
             //ModSettingsToolTipPanel.anchoredPosition = new Vector2(-30, this.GetComponent<RectTransform>().anchoredPosition.y + 180);
-            ModSettingsToolTipPanel.anchoredPosition = new Vector2(-30, this.GetComponent<RectTransform>().anchoredPosition.y + 180+115);
+            ModSettingsToolTipPanel.anchoredPosition = new Vector2(-30, this.GetComponent<RectTransform>().anchoredPosition.y + -80);
 
             description = ConfigManager.Instance.FindDescription(index);
             (bool, bool) info = ConfigManager.Instance.FindNetInfo(index);

@@ -63,9 +63,17 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmines stills bip if a player walk on them when theres already an item placed on it.
 - Eclypse in new moons from SDK appears purple.
 - Landmine instand explode when a player walk on them (Vanilla bug).
-- Entrance and ship scannodes don't work.
+- Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.2.7
+	- Added Brutal Company Plus Compatibility.
+	- Several improvement in scrap and moon loaders.
+	- Security against template module overwrite.
+	- Added a timeout before kick clients who don't answer to network sync packets (Not working).
+	- Improved Configurable Popups focus.
+	- Fixed external scan nodes.
+	- Fixed custom audio files importation issues.
 - 1.2.6
 	- More retrocompatibility with outdated modules.
 	- Fixing some exceptions when missing ScanNode on new scraps.

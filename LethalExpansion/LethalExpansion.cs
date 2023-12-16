@@ -34,21 +34,23 @@ namespace LethalExpansion
 {
     [BepInPlugin(PluginGUID, PluginName, VersionString)]
     [BepInDependency("me.swipez.melonloader.morecompany", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("BrutalCompanyPlus", BepInDependency.DependencyFlags.SoftDependency)]
     public class LethalExpansion : BaseUnityPlugin
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.2.6";
+        private const string VersionString = "1.2.7";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 2, 6)
+            new Version(1, 2, 7)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
             { "com.sinai.unityexplorer",compatibility.medium },
             { "HDLethalCompany",compatibility.good },
             { "LC_API",compatibility.good },
-            { "me.swipez.melonloader.morecompany",compatibility.unknown }
+            { "me.swipez.melonloader.morecompany",compatibility.unknown },
+            { "BrutalCompanyPlus",compatibility.unknown }
         };
         private enum compatibility
         {
@@ -60,6 +62,8 @@ namespace LethalExpansion
             critical = 5,
             incompatible = 6
         }
+        List<PluginInfo> loadedPlugins = new List<PluginInfo>();
+
         public static readonly int[] CompatibleGameVersions = {45};
 
         public static bool sessionWaiting = true;
@@ -87,7 +91,7 @@ namespace LethalExpansion
 
 
             Logger.LogInfo("Getting other plugins list");
-            List<PluginInfo> loadedPlugins = GetLoadedPlugins();
+            loadedPlugins = GetLoadedPlugins();
             foreach (var plugin in loadedPlugins)
             {
                 if (plugin.Metadata.GUID != PluginGUID)
@@ -131,7 +135,9 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonPriceInCatalogue", false, "HUD", "Display the route price of Moons in the Terminal's Moon Catalogue.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("QuotaIncreaseSteepness", 16, "Expeditions", "Change the Quota Increase Steepness (Highter = more exponential increase).", 0, 32, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("QuotaBaseIncrease", 100, "Expeditions", "Change the Quota Base Increase.", 0, 300, sync: true));
-            
+            ConfigManager.Instance.AddItem(new ConfigItem("KickPlayerWithoutMod", false, "Lobby", "Kick the players without Lethal Expansion installer. (Will be kicked anyway if LoadModules is True)", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("BrutalCompanyPlusCompatibility", false, "Compatibility", "Leave Brutal Company Plus control the Quota settings", sync: true));
+
             ConfigManager.Instance.ReadConfig();
 
             Config.SettingChanged += ConfigSettingChanged;
@@ -232,7 +238,7 @@ namespace LethalExpansion
 
                 if(lastKickReason != null && lastKickReason.Length > 0)
                 {
-                    PopupManager.Instance.InstantiatePopup("Kicked from Lobby", $"You have been kicked\r\nReason: {lastKickReason}", button2: "Ignore");
+                    PopupManager.Instance.InstantiatePopup("Kicked from Lobby", $"You have been kicked\r\nReason: {lastKickReason}", button2: "Ignore", sceneFocus:scene);
                 }
             }
             if (scene.name == "CompanyBuilding")
@@ -579,11 +585,14 @@ namespace LethalExpansion
             TimeOfDay.Instance.globalTimeSpeedMultiplier = ConfigManager.Instance.FindItemValue<float>("GlobalTimeSpeedMultiplier");
             TimeOfDay.Instance.lengthOfHours = ConfigManager.Instance.FindItemValue<int>("LengthOfHours");
             TimeOfDay.Instance.numberOfHours = ConfigManager.Instance.FindItemValue<int>("NumberOfHours");
-            TimeOfDay.Instance.quotaVariables.deadlineDaysAmount = ConfigManager.Instance.FindItemValue<int>("DeadlineDaysAmount");
-            TimeOfDay.Instance.quotaVariables.startingQuota = ConfigManager.Instance.FindItemValue<int>("StartingQuota");
-            TimeOfDay.Instance.quotaVariables.startingCredits = ConfigManager.Instance.FindItemValue<int>("StartingCredits");
-            TimeOfDay.Instance.quotaVariables.increaseSteepness = ConfigManager.Instance.FindItemValue<int>("QuotaIncreaseSteepness");
-            TimeOfDay.Instance.quotaVariables.baseIncrease = ConfigManager.Instance.FindItemValue<int>("QuotaBaseIncrease");
+            if(ConfigManager.Instance.FindItemValue<bool>("BrutalCompanyPlusCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "BrutalCompanyPlus"))
+            {
+                TimeOfDay.Instance.quotaVariables.deadlineDaysAmount = ConfigManager.Instance.FindItemValue<int>("DeadlineDaysAmount");
+                TimeOfDay.Instance.quotaVariables.startingQuota = ConfigManager.Instance.FindItemValue<int>("StartingQuota");
+                TimeOfDay.Instance.quotaVariables.startingCredits = ConfigManager.Instance.FindItemValue<int>("StartingCredits");
+                TimeOfDay.Instance.quotaVariables.baseIncrease = ConfigManager.Instance.FindItemValue<int>("QuotaBaseIncrease");
+                TimeOfDay.Instance.quotaVariables.increaseSteepness = ConfigManager.Instance.FindItemValue<int>("QuotaIncreaseSteepness");
+            }
             RoundManager.Instance.scrapAmountMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapAmountMultiplier");
             RoundManager.Instance.scrapValueMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapValueMultiplier");
             RoundManager.Instance.mapSizeMultiplier = ConfigManager.Instance.FindItemValue<float>("MapSizeMultiplier");

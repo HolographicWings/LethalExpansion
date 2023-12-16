@@ -51,9 +51,8 @@ namespace LethalExpansion.Patches
 
                         foreach (var newScrap in bundle2.Item2.scraps)
                         {
-                            if (newScrap != null && newScrap.prefab != null)
+                            if (newScrap != null && newScrap.prefab != null && (newScrap.RequiredBundles == null || AssetBundlesManager.Instance.BundlesLoaded(newScrap.RequiredBundles)) && (newScrap.IncompatibleBundles == null || !AssetBundlesManager.Instance.IncompatibleBundlesLoaded(newScrap.IncompatibleBundles)))
                             {
-
                                 Item tmpItem = ScriptableObject.CreateInstance<Item>();
 
                                 tmpItem.name = newScrap.name;
@@ -67,7 +66,11 @@ namespace LethalExpansion.Patches
                                 CheckAndRemoveIllegalComponents(newScrap.prefab.transform, scrapPrefabComponentWhitelist);
                                 tmpItem.spawnPrefab = newScrap.prefab;
 
+                                tmpItem.twoHanded = newScrap.twoHanded;
+                                tmpItem.twoHandedAnimation = newScrap.twoHandedAnimation;
                                 tmpItem.requiresBattery = newScrap.requiresBattery;
+                                tmpItem.isConductiveMetal = newScrap.isConductiveMetal;
+
                                 tmpItem.itemIcon = scrapSprite;
                                 tmpItem.syncGrabFunction = false;
                                 tmpItem.syncUseFunction = false;

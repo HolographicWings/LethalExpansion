@@ -26,6 +26,10 @@ namespace LethalExpansion.Utils
 
                     if(destination == -1 || (ulong)destination == RoundManager.Instance.NetworkManager.LocalClientId)
                     {
+                        if(sender != 0)
+                        {
+                            NetworkPacketManager.Instance.CancelTimeout((long)sender);
+                        }
                         LethalExpansion.Log.LogInfo(message);
                         switch (type)
                         {
