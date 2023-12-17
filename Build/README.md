@@ -64,10 +64,13 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Eclypse in new moons from SDK appears purple.
 - Landmine instand explode when a player walk on them (Vanilla bug).
 - Kicking a client after timeout is not working.
+- Item DropShip are not synced through network and will land only for Host.
 
 ## Changes :
+- 1.2.14
+	- Attempt to fix generation desync once and for all!
 - 1.2.13
-	- Attempt issue to join someone already orbitting a modded moon.
+	- Attempt to fix issue preventing to join someone already orbitting a modded moon.
 	- Temporarily disabled the Version checker popup that was appearing sometimes outside of the Main Menu.
 - 1.2.12
 	- Attempt to fix Weather desync.

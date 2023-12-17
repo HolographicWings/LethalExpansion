@@ -130,6 +130,11 @@ namespace LethalExpansion.Patches
                     LethalExpansion.Log.LogError(ex.Message);
                 }
             }
+            /*LethalExpansion.Log.LogInfo("1");
+            var objtest = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/itemshipanimcontainer.prefab");
+            GameObject.DontDestroyOnLoad(objtest);
+            __instance.GetComponent<NetworkManager>().PrefabHandler.AddNetworkPrefab(objtest);
+            LethalExpansion.Log.LogInfo("2");*/
         }
         private static List<Type> scrapPrefabComponentWhitelist = new List<Type> {
             //Base

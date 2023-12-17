@@ -1,6 +1,8 @@
 ﻿using BepInEx.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace LethalExpansion.Utils
@@ -289,10 +291,10 @@ namespace LethalExpansion.Utils
                     switch (type)
                     {
                         case 'i':
-                            items[index].Value = int.Parse(value);
+                            items[index].Value = int.Parse(value, CultureInfo.InvariantCulture);
                             break;
                         case 'f':
-                            items[index].Value = float.Parse(value);
+                            items[index].Value = float.Parse(value, CultureInfo.InvariantCulture);
                             break;
                         case 'b':
                             items[index].Value = bool.Parse(value);

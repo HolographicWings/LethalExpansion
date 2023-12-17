@@ -1,4 +1,5 @@
 ﻿using LethalExpansion.Patches;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -136,21 +137,21 @@ namespace LethalExpansion.Utils
                                 switch (item.type.Name)
                                 {
                                     case "Int32":
-                                        config += 'i';
+                                        config += "i" + ((int)item.Value).ToString(CultureInfo.InvariantCulture);
                                         break;
                                     case "Single":
-                                        config += 'f';
+                                        config += "f" + ((float)item.Value).ToString(CultureInfo.InvariantCulture);
                                         break;
                                     case "Boolean":
-                                        config += 'b';
+                                        config += "b" + ((bool)item.Value);
                                         break;
                                     case "String":
-                                        config += 's';
+                                        config += "s" + item;
                                         break;
                                     default:
                                         break;
                                 }
-                                config += item.Value + "&";
+                                config += "&";
                             }
                             config = config.Remove(config.Length - 1);
                             NetworkPacketManager.Instance.sendPacket(packetType.data, "hostconfig", config, (long)sender);

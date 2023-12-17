@@ -5,6 +5,7 @@ using System.Reflection;
 using UnityEngine;
 using LethalSDK.ScriptableObjects;
 using System.Linq;
+using System.Diagnostics;
 
 namespace LethalExpansion.Utils
 {
@@ -55,6 +56,10 @@ namespace LethalExpansion.Utils
                 LethalExpansion.Log.LogWarning("Mod is not in a plugins folder.");
                 return;
             }
+            if (modDirectory.FullName == pluginsDirectory.FullName)
+            {
+                LethalExpansion.Log.LogWarning($"LethalExpansion is Rooting the Plugins folder, this is not recommended. {modDirectory.FullName}");
+            }
 
             foreach (string file in Directory.GetFiles(pluginsDirectory.FullName, "*.lem", SearchOption.AllDirectories))
             {
@@ -72,10 +77,13 @@ namespace LethalExpansion.Utils
             {
                 if (!assetBundles.ContainsKey(Path.GetFileNameWithoutExtension(file)))
                 {
+                    Stopwatch stopwatch = new Stopwatch();
                     AssetBundle loadedBundle = null;
                     try
                     {
+                        stopwatch.Start();
                         loadedBundle = AssetBundle.LoadFromFile(file);
+                        stopwatch.Stop();
                     }
                     catch (Exception e)
                     {
@@ -90,7 +98,7 @@ namespace LethalExpansion.Utils
                         {
                             if(!assetBundles.Any(b => b.Value.Item2.modName == modManifest.modName))
                             {
-                                LethalExpansion.Log.LogInfo($"Module found: {modManifest.modName} v{(modManifest.GetVersion() != null ? modManifest.GetVersion().ToString() : "0.0.0.0" )}");
+                                LethalExpansion.Log.LogInfo($"Module found: {modManifest.modName} v{(modManifest.GetVersion() != null ? modManifest.GetVersion().ToString() : "0.0.0.0" )} Loaded in {stopwatch.ElapsedMilliseconds}ms");
 
                                 assetBundles.Add(Path.GetFileNameWithoutExtension(file).ToLower(), (loadedBundle, modManifest));
                             }
