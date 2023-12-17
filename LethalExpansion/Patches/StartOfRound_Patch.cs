@@ -4,15 +4,26 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static LethalExpansion.Utils.NetworkPacketManager;
+using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(StartOfRound))]
     internal class StartOfRound_Patch
     {
-        [HarmonyPatch(nameof(StartOfRound.StartGame))]
+        public static int[] currentWeathers = new int[0];
+        [HarmonyPatch("Awake")]
         [HarmonyPostfix]
         public static void Awake_Postfix(StartOfRound __instance)
+        {
+            LethalExpansion.Log.LogInfo(__instance.randomMapSeed);
+            __instance.randomMapSeed = 464657;
+            LethalExpansion.Log.LogInfo(__instance.randomMapSeed);
+        }
+        [HarmonyPatch(nameof(StartOfRound.StartGame))]
+        [HarmonyPostfix]
+        public static void StartGame_Postfix(StartOfRound __instance)
         {
             if (__instance.currentLevel.name.StartsWith("Assets/Mods/"))
             {
@@ -22,7 +33,7 @@ namespace LethalExpansion.Patches
         }
         [HarmonyPatch("OnPlayerConnectedClientRpc")]
         [HarmonyPostfix]
-        static void OnPlayerConnectedClientRpc_Postfix(StartOfRound __instance, ulong clientId)
+        static void OnPlayerConnectedClientRpc_Postfix(StartOfRound __instance, ulong clientId, int connectedPlayers, ulong[] connectedPlayerIdsOrdered, int assignedPlayerObjectId, int serverMoneyAmount, int levelID, int profitQuota, int timeUntilDeadline, int quotaFulfilled, int randomSeed)
         {
             if (!LethalExpansion.ishost)
             {
@@ -43,6 +54,42 @@ namespace LethalExpansion.Patches
             if (obj != null)
             {
                 obj.ResetScrolling();
+            }
+        }
+        [HarmonyPatch(nameof(StartOfRound.SetPlanetsWeather))]
+        [HarmonyPrefix]
+        static bool SetPlanetsWeather_Prefix(StartOfRound __instance)
+        {
+            if(__instance.IsHost)
+            {
+                LethalExpansion.weathersReadyToShare = false;
+                return true;
+            }
+            else
+            {
+                if (LethalExpansion.alreadypatched)
+                {
+                    NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "hostweathers", string.Empty, 0);
+                }
+                return false;
+            }
+        }
+        [HarmonyPatch(nameof(StartOfRound.SetPlanetsWeather))]
+        [HarmonyPostfix]
+        static void SetPlanetsWeather_Postfix(StartOfRound __instance)
+        {
+            if (__instance.IsHost)
+            {
+                currentWeathers = new int[__instance.levels.Length];
+                string weathers = string.Empty;
+                for (int i = 0; i < __instance.levels.Length; i++)
+                {
+                    currentWeathers[i] = (int)__instance.levels[i].currentWeather;
+                    weathers += (int)__instance.levels[i].currentWeather + "&";
+                }
+                weathers = weathers.Remove(weathers.Length - 1);
+                NetworkPacketManager.Instance.sendPacket(packetType.data, "hostweathers", weathers, -1, false);
+                LethalExpansion.weathersReadyToShare = true;
             }
         }
         /*[HarmonyPatch(nameof(StartOfRound.KickPlayer))]

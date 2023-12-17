@@ -70,6 +70,7 @@ namespace LethalExpansion
         public static bool hostDataWaiting = true;
         public static bool ishost = false;
         public static bool alreadypatched = false;
+        public static bool weathersReadyToShare = false;
         public static bool isInGame = false;
 
         public static string lastKickReason = string.Empty;
@@ -112,10 +113,10 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("GlobalTimeSpeedMultiplier", 1.4f, "Time", "Change the global time speed", 0.1f, 3f, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("LengthOfHours", 60, "Time", "Change amount of seconds in one hour", 1, 300));
             ConfigManager.Instance.AddItem(new ConfigItem("NumberOfHours", 18, "Time", "Max lenght of an Expedition in hours. (Begin at 6 AM | 18 = Midnight)", 6, 20));
-            ConfigManager.Instance.AddItem(new ConfigItem("DeadlineDaysAmount", 3, "Expeditions", "Change amount of days for the Quota.", 1, 9, sync: false));
-            ConfigManager.Instance.AddItem(new ConfigItem("StartingCredits", 60, "Expeditions", "Change amount of starting Credit.", 0, 1000, sync: false));
+            ConfigManager.Instance.AddItem(new ConfigItem("DeadlineDaysAmount", 3, "Expeditions", "Change amount of days for the Quota.", 1, 9, sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("StartingCredits", 60, "Expeditions", "Change amount of starting Credit.", 0, 1000, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("MoonsRoutePricesMultiplier", 1f, "Moons", "Change the Cost of the Moon Routes.", 0f, 5f));
-            ConfigManager.Instance.AddItem(new ConfigItem("StartingQuota", 130, "Expeditions", "Change the starting Quota.", 0, 1000, sync: false, optional:true));
+            ConfigManager.Instance.AddItem(new ConfigItem("StartingQuota", 130, "Expeditions", "Change the starting Quota.", 0, 1000, sync: true, optional:true));
             ConfigManager.Instance.AddItem(new ConfigItem("ScrapAmountMultiplier", 1f, "Dungeons", "Change the amount of Scraps in dungeons.", 0f, 10f));
             ConfigManager.Instance.AddItem(new ConfigItem("ScrapValueMultiplier", 0.4f, "Dungeons", "Change the value of Scraps.", 0f, 10f));
             ConfigManager.Instance.AddItem(new ConfigItem("MapSizeMultiplier", 1.5f, "Dungeons", "Change the size of the Dungeons. (Can crash when under 1.0)", 0.8f, 10f));

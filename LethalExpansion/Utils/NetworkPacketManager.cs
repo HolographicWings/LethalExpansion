@@ -23,22 +23,22 @@ namespace LethalExpansion.Utils
                 return _instance;
             }
         }
-        public void sendPacket(packetType type, string header, string packet, long destination = -1)
+        public void sendPacket(packetType type, string header, string packet, long destination = -1, bool waitForAnswer = true)
         {
             HUDManager.Instance.AddTextToChatOnServer($"[sync]{(int)type}|{RoundManager.Instance.NetworkManager.LocalClientId}>{destination}|{header}={packet}[sync]");
-            if (RoundManager.Instance.NetworkManager.IsHost && ConfigManager.Instance.FindItemValue<bool>("LoadModules") || ConfigManager.Instance.FindItemValue<bool>("KickPlayerWithoutMod"))
+            if (waitForAnswer && RoundManager.Instance.NetworkManager.IsHost && ConfigManager.Instance.FindItemValue<bool>("LoadModules") || ConfigManager.Instance.FindItemValue<bool>("KickPlayerWithoutMod"))
             {
                 StartTimeout(destination);
             }
         }
-        public void sendPacket(packetType type, string header, string packet, long[] destinations)
+        public void sendPacket(packetType type, string header, string packet, long[] destinations, bool waitForAnswer = true)
         {
             foreach (int destination in destinations)
             {
                 if(destination != -1)
                 {
                     HUDManager.Instance.AddTextToChatOnServer($"[sync]{(int)type}|{RoundManager.Instance.NetworkManager.LocalClientId}>{destination}|{header}={packet}[sync]");
-                    if (RoundManager.Instance.NetworkManager.IsHost && ConfigManager.Instance.FindItemValue<bool>("LoadModules") || ConfigManager.Instance.FindItemValue<bool>("KickPlayerWithoutMod"))
+                    if (waitForAnswer && RoundManager.Instance.NetworkManager.IsHost && ConfigManager.Instance.FindItemValue<bool>("LoadModules") || ConfigManager.Instance.FindItemValue<bool>("KickPlayerWithoutMod"))
                     {
                         StartTimeout(destination);
                     }

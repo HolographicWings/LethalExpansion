@@ -42,6 +42,7 @@ namespace LethalExpansion.Patches
             UpdateMoonsRoutePrices();
             UpdateMoonsCatalogue(__instance);
             SaveFireExitAmounts();
+            NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "hostweathers", string.Empty, 0);
             LethalExpansion.Log.LogInfo("Terminal Main Patch.");
             //AssetGather.Instance.GetList();
         }

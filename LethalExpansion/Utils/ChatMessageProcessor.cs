@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using LethalExpansion.Patches;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using static LethalExpansion.Utils.NetworkPacketManager;
@@ -59,7 +60,7 @@ namespace LethalExpansion.Utils
         {
             switch (header)
             {
-                case "clientinfo":
+                case "clientinfo": //client receive info request from host
                     if (!LethalExpansion.ishost && sender == 0)
                     {
                         string configPacket = $"{LethalExpansion.ModVersion.ToString()}-";
@@ -71,10 +72,22 @@ namespace LethalExpansion.Utils
                         NetworkPacketManager.Instance.sendPacket(packetType.data, "clientinfo", configPacket, 0);
                     }
                     break;
-                case "hostconfig":
+                case "hostconfig": //host receive config request from client
                     if (LethalExpansion.ishost && sender != 0)
                     {
                         NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "clientinfo", string.Empty, (long)sender);
+                    }
+                    break;
+                case "hostweathers": //host receive weather request from client
+                    if (LethalExpansion.ishost && sender != 0 && LethalExpansion.weathersReadyToShare)
+                    {
+                        string weathers = string.Empty;
+                        foreach (var weather in StartOfRound_Patch.currentWeathers)
+                        {
+                            weathers += weather + "&";
+                        }
+                        weathers = weathers.Remove(weathers.Length - 1);
+                        NetworkPacketManager.Instance.sendPacket(packetType.data, "hostweathers", weathers, (long)sender, false);
                     }
                     break;
                 default:
@@ -86,7 +99,7 @@ namespace LethalExpansion.Utils
         {
             switch (header)
             {
-                case "clientinfo":
+                case "clientinfo": //host receive info from client
                     if (LethalExpansion.ishost && sender != 0)
                     {
                         string[] values = packet.Split('-');
@@ -144,7 +157,7 @@ namespace LethalExpansion.Utils
                         }
                     }
                     break;
-                case "hostconfig":
+                case "hostconfig": //client receive config from host
                     if (!LethalExpansion.ishost && sender == 0)
                     {
                         string[] values = packet.Split('&');
@@ -164,6 +177,25 @@ namespace LethalExpansion.Utils
 
                         LethalExpansion.hostDataWaiting = false;
                         LethalExpansion.Log.LogInfo("Updated config");
+                    }
+                    break;
+                case "hostweathers": //client receive weathers from host
+                    if (!LethalExpansion.ishost && sender == 0)
+                    {
+                        string[] values = packet.Split('&');
+
+                        LethalExpansion.Log.LogInfo("Received host weathers: " + packet);
+
+                        StartOfRound_Patch.currentWeathers = new int[values.Length];
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            int tmp = 0;
+                            if (int.TryParse(values[i], out tmp))
+                            {
+                                StartOfRound_Patch.currentWeathers[i] = tmp;
+                                StartOfRound.Instance.levels[i].currentWeather = (LevelWeatherType)tmp;
+                            }
+                        }
                     }
                     break;
                 case "kickreason":
