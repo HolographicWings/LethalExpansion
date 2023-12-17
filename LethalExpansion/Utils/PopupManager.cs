@@ -28,50 +28,46 @@ namespace LethalExpansion.Utils
             }
         }
         List<PopupObject> popups = new List<PopupObject>();
-        public void InstantiatePopup(string title = "Popup", string content = "", string button1 = "Ok", string button2 = "Cancel", UnityAction button1Action = null, UnityAction button2Action = null, bool button1Destroy = true, bool button2Destroy = true, Scene sceneFocus = default, bool dontDestroyOnLoad = false)
+        public void InstantiatePopup(Scene sceneFocus, string title = "Popup", string content = "", string button1 = "Ok", string button2 = "Cancel", UnityAction button1Action = null, UnityAction button2Action = null, bool button1Destroy = true, bool button2Destroy = true)
         {
-            var canvas = GameObject.FindAnyObjectByType<Canvas>();
-            if (canvas == null)
+            if(sceneFocus != null && sceneFocus.isLoaded)
             {
-                var canvasObject = new GameObject();
-                canvasObject.name = "Canvas";
-                canvas = canvasObject.AddComponent<Canvas>();
-            }
-            var _tmp = GameObject.Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Popup.prefab"), canvas.transform);
-            if(_tmp != null)
-            {
-                _tmp.transform.Find("DragAndDropSurface").gameObject.AddComponent<SettingMenu_DragAndDrop>().rectTransform = _tmp.GetComponent<RectTransform>();
-                _tmp.transform.Find("CloseButton").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
-                if(button1Action != null)
+                var canvas = GameObject.FindAnyObjectByType<Canvas>();
+                if (canvas == null)
                 {
-                    _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(button1Action);
+                    var canvasObject = new GameObject();
+                    canvasObject.name = "Canvas";
+                    canvas = canvasObject.AddComponent<Canvas>();
                 }
-                if (button2Action != null)
+                var _tmp = GameObject.Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Popup.prefab"), canvas.transform);
+                if (_tmp != null)
                 {
-                    _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(button2Action);
-                }
-                if (button1Destroy)
-                {
-                    _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
-                }
-                if(button2Destroy)
-                {
-                    _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
-                }
-                if(sceneFocus != null && sceneFocus != default && sceneFocus.isLoaded)
-                {
+                    _tmp.transform.Find("DragAndDropSurface").gameObject.AddComponent<SettingMenu_DragAndDrop>().rectTransform = _tmp.GetComponent<RectTransform>();
+                    _tmp.transform.Find("CloseButton").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
+                    if (button1Action != null)
+                    {
+                        _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(button1Action);
+                    }
+                    if (button2Action != null)
+                    {
+                        _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(button2Action);
+                    }
+                    if (button1Destroy)
+                    {
+                        _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
+                    }
+                    if (button2Destroy)
+                    {
+                        _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
+                    }
+                    PopupObject _instance = new PopupObject(_tmp, _tmp.transform.Find("Title").GetComponent<TMP_Text>(), _tmp.transform.Find("Panel/MainContent").GetComponent<TMP_Text>(), _tmp.transform.Find("Button1/Text").GetComponent<TMP_Text>(), _tmp.transform.Find("Button2/Text").GetComponent<TMP_Text>());
+                    _instance.title.text = title;
+                    _instance.content.text = content;
+                    _instance.button1.text = button1;
+                    _instance.button2.text = button2;
                     SceneManager.MoveGameObjectToScene(_tmp, sceneFocus);
+                    popups.Add(_instance);
                 }
-                if (dontDestroyOnLoad)
-                {
-                    GameObject.DontDestroyOnLoad(_tmp);
-                }
-                PopupObject _instance = new PopupObject(_tmp, _tmp.transform.Find("Title").GetComponent<TMP_Text>(), _tmp.transform.Find("Panel/MainContent").GetComponent<TMP_Text>(), _tmp.transform.Find("Button1/Text").GetComponent<TMP_Text>(), _tmp.transform.Find("Button2/Text").GetComponent<TMP_Text>());
-                _instance.title.text = title;
-                _instance.content.text = content;
-                _instance.button1.text = button1;
-                _instance.button2.text = button2;
-                popups.Add(_instance);
             }
         }
     }

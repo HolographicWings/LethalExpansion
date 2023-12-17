@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace LethalExpansion.Utils
 {
@@ -13,7 +14,7 @@ namespace LethalExpansion.Utils
     {
         public static async Task CheckVersion()
         {
-            string url = "https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/last.txt";
+            const string url = "https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/last.txt";
 
             using (var httpClient = new HttpClient())
             {
@@ -33,7 +34,7 @@ namespace LethalExpansion.Utils
         {
             if (LethalExpansion.ModVersion < Version.Parse(onlineVersion))
             {
-                PopupManager.Instance.InstantiatePopup("Update", "Lethal Expansion is not up to date " + onlineVersion, "Update", "Ignore", new UnityAction(() => { Application.OpenURL("https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/"); }));
+                PopupManager.Instance.InstantiatePopup(SceneManager.GetSceneByName("MainMenu"), "Update", "Lethal Expansion is not up to date " + onlineVersion, "Update", "Ignore", new UnityAction(() => { Application.OpenURL("https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/"); }));
             }
         }
     }

@@ -92,6 +92,25 @@ namespace LethalExpansion.Patches
                 LethalExpansion.weathersReadyToShare = true;
             }
         }
+        [HarmonyPatch(nameof(StartOfRound.ChangeLevel))]
+        [HarmonyPrefix]
+        static bool ChangeLevel_Prefix(StartOfRound __instance, ref int levelID)
+        {
+            if (levelID >= __instance.levels.Length)
+            {
+                if (LethalExpansion.delayedLevelChange == -1)
+                {
+                    LethalExpansion.delayedLevelChange = levelID;
+                    levelID = 0;
+                }
+                else
+                {
+                    LethalExpansion.Log.LogError($"Error loading moon ID {levelID}.");
+                    levelID = 0;
+                }
+            }
+            return true;
+        }
         /*[HarmonyPatch(nameof(StartOfRound.KickPlayer))]
         [HarmonyPrefix]
         public static bool KickPlayer_Prefix(StartOfRound __instance, int playerObjToKick)

@@ -39,10 +39,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.2.12";
+        private const string VersionString = "1.2.13";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 2, 12)
+            new Version(1, 2, 13)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -72,6 +72,8 @@ namespace LethalExpansion
         public static bool alreadypatched = false;
         public static bool weathersReadyToShare = false;
         public static bool isInGame = false;
+
+        public static int delayedLevelChange = -1;
 
         public static string lastKickReason = string.Empty;
 
@@ -229,17 +231,19 @@ namespace LethalExpansion
                 ishost = false;
                 alreadypatched = false;
 
+                LethalExpansion.delayedLevelChange = -1;
+
                 isInGame = false;
 
                 AssetGather.Instance.AddAudioMixer(GameObject.Find("Canvas/MenuManager").GetComponent<AudioSource>().outputAudioMixerGroup.audioMixer);
 
                 SettingsMenu.Instance.InitSettingsMenu();
 
-                VersionChecker.CheckVersion().GetAwaiter();
+                //VersionChecker.CheckVersion().GetAwaiter();
 
                 if(lastKickReason != null && lastKickReason.Length > 0)
                 {
-                    PopupManager.Instance.InstantiatePopup("Kicked from Lobby", $"You have been kicked\r\nReason: {lastKickReason}", button2: "Ignore", sceneFocus:scene);
+                    PopupManager.Instance.InstantiatePopup(scene, "Kicked from Lobby", $"You have been kicked\r\nReason: {lastKickReason}", button2: "Ignore");
                 }
             }
             if (scene.name == "CompanyBuilding")
