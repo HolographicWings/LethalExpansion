@@ -35,14 +35,15 @@ namespace LethalExpansion
     [BepInPlugin(PluginGUID, PluginName, VersionString)]
     [BepInDependency("me.swipez.melonloader.morecompany", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("BrutalCompanyPlus", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("MoonOfTheDay", BepInDependency.DependencyFlags.SoftDependency)]
     public class LethalExpansion : BaseUnityPlugin
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.2.15";
+        private const string VersionString = "1.2.16";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 2, 15)
+            new Version(1, 2, 16)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -50,7 +51,8 @@ namespace LethalExpansion
             { "HDLethalCompany",compatibility.good },
             { "LC_API",compatibility.good },
             { "me.swipez.melonloader.morecompany",compatibility.unknown },
-            { "BrutalCompanyPlus",compatibility.unknown }
+            { "BrutalCompanyPlus",compatibility.unknown },
+            { "MoonOfTheDay",compatibility.good }
         };
         private enum compatibility
         {

@@ -401,13 +401,14 @@ namespace LethalExpansion.Patches
 
                 foreach (CompatibleNoun noun in routeKeyword.compatibleNouns)
                 {
-                    if (!uniqueNames.Contains(noun.result.name))
+                    if (!uniqueNames.Contains(noun.result.name) || noun.result.name == "Daily Moon" /* MoonOfTheDay 1.0.4 compatibility workaround*/)
                     {
                         uniqueNames.Add(noun.result.name);
                         uniqueNouns.Add(noun);
                     }
                     else
                     {
+                        LethalExpansion.Log.LogDebug($"{noun.result.name} duplicated route removed.");
                         duplicateCount++;
                     }
                 }
