@@ -13,14 +13,7 @@ namespace LethalExpansion.Patches
     internal class StartOfRound_Patch
     {
         public static int[] currentWeathers = new int[0];
-        [HarmonyPatch("Awake")]
-        [HarmonyPostfix]
-        public static void Awake_Postfix(StartOfRound __instance)
-        {
-            LethalExpansion.Log.LogInfo(__instance.randomMapSeed);
-            __instance.randomMapSeed = 464657;
-            LethalExpansion.Log.LogInfo(__instance.randomMapSeed);
-        }
+
         [HarmonyPatch(nameof(StartOfRound.StartGame))]
         [HarmonyPostfix]
         public static void StartGame_Postfix(StartOfRound __instance)
