@@ -69,6 +69,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.2.16
+	- Compatibility patch for MoonOfTheDay mod.
 - 1.2.15
 	- Removed a debuging test i forgot that made the seed always same. (thanks to @MaxWasUnavailable to noticed it)
 - 1.2.14
