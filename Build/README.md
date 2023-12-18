@@ -67,8 +67,10 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Item DropShip are not synced through network and will land only for Host.
 
 ## Changes :
+- 1.2.15
+	- Removed a debuging test i forgot that made the seed always same. (thanks to @MaxWasUnavailable to noticed it)
 - 1.2.14
-	- Attempt to fix generation desync once and for all!
+	- Attempt to fix generation desync once and for all! (Thanks to Olskor to helped me with this issue)
 - 1.2.13
 	- Attempt to fix issue preventing to join someone already orbitting a modded moon.
 	- Temporarily disabled the Version checker popup that was appearing sometimes outside of the Main Menu.
