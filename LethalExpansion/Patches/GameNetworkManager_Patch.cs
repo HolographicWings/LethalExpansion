@@ -94,10 +94,10 @@ namespace LethalExpansion.Patches
                                 audioSource.playOnAwake = false;
                                 audioSource.spatialBlend = 1f;
 
-                                GameObject scanNodeObject = newScrap.prefab.transform.Find("ScanNode").gameObject;
+                                Transform scanNodeObject = newScrap.prefab.transform.Find("ScanNode");
                                 if(scanNodeObject != null)
                                 {
-                                    ScanNodeProperties scanNode = scanNodeObject.AddComponent<ScanNodeProperties>();
+                                    ScanNodeProperties scanNode = scanNodeObject.gameObject.AddComponent<ScanNodeProperties>();
                                     scanNode.maxRange = 13;
                                     scanNode.minRange = 1;
                                     scanNode.headerText = newScrap.itemName;
