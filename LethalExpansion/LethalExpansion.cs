@@ -44,7 +44,8 @@ namespace LethalExpansion
         private const string VersionString = "1.3.1";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 3, 1)
+            new Version(1, 3, 1),
+            new Version(1, 3, 0)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
