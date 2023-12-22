@@ -43,7 +43,7 @@ namespace LethalExpansion.Utils
                 if (_tmp != null)
                 {
                     _tmp.transform.Find("DragAndDropSurface").gameObject.AddComponent<SettingMenu_DragAndDrop>().rectTransform = _tmp.GetComponent<RectTransform>();
-                    _tmp.transform.Find("CloseButton").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
+                    _tmp.transform.Find("CloseButton").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.Destroy(_tmp); });
                     if (button1Action != null)
                     {
                         _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(button1Action);
@@ -54,11 +54,11 @@ namespace LethalExpansion.Utils
                     }
                     if (button1Destroy)
                     {
-                        _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
+                        _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.Destroy(_tmp); });
                     }
                     if (button2Destroy)
                     {
-                        _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.DestroyImmediate(_tmp); });
+                        _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.Destroy(_tmp); });
                     }
                     PopupObject _instance = new PopupObject(_tmp, _tmp.transform.Find("Title").GetComponent<TMP_Text>(), _tmp.transform.Find("Panel/MainContent").GetComponent<TMP_Text>(), _tmp.transform.Find("Button1/Text").GetComponent<TMP_Text>(), _tmp.transform.Find("Button2/Text").GetComponent<TMP_Text>());
                     _instance.title.text = title;

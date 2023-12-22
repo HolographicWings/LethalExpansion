@@ -213,10 +213,12 @@
     <Compile Include="Extenders\DungeonFlow_Extender.cs" />
     <Compile Include="MonoBehaviours\AutoScrollText.cs" />
     <Compile Include="MonoBehaviours\TooltipHandler.cs" />
+    <Compile Include="Patches\AudioReverbTrigger_Patch.cs" />
     <Compile Include="Patches\EntranceTeleport_Patch.cs" />
     <Compile Include="Patches\GameNetworkManager_Patch.cs" />
     <Compile Include="Patches\HUDManager_Patch.cs" />
     <Compile Include="LethalExpansion.cs" />
+    <Compile Include="Patches\InteractTrigger_Patch.cs" />
     <Compile Include="Patches\Landmine_Patch.cs" />
     <Compile Include="Patches\MenuManager_Patch.cs" />
     <Compile Include="Patches\GrabbableObject_Patch.cs" />
@@ -241,6 +243,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="lethalexpansion.lem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Modules\christmasvillage.lem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Modules\oldseaport.lem">

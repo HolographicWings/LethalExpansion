@@ -40,10 +40,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.2.16";
+        private const string VersionString = "1.3.0";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 2, 16)
+            new Version(1, 3, 0)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -88,6 +88,7 @@ namespace LethalExpansion
 
         public GameObject SpaceLight;
         public GameObject terrainfixer;
+        public static Transform currentWaterSurface;
 
         private void Awake()
         {
@@ -138,7 +139,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonWeatherInCatalogue", true, "HUD", "Display the current weather of Moons in the Terminal's Moon Catalogue.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonRankInCatalogue", false, "HUD", "Display the rank of Moons in the Terminal's Moon Catalogue.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonPriceInCatalogue", false, "HUD", "Display the route price of Moons in the Terminal's Moon Catalogue.", sync: true));
-            ConfigManager.Instance.AddItem(new ConfigItem("QuotaIncreaseSteepness", 16, "Expeditions", "Change the Quota Increase Steepness (Highter = more exponential increase).", 0, 32, sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("QuotaIncreaseSteepness", 16, "Expeditions", "Change the Quota Increase Steepness. (Highter = less steep exponential increase)", 0, 32, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("QuotaBaseIncrease", 100, "Expeditions", "Change the Quota Base Increase.", 0, 300, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("KickPlayerWithoutMod", false, "Lobby", "Kick the players without Lethal Expansion installer. (Will be kicked anyway if LoadModules is True)", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("BrutalCompanyPlusCompatibility", false, "Compatibility", "Leave Brutal Company Plus control the Quota settings", sync: true));
@@ -162,6 +163,8 @@ namespace LethalExpansion
             Harmony.PatchAll(typeof(StartOfRound_Patch));
             Harmony.PatchAll(typeof(EntranceTeleport_Patch));
             Harmony.PatchAll(typeof(Landmine_Patch));
+            Harmony.PatchAll(typeof(AudioReverbTrigger_Patch));
+            Harmony.PatchAll(typeof(InteractTrigger_Patch));
             Harmony.PatchAll(typeof(RuntimeDungeon));
             Harmony harmony = new Harmony("LethalExpansion");
             MethodInfo BaboonBirdAI_GrabScrap_Method = AccessTools.Method(typeof(BaboonBirdAI), "GrabScrap", null, null);
@@ -267,11 +270,11 @@ namespace LethalExpansion
 
                 MeshRenderer MonitorWallMeshRenderer = MonitorWall.GetComponent<MeshRenderer>();
 
-                var waterSurface = GameObject.Instantiate(GameObject.Find("Systems/GameSystems/TimeAndWeather/Flooding"));
-                DestroyImmediate(waterSurface.GetComponent<FloodWeather>());
+                GameObject waterSurface = GameObject.Instantiate(GameObject.Find("Systems/GameSystems/TimeAndWeather/Flooding"));
+                Destroy(waterSurface.GetComponent<FloodWeather>());
                 waterSurface.name = "WaterSurface";
                 waterSurface.transform.position = Vector3.zero;
-                waterSurface.SetActive(false);
+                waterSurface.transform.Find("Water").GetComponent<MeshFilter>().sharedMesh = null;
                 SpawnPrefab.Instance.waterSurface = waterSurface;
 
                 /*Material BlueScreenMaterial = new Material(MonitorWallMeshRenderer.materials[1]);
@@ -344,6 +347,7 @@ namespace LethalExpansion
                     {
                         CheckAndRemoveIllegalComponents(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform);
                         GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
+                        currentWaterSurface = mainPrefab.transform.Find("Environment/Water");
                         if (mainPrefab != null)
                         {
                             SceneManager.MoveGameObjectToScene(mainPrefab, scene);
@@ -351,6 +355,14 @@ namespace LethalExpansion
                             if(DiageticBackground != null)
                             {
                                 DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
+                            }
+                            Terrain[] Terrains = mainPrefab.GetComponentsInChildren<Terrain>();
+                            if (Terrains != null && Terrains.Length > 0)
+                            {
+                                foreach(Terrain terrain in Terrains)
+                                {
+                                    terrain.drawInstanced = true;
+                                }
                             }
                         }
                     }
@@ -521,7 +533,10 @@ namespace LethalExpansion
             typeof(SI_WaterSurface),
             typeof(SI_Ladder),
             typeof(SI_ItemDropship),
-            typeof(LockPosition)
+            typeof(SI_NetworkPrefabInstancier),
+            typeof(SI_InteractTrigger),
+            typeof(SI_DamagePlayer),
+            typeof(PlayerShip)
         };
 
         void CheckAndRemoveIllegalComponents(Transform root)
@@ -534,7 +549,7 @@ namespace LethalExpansion
                     if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
                     {
                         LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
-                        GameObject.DestroyImmediate(component);
+                        GameObject.Destroy(component);
                     }
                 }
 
@@ -559,6 +574,10 @@ namespace LethalExpansion
                 if(SpaceLight != null)
                 {
                     SpaceLight.SetActive(true);
+                }
+                if(currentWaterSurface != null)
+                {
+                    currentWaterSurface = null;
                 }
                 Terminal_Patch.ResetFireExitAmounts();
             }

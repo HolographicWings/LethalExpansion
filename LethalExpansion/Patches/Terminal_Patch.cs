@@ -2,6 +2,7 @@
 using HarmonyLib;
 using LethalExpansion.Extenders;
 using LethalExpansion.Utils;
+using LethalSDK.Utils;
 using LethalSDK.ScriptableObjects;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace LethalExpansion.Patches
 
         public static TerminalKeyword routeKeyword;
 
+        public static List<string> newScrapsNames = new List<string>();
+        public static List<string> newMoonsNames = new List<string>();
         public static Dictionary<int, Moon> newMoons = new Dictionary<int, Moon>();
 
         public static void MainPatch(Terminal __instance)
@@ -62,6 +65,9 @@ namespace LethalExpansion.Patches
                     AssetGather.Instance.AddAudioClip(item.pocketSFX);
                     AssetGather.Instance.AddAudioClip(item.throwSFX);
                 }
+                AssetGather.Instance.AddSprites(GameObject.Find("Environment/HangarShip/StartGameLever").GetComponent<InteractTrigger>().hoverIcon);
+                AssetGather.Instance.AddSprites(GameObject.Find("Environment/HangarShip/Terminal/TerminalTrigger/TerminalScript").GetComponent<InteractTrigger>().hoverIcon);
+                AssetGather.Instance.AddSprites(GameObject.Find("Environment/HangarShip/OutsideShipRoom/Ladder/LadderTrigger").GetComponent<InteractTrigger>().hoverIcon);
                 foreach (SelectableLevel level in StartOfRound.Instance.levels)
                 {
                     AssetGather.Instance.AddPlanetPrefabs(level.planetPrefab);
@@ -105,6 +111,11 @@ namespace LethalExpansion.Patches
                         }
                     }
                 }
+                //Interfacing LE and SDK Asset Gathers
+                AssetGatherDialog.audioClips = AssetGather.Instance.audioClips;
+                AssetGatherDialog.audioMixers = AssetGather.Instance.audioMixers;
+                AssetGatherDialog.sprites = AssetGather.Instance.sprites;
+
                 assetsGotten = true;
             }
         }
@@ -122,67 +133,75 @@ namespace LethalExpansion.Patches
                     {
                         if (newScrap != null && newScrap.prefab != null && (newScrap.RequiredBundles == null || AssetBundlesManager.Instance.BundlesLoaded(newScrap.RequiredBundles)) && (newScrap.IncompatibleBundles == null || !AssetBundlesManager.Instance.IncompatibleBundlesLoaded(newScrap.IncompatibleBundles)))
                         {
-                            try
+                            if (!newScrapsNames.Contains(newScrap.itemName))
                             {
-                                Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
-
-                                AudioSource audioSource = newScrap.prefab.GetComponent<AudioSource>();
-                                audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
-
-                                AudioClip _tpmGrabSFX = null;
-                                if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.grabSFX))
+                                try
                                 {
-                                    _tpmGrabSFX = AssetGather.Instance.audioClips[newScrap.grabSFX];
-                                }
-                                tmpItem.grabSFX = _tpmGrabSFX != null ? _tpmGrabSFX : defaultGrabSound;
-                                AudioClip _tpmDropSFX = null;
-                                if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.dropSFX))
-                                {
-                                    _tpmDropSFX = AssetGather.Instance.audioClips[newScrap.dropSFX];
-                                }
-                                tmpItem.dropSFX = _tpmDropSFX != null ? _tpmDropSFX : defaultDropSound;
+                                    Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
 
-                                StartOfRound.Instance.allItemsList.itemsList.Add(tmpItem);
-                                if (newScrap.useGlobalSpawnWeight)
-                                {
-                                    SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
-                                    itemRarity.spawnableItem = tmpItem;
-                                    itemRarity.rarity = newScrap.globalSpawnWeight;
-                                    foreach (SelectableLevel level in __instance.moonsCatalogueList)
+                                    AudioSource audioSource = newScrap.prefab.GetComponent<AudioSource>();
+                                    audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
+
+                                    AudioClip _tpmGrabSFX = null;
+                                    if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.grabSFX))
                                     {
-                                        level.spawnableScrap.Add(itemRarity);
+                                        _tpmGrabSFX = AssetGather.Instance.audioClips[newScrap.grabSFX];
                                     }
-                                }
-                                else
-                                {
-                                    var ddqdz = newScrap.perPlanetSpawnWeight();
-                                    foreach (SelectableLevel level in __instance.moonsCatalogueList)
+                                    tmpItem.grabSFX = _tpmGrabSFX != null ? _tpmGrabSFX : defaultGrabSound;
+                                    AudioClip _tpmDropSFX = null;
+                                    if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.dropSFX))
                                     {
-                                        try
+                                        _tpmDropSFX = AssetGather.Instance.audioClips[newScrap.dropSFX];
+                                    }
+                                    tmpItem.dropSFX = _tpmDropSFX != null ? _tpmDropSFX : defaultDropSound;
+
+                                    StartOfRound.Instance.allItemsList.itemsList.Add(tmpItem);
+                                    if (newScrap.useGlobalSpawnWeight)
+                                    {
+                                        SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                        itemRarity.spawnableItem = tmpItem;
+                                        itemRarity.rarity = newScrap.globalSpawnWeight;
+                                        foreach (SelectableLevel level in __instance.moonsCatalogueList)
                                         {
-                                            if (ddqdz.Any(l => l.SceneName == level.PlanetName))
+                                            level.spawnableScrap.Add(itemRarity);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var ddqdz = newScrap.perPlanetSpawnWeight();
+                                        foreach (SelectableLevel level in __instance.moonsCatalogueList)
+                                        {
+                                            try
                                             {
-                                                var tmp = ddqdz.First(l => l.SceneName == level.PlanetName);
+                                                if (ddqdz.Any(l => l.SceneName == level.PlanetName))
+                                                {
+                                                    var tmp = ddqdz.First(l => l.SceneName == level.PlanetName);
 
-                                                SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
-                                                itemRarity.spawnableItem = tmpItem;
-                                                itemRarity.rarity = tmp.SpawnWeight;
+                                                    SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                                    itemRarity.spawnableItem = tmpItem;
+                                                    itemRarity.rarity = tmp.SpawnWeight;
 
-                                                level.spawnableScrap.Add(itemRarity);
+                                                    level.spawnableScrap.Add(itemRarity);
+                                                }
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                LethalExpansion.Log.LogError(ex.Message);
                                             }
                                         }
-                                        catch (Exception ex)
-                                        {
-                                            LethalExpansion.Log.LogError(ex.Message);
-                                        }
                                     }
+                                    newScrapsNames.Add(tmpItem.itemName);
+                                    AssetGather.Instance.AddScrap(tmpItem);
+                                    LethalExpansion.Log.LogInfo($"{newScrap.itemName} Scrap added.");
                                 }
-                                AssetGather.Instance.AddScrap(tmpItem);
-                                LethalExpansion.Log.LogInfo($"{newScrap.itemName} Scrap added.");
+                                catch (Exception ex)
+                                {
+                                    LethalExpansion.Log.LogError(ex.Message);
+                                }
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                LethalExpansion.Log.LogError(ex.Message);
+                                LethalExpansion.Log.LogWarning($"{newScrap.itemName} Scrap already added.");
                             }
                         }
                     }
@@ -203,185 +222,220 @@ namespace LethalExpansion.Patches
                     {
                         if (newMoon != null && newMoon.IsEnabled)
                         {
-                            try
+                            if (!newMoonsNames.Contains(newMoon.MoonName))
                             {
-                                if ((newMoon.RequiredBundles != null && !AssetBundlesManager.Instance.BundlesLoaded(newMoon.RequiredBundles)) || (newMoon.IncompatibleBundles != null && AssetBundlesManager.Instance.IncompatibleBundlesLoaded(newMoon.IncompatibleBundles)))
+                                try
                                 {
-                                    LethalExpansion.Log.LogWarning($"{newMoon.MoonName} can't be added, missing or incompatible bundles.");
+                                    if ((newMoon.RequiredBundles != null && !AssetBundlesManager.Instance.BundlesLoaded(newMoon.RequiredBundles)) || (newMoon.IncompatibleBundles != null && AssetBundlesManager.Instance.IncompatibleBundlesLoaded(newMoon.IncompatibleBundles)))
+                                    {
+                                        LethalExpansion.Log.LogWarning($"{newMoon.MoonName} can't be added, missing or incompatible bundles.");
+                                    }
+                                    else
+                                    {
+                                        TerminalKeyword confirmKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "confirm");
+                                        TerminalKeyword denyKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "deny");
+                                        TerminalNode cancelRouteNode = null;
+                                        foreach (CompatibleNoun option in routeKeyword.compatibleNouns[0].result.terminalOptions)
+                                        {
+                                            if (option.result.name == "CancelRoute")
+                                            {
+                                                cancelRouteNode = option.result;
+                                                break;
+                                            }
+                                        }
+
+                                        SelectableLevel newLevel = ScriptableObject.CreateInstance<SelectableLevel>();
+
+                                        newLevel.name = newMoon.PlanetName;
+                                        newLevel.PlanetName = newMoon.PlanetName;
+                                        newLevel.sceneName = "InitSceneLaunchOptions";
+                                        newLevel.levelID = StartOfRound.Instance.levels.Length;
+                                        if (newMoon.OrbitPrefabName != null && newMoon.OrbitPrefabName.Length > 0 && AssetGather.Instance.planetPrefabs.ContainsKey(newMoon.OrbitPrefabName))
+                                        {
+                                            newLevel.planetPrefab = AssetGather.Instance.planetPrefabs[newMoon.OrbitPrefabName];
+                                        }
+                                        else
+                                        {
+                                            newLevel.planetPrefab = AssetGather.Instance.planetPrefabs.First().Value;
+                                        }
+                                        newLevel.lockedForDemo = true;
+                                        newLevel.spawnEnemiesAndScrap = newMoon.SpawnEnemiesAndScrap;
+                                        if (newMoon.PlanetDescription != null && newMoon.PlanetDescription.Length > 0)
+                                        {
+                                            newLevel.LevelDescription = newMoon.PlanetDescription;
+                                        }
+                                        else
+                                        {
+                                            newLevel.LevelDescription = string.Empty;
+                                        }
+                                        newLevel.videoReel = newMoon.PlanetVideo;
+                                        if (newMoon.RiskLevel != null && newMoon.RiskLevel.Length > 0)
+                                        {
+                                            newLevel.riskLevel = newMoon.RiskLevel;
+                                        }
+                                        else
+                                        {
+                                            newLevel.riskLevel = string.Empty;
+                                        }
+                                        newLevel.timeToArrive = newMoon.TimeToArrive;
+                                        newLevel.DaySpeedMultiplier = newMoon.DaySpeedMultiplier;
+                                        newLevel.planetHasTime = newMoon.PlanetHasTime;
+                                        newLevel.factorySizeMultiplier = newMoon.FactorySizeMultiplier;
+
+                                        newLevel.overrideWeather = newMoon.OverwriteWeather;
+                                        newLevel.overrideWeatherType = (LevelWeatherType)(int)newMoon.OverwriteWeatherType;
+                                        newLevel.currentWeather = LevelWeatherType.None;
+
+                                        var tmpRandomWeatherTypes1 = newMoon.RandomWeatherTypes();
+                                        List<RandomWeatherWithVariables> tmpRandomWeatherTypes2 = new List<RandomWeatherWithVariables>();
+                                        foreach (var item in tmpRandomWeatherTypes1)
+                                        {
+                                            tmpRandomWeatherTypes2.Add(new RandomWeatherWithVariables() { weatherType = (LevelWeatherType)(int)item.Weather, weatherVariable = item.WeatherVariable1, weatherVariable2 = item.WeatherVariable2 });
+                                        }
+                                        newLevel.randomWeathers = tmpRandomWeatherTypes2.ToArray();
+
+                                        var tmpDungeonFlowTypes1 = newMoon.DungeonFlowTypes();
+                                        List<IntWithRarity> tmpDungeonFlowTypes2 = new List<IntWithRarity>();
+                                        foreach (var item in tmpDungeonFlowTypes1)
+                                        {
+                                            tmpDungeonFlowTypes2.Add(new IntWithRarity() { id = item.ID, rarity = item.Rarity });
+                                        }
+                                        newLevel.dungeonFlowTypes = tmpDungeonFlowTypes2.ToArray();
+
+                                        var tmpSpawnableScrap1 = newMoon.SpawnableScrap();
+                                        List<SpawnableItemWithRarity> tmpSpawnableScrap2 = new List<SpawnableItemWithRarity>();
+                                        foreach (var item in tmpSpawnableScrap1)
+                                        {
+                                            try
+                                            {
+                                                tmpSpawnableScrap2.Add(new SpawnableItemWithRarity() { spawnableItem = AssetGather.Instance.scraps[item.ObjectName], rarity = item.SpawnWeight });
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                LethalExpansion.Log.LogError(ex.Message);
+                                            }
+                                        }
+                                        newLevel.spawnableScrap = tmpSpawnableScrap2;
+
+                                        newLevel.minScrap = newMoon.MinScrap;
+                                        newLevel.maxScrap = newMoon.MaxScrap;
+
+                                        if (newMoon.LevelAmbienceClips != null && newMoon.LevelAmbienceClips.Length > 0 && AssetGather.Instance.levelAmbiances.ContainsKey(newMoon.LevelAmbienceClips))
+                                        {
+                                            newLevel.levelAmbienceClips = AssetGather.Instance.levelAmbiances[newMoon.LevelAmbienceClips];
+                                        }
+                                        else
+                                        {
+                                            newLevel.levelAmbienceClips = AssetGather.Instance.levelAmbiances.First().Value;
+                                        }
+
+                                        newLevel.maxEnemyPowerCount = newMoon.MaxEnemyPowerCount;
+
+                                        var tmpEnemies1 = newMoon.Enemies();
+                                        List<SpawnableEnemyWithRarity> tmpEnemies2 = new List<SpawnableEnemyWithRarity>();
+                                        foreach (var item in tmpEnemies1)
+                                        {
+                                            tmpEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
+                                        }
+                                        newLevel.Enemies = tmpEnemies2;
+
+                                        newLevel.enemySpawnChanceThroughoutDay = newMoon.EnemySpawnChanceThroughoutDay;
+                                        newLevel.spawnProbabilityRange = newMoon.SpawnProbabilityRange;
+
+                                        var tmpSpawnableMapObjects1 = newMoon.SpawnableMapObjects();
+                                        List<SpawnableMapObject> tmpSpawnableMapObjects2 = new List<SpawnableMapObject>();
+                                        foreach (var item in tmpSpawnableMapObjects1)
+                                        {
+                                            tmpSpawnableMapObjects2.Add(new SpawnableMapObject() { prefabToSpawn = AssetGather.Instance.mapObjects[item.ObjectName], spawnFacingAwayFromWall = item.SpawnFacingAwayFromWall, numberToSpawn = item.SpawnRate });
+                                        }
+                                        newLevel.spawnableMapObjects = tmpSpawnableMapObjects2.ToArray();
+
+                                        var tmpSpawnableOutsideObjects1 = newMoon.SpawnableOutsideObjects();
+                                        List<SpawnableOutsideObjectWithRarity> tmpSpawnableOutsideObjects2 = new List<SpawnableOutsideObjectWithRarity>();
+                                        foreach (var item in tmpSpawnableOutsideObjects1)
+                                        {
+                                            tmpSpawnableOutsideObjects2.Add(new SpawnableOutsideObjectWithRarity() { spawnableObject = AssetGather.Instance.outsideObjects[item.ObjectName], randomAmount = item.SpawnRate });
+                                        }
+                                        newLevel.spawnableOutsideObjects = tmpSpawnableOutsideObjects2.ToArray();
+
+                                        newLevel.maxOutsideEnemyPowerCount = newMoon.MaxOutsideEnemyPowerCount;
+                                        newLevel.maxDaytimeEnemyPowerCount = newMoon.MaxDaytimeEnemyPowerCount;
+
+                                        var tmpOutsideEnemies1 = newMoon.OutsideEnemies();
+                                        List<SpawnableEnemyWithRarity> tmpOutsideEnemies2 = new List<SpawnableEnemyWithRarity>();
+                                        foreach (var item in tmpOutsideEnemies1)
+                                        {
+                                            tmpOutsideEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
+                                        }
+                                        newLevel.OutsideEnemies = tmpOutsideEnemies2;
+
+                                        var tmpDaytimeEnemies1 = newMoon.DaytimeEnemies();
+                                        List<SpawnableEnemyWithRarity> tmpDaytimeEnemies2 = new List<SpawnableEnemyWithRarity>();
+                                        foreach (var item in tmpDaytimeEnemies1)
+                                        {
+                                            tmpDaytimeEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
+                                        }
+                                        newLevel.DaytimeEnemies = tmpDaytimeEnemies2;
+
+                                        newLevel.outsideEnemySpawnChanceThroughDay = newMoon.OutsideEnemySpawnChanceThroughDay;
+                                        newLevel.daytimeEnemySpawnChanceThroughDay = newMoon.DaytimeEnemySpawnChanceThroughDay;
+                                        newLevel.daytimeEnemiesProbabilityRange = newMoon.DaytimeEnemiesProbabilityRange;
+                                        newLevel.levelIncludesSnowFootprints = newMoon.LevelIncludesSnowFootprints;
+
+                                        newLevel.SetFireExitAmountOverwrite(newMoon.FireExitsAmountOverwrite);
+
+                                        __instance.moonsCatalogueList = __instance.moonsCatalogueList.AddItem(newLevel).ToArray();
+
+                                        TerminalKeyword moonKeyword = ScriptableObject.CreateInstance<TerminalKeyword>();
+                                        moonKeyword.word = newMoon.RouteWord != null || newMoon.RouteWord.Length >= 3 ? newMoon.RouteWord.ToLower() : Regex.Replace(newMoon.MoonName, @"\s", "").ToLower();
+                                        moonKeyword.name = newMoon.MoonName;
+                                        moonKeyword.defaultVerb = routeKeyword;
+                                        __instance.terminalNodes.allKeywords = __instance.terminalNodes.allKeywords.AddItem(moonKeyword).ToArray();
+
+                                        TerminalNode moonRouteConfirm = ScriptableObject.CreateInstance<TerminalNode>();
+                                        moonRouteConfirm.name = newMoon.MoonName.ToLower() + "RouteConfirm";
+                                        moonRouteConfirm.displayText = $"Routing autopilot to {newMoon.PlanetName}.\r\nYour new balance is [playerCredits].\r\n\r\n{newMoon.BoughtComment}\r\n\r\n";
+                                        moonRouteConfirm.clearPreviousText = true;
+                                        moonRouteConfirm.buyRerouteToMoon = StartOfRound.Instance.levels.Length;
+                                        moonRouteConfirm.lockedInDemo = true;
+                                        moonRouteConfirm.itemCost = newMoon.RoutePrice;
+
+                                        TerminalNode moonRoute = ScriptableObject.CreateInstance<TerminalNode>();
+                                        moonRoute.name = newMoon.MoonName.ToLower() + "Route";
+                                        moonRoute.displayText = $"The cost to route to {newMoon.PlanetName} is [totalCost]. It is \r\ncurrently [currentPlanetTime] on this moon.\r\n\r\nPlease CONFIRM or DENY.\r\n\r\n\r\n";
+                                        moonRoute.clearPreviousText = true;
+                                        moonRoute.buyRerouteToMoon = -2;
+                                        moonRoute.displayPlanetInfo = StartOfRound.Instance.levels.Length;
+                                        moonRoute.lockedInDemo = true;
+                                        moonRoute.overrideOptions = true;
+                                        moonRoute.itemCost = newMoon.RoutePrice;
+                                        moonRoute.terminalOptions = new CompatibleNoun[]
+                                        {
+                                            new CompatibleNoun(){noun = denyKeyword, result = cancelRouteNode != null ? cancelRouteNode : new TerminalNode()},
+                                            new CompatibleNoun(){noun = confirmKeyword, result = moonRouteConfirm},
+                                        };
+
+                                        CompatibleNoun moonNoun = new CompatibleNoun();
+
+                                        moonNoun.noun = moonKeyword;
+                                        moonNoun.result = moonRoute;
+                                        routeKeyword.compatibleNouns = routeKeyword.compatibleNouns.AddItem(moonNoun).ToArray();
+
+                                        StartOfRound.Instance.levels = StartOfRound.Instance.levels.AddItem(newLevel).ToArray();
+
+                                        newMoons.Add(newLevel.levelID, newMoon);
+
+                                        LethalExpansion.Log.LogInfo(newMoon.MoonName + " Moon added.");
+                                    }
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    TerminalKeyword confirmKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "confirm");
-                                    TerminalKeyword denyKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "deny");
-                                    TerminalNode cancelRouteNode = null;
-                                    foreach (CompatibleNoun option in routeKeyword.compatibleNouns[0].result.terminalOptions)
-                                    {
-                                        if (option.result.name == "CancelRoute")
-                                        {
-                                            cancelRouteNode = option.result;
-                                            break;
-                                        }
-                                    }
-
-                                    SelectableLevel newLevel = ScriptableObject.CreateInstance<SelectableLevel>();
-
-                                    newLevel.name = newMoon.PlanetName;
-                                    newLevel.PlanetName = newMoon.PlanetName;
-                                    newLevel.sceneName = "InitSceneLaunchOptions";
-                                    newLevel.levelID = StartOfRound.Instance.levels.Length;
-                                    newLevel.planetPrefab = AssetGather.Instance.planetPrefabs.ContainsKey(newMoon.OrbitPrefabName) ? AssetGather.Instance.planetPrefabs[newMoon.OrbitPrefabName] : AssetGather.Instance.planetPrefabs.First().Value;
-                                    newLevel.lockedForDemo = true;
-                                    newLevel.spawnEnemiesAndScrap = newMoon.SpawnEnemiesAndScrap;
-                                    newLevel.LevelDescription = newMoon.PlanetDescription;
-                                    newLevel.videoReel = newMoon.PlanetVideo;
-                                    newLevel.riskLevel = newMoon.RiskLevel;
-                                    newLevel.timeToArrive = newMoon.TimeToArrive;
-                                    newLevel.DaySpeedMultiplier = newMoon.DaySpeedMultiplier;
-                                    newLevel.planetHasTime = newMoon.PlanetHasTime;
-                                    newLevel.factorySizeMultiplier = newMoon.FactorySizeMultiplier;
-
-                                    newLevel.overrideWeather = newMoon.OverwriteWeather;
-                                    newLevel.overrideWeatherType = (LevelWeatherType)(int)newMoon.OverwriteWeatherType;
-                                    newLevel.currentWeather = LevelWeatherType.None;
-
-                                    var tmpRandomWeatherTypes1 = newMoon.RandomWeatherTypes();
-                                    List<RandomWeatherWithVariables> tmpRandomWeatherTypes2 = new List<RandomWeatherWithVariables>();
-                                    foreach (var item in tmpRandomWeatherTypes1)
-                                    {
-                                        tmpRandomWeatherTypes2.Add(new RandomWeatherWithVariables() { weatherType = (LevelWeatherType)(int)item.Weather, weatherVariable = item.WeatherVariable1, weatherVariable2 = item.WeatherVariable2 });
-                                    }
-                                    newLevel.randomWeathers = tmpRandomWeatherTypes2.ToArray();
-
-                                    var tmpDungeonFlowTypes1 = newMoon.DungeonFlowTypes();
-                                    List<IntWithRarity> tmpDungeonFlowTypes2 = new List<IntWithRarity>();
-                                    foreach (var item in tmpDungeonFlowTypes1)
-                                    {
-                                        tmpDungeonFlowTypes2.Add(new IntWithRarity() { id = item.ID, rarity = item.Rarity });
-                                    }
-                                    newLevel.dungeonFlowTypes = tmpDungeonFlowTypes2.ToArray();
-
-                                    var tmpSpawnableScrap1 = newMoon.SpawnableScrap();
-                                    List<SpawnableItemWithRarity> tmpSpawnableScrap2 = new List<SpawnableItemWithRarity>();
-                                    foreach (var item in tmpSpawnableScrap1)
-                                    {
-                                        try
-                                        {
-                                            tmpSpawnableScrap2.Add(new SpawnableItemWithRarity() { spawnableItem = AssetGather.Instance.scraps[item.ObjectName], rarity = item.SpawnWeight });
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            LethalExpansion.Log.LogError(ex.Message);
-                                        }
-                                    }
-                                    newLevel.spawnableScrap = tmpSpawnableScrap2;
-
-                                    newLevel.minScrap = newMoon.MinScrap;
-                                    newLevel.maxScrap = newMoon.MaxScrap;
-
-                                    newLevel.levelAmbienceClips = AssetGather.Instance.levelAmbiances[newMoon.LevelAmbienceClips];
-
-                                    newLevel.maxEnemyPowerCount = newMoon.MaxEnemyPowerCount;
-
-                                    var tmpEnemies1 = newMoon.Enemies();
-                                    List<SpawnableEnemyWithRarity> tmpEnemies2 = new List<SpawnableEnemyWithRarity>();
-                                    foreach (var item in tmpEnemies1)
-                                    {
-                                        tmpEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
-                                    }
-                                    newLevel.Enemies = tmpEnemies2;
-
-                                    newLevel.enemySpawnChanceThroughoutDay = newMoon.EnemySpawnChanceThroughoutDay;
-                                    newLevel.spawnProbabilityRange = newMoon.SpawnProbabilityRange;
-
-                                    var tmpSpawnableMapObjects1 = newMoon.SpawnableMapObjects();
-                                    List<SpawnableMapObject> tmpSpawnableMapObjects2 = new List<SpawnableMapObject>();
-                                    foreach (var item in tmpSpawnableMapObjects1)
-                                    {
-                                        tmpSpawnableMapObjects2.Add(new SpawnableMapObject() { prefabToSpawn = AssetGather.Instance.mapObjects[item.ObjectName], spawnFacingAwayFromWall = item.SpawnFacingAwayFromWall, numberToSpawn = item.SpawnRate });
-                                    }
-                                    newLevel.spawnableMapObjects = tmpSpawnableMapObjects2.ToArray();
-
-                                    var tmpSpawnableOutsideObjects1 = newMoon.SpawnableOutsideObjects();
-                                    List<SpawnableOutsideObjectWithRarity> tmpSpawnableOutsideObjects2 = new List<SpawnableOutsideObjectWithRarity>();
-                                    foreach (var item in tmpSpawnableOutsideObjects1)
-                                    {
-                                        tmpSpawnableOutsideObjects2.Add(new SpawnableOutsideObjectWithRarity() { spawnableObject = AssetGather.Instance.outsideObjects[item.ObjectName], randomAmount = item.SpawnRate });
-                                    }
-                                    newLevel.spawnableOutsideObjects = tmpSpawnableOutsideObjects2.ToArray();
-
-                                    newLevel.maxOutsideEnemyPowerCount = newMoon.MaxOutsideEnemyPowerCount;
-                                    newLevel.maxDaytimeEnemyPowerCount = newMoon.MaxDaytimeEnemyPowerCount;
-
-                                    var tmpOutsideEnemies1 = newMoon.OutsideEnemies();
-                                    List<SpawnableEnemyWithRarity> tmpOutsideEnemies2 = new List<SpawnableEnemyWithRarity>();
-                                    foreach (var item in tmpOutsideEnemies1)
-                                    {
-                                        tmpOutsideEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
-                                    }
-                                    newLevel.OutsideEnemies = tmpOutsideEnemies2;
-
-                                    var tmpDaytimeEnemies1 = newMoon.DaytimeEnemies();
-                                    List<SpawnableEnemyWithRarity> tmpDaytimeEnemies2 = new List<SpawnableEnemyWithRarity>();
-                                    foreach (var item in tmpDaytimeEnemies1)
-                                    {
-                                        tmpDaytimeEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
-                                    }
-                                    newLevel.DaytimeEnemies = tmpDaytimeEnemies2;
-
-                                    newLevel.outsideEnemySpawnChanceThroughDay = newMoon.OutsideEnemySpawnChanceThroughDay;
-                                    newLevel.daytimeEnemySpawnChanceThroughDay = newMoon.DaytimeEnemySpawnChanceThroughDay;
-                                    newLevel.daytimeEnemiesProbabilityRange = newMoon.DaytimeEnemiesProbabilityRange;
-                                    newLevel.levelIncludesSnowFootprints = newMoon.LevelIncludesSnowFootprints;
-
-                                    newLevel.SetFireExitAmountOverwrite(newMoon.FireExitsAmountOverwrite);
-
-                                    __instance.moonsCatalogueList = __instance.moonsCatalogueList.AddItem(newLevel).ToArray();
-
-                                    TerminalKeyword moonKeyword = ScriptableObject.CreateInstance<TerminalKeyword>();
-                                    moonKeyword.word = newMoon.RouteWord != null || newMoon.RouteWord.Length >= 3 ? newMoon.RouteWord.ToLower() : Regex.Replace(newMoon.MoonName, @"\s", "").ToLower();
-                                    moonKeyword.name = newMoon.MoonName;
-                                    moonKeyword.defaultVerb = routeKeyword;
-                                    __instance.terminalNodes.allKeywords = __instance.terminalNodes.allKeywords.AddItem(moonKeyword).ToArray();
-
-                                    TerminalNode moonRouteConfirm = ScriptableObject.CreateInstance<TerminalNode>();
-                                    moonRouteConfirm.name = newMoon.MoonName.ToLower() + "RouteConfirm";
-                                    moonRouteConfirm.displayText = $"Routing autopilot to {newMoon.PlanetName}.\r\nYour new balance is [playerCredits].\r\n\r\n{newMoon.BoughtComment}\r\n\r\n";
-                                    moonRouteConfirm.clearPreviousText = true;
-                                    moonRouteConfirm.buyRerouteToMoon = StartOfRound.Instance.levels.Length;
-                                    moonRouteConfirm.lockedInDemo = true;
-                                    moonRouteConfirm.itemCost = newMoon.RoutePrice;
-
-                                    TerminalNode moonRoute = ScriptableObject.CreateInstance<TerminalNode>();
-                                    moonRoute.name = newMoon.MoonName.ToLower() + "Route";
-                                    moonRoute.displayText = $"The cost to route to {newMoon.PlanetName} is [totalCost]. It is \r\ncurrently [currentPlanetTime] on this moon.\r\n\r\nPlease CONFIRM or DENY.\r\n\r\n\r\n";
-                                    moonRoute.clearPreviousText = true;
-                                    moonRoute.buyRerouteToMoon = -2;
-                                    moonRoute.displayPlanetInfo = StartOfRound.Instance.levels.Length;
-                                    moonRoute.lockedInDemo = true;
-                                    moonRoute.overrideOptions = true;
-                                    moonRoute.itemCost = newMoon.RoutePrice;
-                                    moonRoute.terminalOptions = new CompatibleNoun[]
-                                    {
-                                        new CompatibleNoun(){noun = denyKeyword, result = cancelRouteNode != null ? cancelRouteNode : new TerminalNode()},
-                                        new CompatibleNoun(){noun = confirmKeyword, result = moonRouteConfirm},
-                                    };
-
-                                    CompatibleNoun moonNoun = new CompatibleNoun();
-
-                                    moonNoun.noun = moonKeyword;
-                                    moonNoun.result = moonRoute;
-                                    routeKeyword.compatibleNouns = routeKeyword.compatibleNouns.AddItem(moonNoun).ToArray();
-
-                                    StartOfRound.Instance.levels = StartOfRound.Instance.levels.AddItem(newLevel).ToArray();
-
-                                    newMoons.Add(newLevel.levelID, newMoon);
-
-                                    LethalExpansion.Log.LogInfo(newMoon.MoonName + " Moon added.");
+                                    LethalExpansion.Log.LogError(ex.Message);
                                 }
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                LethalExpansion.Log.LogError(ex.Message);
+                                LethalExpansion.Log.LogWarning(newMoon.MoonName + " Moon already added.");
                             }
                         }
                     }

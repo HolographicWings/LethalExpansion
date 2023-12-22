@@ -4,7 +4,7 @@
  [Thunderstore.io link](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/)
 
  Features :
- - A mod menu with 21 settings to customize your game.
+ - A mod menu with 28 settings to customize your game.
  - A support to load modules made with [my SDK](https://github.com/HolographicWings/LethalSDK-Unity-Project) to add new Scraps and Moons. (More soon)
  - A new Moon Catalogue ready for modded moons.
  - A Landmine extension to finally allow players to drop heavy items on them to avoid explosion, based on the weight of the items. (Disabled by default)
@@ -42,6 +42,13 @@ Settings list :
 - AutomaticDeadlineStage: Increase the quota deadline of one day each time the quota exceeds this value.
 - LoadModules: Load SDK Modules that add new content to the game. Disable it to play with Vanilla players. (RESTART REQUIRED)
 - MaxItemsInShip: Change the Items cap can be kept in the ship.
+- ShowMoonWeatherInCatalogue: Display the current weather of Moons in the Terminal's Moon Catalogue.
+- ShowMoonRankInCatalogue: Display the rank of Moons in the Terminal's Moon Catalogue.
+- ShowMoonPriceInCatalogue: Display the route price of Moons in the Terminal's Moon Catalogue.
+- QuotaIncreaseSteepness: Change the Quota Increase Steepness. (Highter = less steep exponential increase)
+- QuotaBaseIncrease: Change the Quota Base Increase.
+- KickPlayerWithoutMod: Kick the players without Lethal Expansion installer. (Will be kicked anyway if LoadModules is True)
+- BrutalCompanyPlusCompatibility: Leave Brutal Company Plus control the Quota settings.
 
 ## Vanilla Compatibility :
 To make the mod compatible with vanilla players, keep default every setting that have "Mod required by client: Yes" in their description. (Keep mouse on a setting to see it's description)
@@ -64,11 +71,23 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Hoarding big killed when grabbed an item from a mine don't drop the item that make it irrecoverable.
 - When deadline remaining days is over 3 days, outside monsters spawn more.
 - Landmines stills bip if a player walk on them when theres already an item placed on it.
-- Eclypse in new moons from SDK appears purple.
 - Landmine instand explode when a player walk on them (Vanilla bug).
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.0
+	- Fixed Item Drop Ship networking of new moons.
+	- Added Christmas Village Moon.
+	- Fixed clock doesn't showing when leaving dungeon.
+	- Fixed water sound don't stopping when entering dungeon.
+	- Fixed terrain crash with a lot of GPU Instanced details.
+	- Fixed terrain holes support.
+	- Improved water surface support.
+	- Fixed issue with host/client validation when no module are loaded.
+	- Fixed material issue with Eclipsed weather of new moons.
+	- Fixed error when looking at an opened Item Dropship.
+	- Fixed description error in QuotaSteepness setting.
+	- Added experimental Ladder support for new moons.
 - 1.2.16
 	- Compatibility patch for MoonOfTheDay mod.
 - 1.2.15
@@ -164,6 +183,22 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 ## Planned features :
 - New landmine system network rework
 - Mod version compatibility checker
+
+## Credits :
+	- Template Scraps :
+		- https://assetstore.unity.com/packages/3d/props/tools/survival-game-tools-139872
+	- Wateridge Moon :
+		- https://assetstore.unity.com/packages/3d/environments/old-sea-port-environment-36897
+	- Christmas Village Moon :
+		- Pixabay
+		- https://youtu.be/n8xGzkizA34
+		- https://assetstore.unity.com/packages/3d/environments/landscapes/flatpoly-winter-village-51544
+		- https://assetstore.unity.com/packages/3d/environments/landscapes/lowpoly-style-free-rocks-and-plants-145133
+		- https://assetstore.unity.com/packages/3d/environments/low-poly-woods-lifestyle-65306
+		- https://assetstore.unity.com/packages/3d/props/pbr-christmas-gifts-237877
+		- https://assetstore.unity.com/packages/3d/props/free-christmas-assets-low-poly-13102
+		- https://assetstore.unity.com/packages/3d/props/food/christmas-cookies-breakable-105913
+		- https://assetstore.unity.com/packages/3d/props/free-christmas-presents-low-poly-24356
 
 ## More screenshots :
 ![Scraps2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps2.png "Scraps2")

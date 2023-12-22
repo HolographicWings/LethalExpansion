@@ -63,7 +63,7 @@ namespace LethalExpansion.Patches
         }
         [HarmonyPatch(nameof(RoundManager.PlotOutEnemiesForNextHour))]
         [HarmonyPrefix]
-        public static bool PlotOutEnemiesForNextHour(RoundManager __instance)
+        public static bool PlotOutEnemiesForNextHour_Prefix(RoundManager __instance)
         {
             if (__instance.currentLevel.enemySpawnChanceThroughoutDay == null)
             {
@@ -73,7 +73,7 @@ namespace LethalExpansion.Patches
         }
         [HarmonyPatch(nameof(RoundManager.SpawnEnemiesOutside))]
         [HarmonyPrefix]
-        public static bool SpawnEnemiesOutside(RoundManager __instance)
+        public static bool SpawnEnemiesOutside_Prefix(RoundManager __instance)
         {
             if (__instance.currentLevel.outsideEnemySpawnChanceThroughDay == null)
             {
@@ -83,13 +83,39 @@ namespace LethalExpansion.Patches
         }
         [HarmonyPatch(nameof(RoundManager.SpawnDaytimeEnemiesOutside))]
         [HarmonyPrefix]
-        public static bool SpawnDaytimeEnemiesOutside(RoundManager __instance)
+        public static bool SpawnDaytimeEnemiesOutside_Prefix(RoundManager __instance)
         {
             if (__instance.currentLevel.daytimeEnemySpawnChanceThroughDay == null)
             {
                 return false;
             }
             return true;
+        }
+        private static bool zeroQuotaWorkaround = false;
+        [HarmonyPatch("AdvanceHourAndSpawnNewBatchOfEnemies")]
+        [HarmonyPrefix]
+        public static bool AdvanceHourAndSpawnNewBatchOfEnemies_Prefix(RoundManager __instance)
+        {
+            if (TimeOfDay.Instance.profitQuota == 0)
+            {
+                TimeOfDay.Instance.profitQuota = 1;
+                zeroQuotaWorkaround = true;
+            }
+            else
+            {
+                zeroQuotaWorkaround = false;
+            }
+            return true;
+        }
+        [HarmonyPatch("AdvanceHourAndSpawnNewBatchOfEnemies")]
+        [HarmonyPostfix]
+        public static void AdvanceHourAndSpawnNewBatchOfEnemies_Postfix(RoundManager __instance)
+        {
+            if (zeroQuotaWorkaround)
+            {
+                TimeOfDay.Instance.profitQuota = 0;
+                zeroQuotaWorkaround = false;
+            }
         }
     }
 }

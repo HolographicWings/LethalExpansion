@@ -6,7 +6,7 @@ using LethalExpansion;
 public class AutoScrollText : MonoBehaviour
 {
     public TextMeshProUGUI textMeshPro;
-    public float scrollSpeed = 20f;
+    public float scrollSpeed = 15f;
     private Vector2 startPosition;
     private float textHeight;
     private bool startScrolling = false;

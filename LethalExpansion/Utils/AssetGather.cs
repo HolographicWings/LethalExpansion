@@ -41,6 +41,8 @@ namespace LethalExpansion.Utils
         public Dictionary<String, LevelAmbienceLibrary> levelAmbiances = new Dictionary<String, LevelAmbienceLibrary>();
         //Enemies
         public Dictionary<String, EnemyType> enemies = new Dictionary<String, EnemyType>();
+        //Sprites
+        public Dictionary<String, Sprite> sprites = new Dictionary<String, Sprite>();
 
         public void GetList()
         {
@@ -81,6 +83,11 @@ namespace LethalExpansion.Utils
             }
             LethalExpansion.Log.LogInfo("Enemies");
             foreach (var item in enemies)
+            {
+                LethalExpansion.Log.LogInfo(item.Key);
+            }
+            LethalExpansion.Log.LogInfo("Sprites");
+            foreach (var item in sprites)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
             }
@@ -177,6 +184,22 @@ namespace LethalExpansion.Utils
             if (enemie != null && !enemies.ContainsKey(enemie.name) && !enemies.ContainsValue(enemie))
             {
                 enemies.Add(enemie.name, enemie);
+            }
+        }
+        #endregion
+        #region Sprites
+        public void AddSprites(Sprite sprite)
+        {
+            if (sprite != null && !sprites.ContainsKey(sprite.name) && !sprites.ContainsValue(sprite))
+            {
+                sprites.Add(sprite.name, sprite);
+            }
+        }
+        public void AddSprites(string name, Sprite sprite)
+        {
+            if (sprite != null && !sprites.ContainsKey(name) && !sprites.ContainsValue(sprite))
+            {
+                sprites.Add(name, sprite);
             }
         }
         #endregion

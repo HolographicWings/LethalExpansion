@@ -40,6 +40,19 @@ namespace LethalExpansion.Patches
                     LethalExpansion.Log.LogWarning(string.Format("Compatible mod versions: {0}", string.Join(",", LethalExpansion.CompatibleGameVersions)));
                 }
             }
+            AssetBank mainBank = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<ModManifest>("Assets/Mods/LethalExpansion/modmanifest.asset").assetBank;
+            if (mainBank != null)
+            {
+                foreach (var networkprefab in mainBank.NetworkPrefabs())
+                {
+                    if (networkprefab.PrefabPath != null && networkprefab.PrefabPath.Length > 0)
+                    {
+                        GameObject prefab = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>(networkprefab.PrefabPath);
+                        __instance.GetComponent<NetworkManager>().PrefabHandler.AddNetworkPrefab(prefab);
+                        LethalExpansion.Log.LogInfo($"{networkprefab.PrefabName} Prefab registered.");
+                    }
+                }
+            }
             if (ConfigManager.Instance.FindItemValue<bool>("LoadModules"))
             {
                 Sprite scrapSprite = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<Sprite>("Assets/Mods/LethalExpansion/Sprites/ScrapItemIcon2.png");
@@ -123,6 +136,19 @@ namespace LethalExpansion.Patches
                                 CheckAndRemoveIllegalComponents(newMoon.MainPrefab.transform, moonPrefabComponentWhitelist);
                             }
                         }*/
+                        if(bundle2.Item2.assetBank != null)
+                        {
+                            foreach (var networkprefab in bundle2.Item2.assetBank.NetworkPrefabs())
+                            {
+                                if (networkprefab.PrefabPath != null && networkprefab.PrefabPath.Length > 0)
+                                {
+                                    GameObject prefab = bundle.Value.Item1.LoadAsset<GameObject>(networkprefab.PrefabPath);
+                                    CheckAndRemoveIllegalComponents(bundle.Value.Item1.LoadAsset<GameObject>(networkprefab.PrefabPath).transform, scrapPrefabComponentWhitelist);
+                                    __instance.GetComponent<NetworkManager>().PrefabHandler.AddNetworkPrefab(prefab);
+                                    LethalExpansion.Log.LogInfo($"{networkprefab.PrefabName} Prefab registered.");
+                                }
+                            }
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -291,7 +317,9 @@ namespace LethalExpansion.Patches
             typeof(SI_WaterSurface),
             typeof(SI_Ladder),
             typeof(SI_ItemDropship),
-            typeof(LockPosition)
+            typeof(SI_InteractTrigger),
+            typeof(SI_DamagePlayer),
+            typeof(PlayerShip)
         };
         static void CheckAndRemoveIllegalComponents(Transform prefab, List<Type> whitelist)
         {
@@ -303,7 +331,7 @@ namespace LethalExpansion.Patches
                     if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
                     {
                         LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
-                        GameObject.DestroyImmediate(component);
+                        GameObject.Destroy(component);
                     }
                 }
 
