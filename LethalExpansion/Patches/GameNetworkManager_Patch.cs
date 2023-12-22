@@ -66,8 +66,6 @@ namespace LethalExpansion.Patches
                         {
                             if(bundle2.Item2.scraps != null && bundle2.Item2.scraps.Length > 0)
                             {
-                                LethalExpansion.Log.LogWarning(bundle2.Item1.name);
-                                LethalExpansion.Log.LogWarning(bundle2.Item2.modName);
                                 foreach (var newScrap in bundle2.Item2.scraps)
                                 {
                                     if (newScrap != null && newScrap.prefab != null && (newScrap.RequiredBundles == null || AssetBundlesManager.Instance.BundlesLoaded(newScrap.RequiredBundles)) && (newScrap.IncompatibleBundles == null || !AssetBundlesManager.Instance.IncompatibleBundlesLoaded(newScrap.IncompatibleBundles)))
@@ -123,19 +121,14 @@ namespace LethalExpansion.Patches
                                             scanNode.subText = "Value: ";
                                             scanNode.nodeType = 2;
                                         }
-                                        bool failed = false;
                                         try
                                         {
                                             __instance.GetComponent<NetworkManager>().PrefabHandler.AddNetworkPrefab(newScrap.prefab);
+                                            LethalExpansion.Log.LogInfo(newScrap.itemName + " Scrap registered.");
                                         }
                                         catch (Exception ex)
                                         {
-                                            failed = true;
                                             LethalExpansion.Log.LogError(ex.Message);
-                                        }
-                                        if (!failed)
-                                        {
-                                            LethalExpansion.Log.LogInfo(newScrap.itemName + " Scrap registered.");
                                         }
                                     }
                                 }
