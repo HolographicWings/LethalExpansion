@@ -54,6 +54,7 @@ jobs:
         name: LethalExpansion
         version: ${{ env.VERSION }}
         community: lethal-company
+        repo: thunderstore.io
         categories: |
           bepinex
           clientside
