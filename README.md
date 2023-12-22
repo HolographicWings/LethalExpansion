@@ -54,6 +54,9 @@ Settings list :
 To make the mod compatible with vanilla players, keep default every setting that have "Mod required by client: Yes" in their description. (Keep mouse on a setting to see it's description)
 ![Mod Menu 2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings2.png "Mod Menu 2")
 
+## Recommended Mods :
+![LandmineFix](https://thunderstore.io/c/lethal-company/p/TheBeeTeam/LandmineFix/ "LandmineFix") by TheBeeTeam is recommender in order to use the PreventMineToExplodeWithItems setting.
+
 ## Report a bug :
 I will maybe open a Discord for support if the mod gets a lot of users, meanwhile you can use the [github's issue tab](https://github.com/HolographicWings/LethalExpansion/issues).
 Please enable the fellowing settings in the "BepInEx.cfg" setting file from the "Lethal Company\BepInEx\config\" folder:  
@@ -75,6 +78,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.1
+	- Added Entrance ScanNode to Christmas village.
 - 1.3.0
 	- Fixed Item Drop Ship networking of new moons.
 	- Added Christmas Village Moon.

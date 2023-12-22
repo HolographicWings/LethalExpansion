@@ -36,14 +36,15 @@ namespace LethalExpansion
     [BepInDependency("me.swipez.melonloader.morecompany", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("BrutalCompanyPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("MoonOfTheDay", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("beeisyou.LandmineFix", BepInDependency.DependencyFlags.SoftDependency)]
     public class LethalExpansion : BaseUnityPlugin
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.0";
+        private const string VersionString = "1.3.1";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 3, 0)
+            new Version(1, 3, 1)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -52,7 +53,9 @@ namespace LethalExpansion
             { "LC_API",compatibility.good },
             { "me.swipez.melonloader.morecompany",compatibility.unknown },
             { "BrutalCompanyPlus",compatibility.unknown },
-            { "MoonOfTheDay",compatibility.good }
+            { "MoonOfTheDay",compatibility.good },
+            { "Television_Controller",compatibility.bad },
+            { "beeisyou.LandmineFix",compatibility.perfect }
         };
         private enum compatibility
         {
