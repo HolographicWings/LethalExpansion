@@ -78,6 +78,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.2
+	- Fixed new moon's Item Drop Ship doesn't unloads and keep it's position on the next moons.
 - 1.3.1
 	- Added Entrance ScanNode to Christmas village.
 - 1.3.0

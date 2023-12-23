@@ -28,7 +28,7 @@ using UnityEngine.Video;
 using Unity.Netcode.Components;
 using LethalSDK.Utils;
 using BepInEx.Bootstrap;
-using System.Net.Sockets;
+using System.Collections;
 
 namespace LethalExpansion
 {
@@ -41,11 +41,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.1";
+        private const string VersionString = "1.3.2";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 3, 1),
-            new Version(1, 3, 0)
+            new Version(1, 3, 2)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -146,7 +145,8 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("QuotaIncreaseSteepness", 16, "Expeditions", "Change the Quota Increase Steepness. (Highter = less steep exponential increase)", 0, 32, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("QuotaBaseIncrease", 100, "Expeditions", "Change the Quota Base Increase.", 0, 300, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("KickPlayerWithoutMod", false, "Lobby", "Kick the players without Lethal Expansion installer. (Will be kicked anyway if LoadModules is True)", sync: true));
-            ConfigManager.Instance.AddItem(new ConfigItem("BrutalCompanyPlusCompatibility", false, "Compatibility", "Leave Brutal Company Plus control the Quota settings", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("BrutalCompanyPlusCompatibility", false, "Compatibility", "Leave Brutal Company Plus control the Quota settings.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("SettingsDebug", false, "Debug", "Show an output of every settings in the Console. (The Console must listen Info messages)", sync: false));
 
             ConfigManager.Instance.ReadConfig();
 
@@ -345,9 +345,21 @@ namespace LethalExpansion
                 {
                     obj.SetActive(false);
                 }
+                if (ConfigManager.Instance.FindItemValue<bool>("SettingsDebug"))
+                {
+                    foreach(var entry in ConfigManager.Instance.GetAll())
+                    {
+                        Log.LogInfo("==========");
+                        Log.LogInfo(entry.Key);
+                        Log.LogInfo(entry.Value);
+                        Log.LogInfo(entry.DefaultValue);
+                        Log.LogInfo(entry.Sync);
+                    }
+                }
+                //StartCoroutine(LoadCustomMoon(scene));
                 if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
                 {
-                    if(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
+                    if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
                     {
                         CheckAndRemoveIllegalComponents(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform);
                         GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
@@ -356,14 +368,14 @@ namespace LethalExpansion
                         {
                             SceneManager.MoveGameObjectToScene(mainPrefab, scene);
                             var DiageticBackground = mainPrefab.transform.Find("Systems/Audio/DiageticBackground");
-                            if(DiageticBackground != null)
+                            if (DiageticBackground != null)
                             {
                                 DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                             }
                             Terrain[] Terrains = mainPrefab.GetComponentsInChildren<Terrain>();
                             if (Terrains != null && Terrains.Length > 0)
                             {
-                                foreach(Terrain terrain in Terrains)
+                                foreach (Terrain terrain in Terrains)
                                 {
                                     terrain.drawInstanced = true;
                                 }
@@ -372,7 +384,7 @@ namespace LethalExpansion
                     }
                 }
                 String[] _tmp = { "MapPropsContainer", "OutsideAINode", "SpawnDenialPoint", "ItemShipLandingNode", "OutsideLevelNavMesh" };
-                foreach(string s in _tmp)
+                foreach (string s in _tmp)
                 {
                     if (GameObject.FindGameObjectWithTag(s) == null || GameObject.FindGameObjectsWithTag(s).Any(o => o.scene.name != "InitSceneLaunchOptions"))
                     {
@@ -387,12 +399,12 @@ namespace LethalExpansion
                 if (DropShip != null)
                 {
                     var ItemShip = DropShip.transform.Find("ItemShip");
-                    if(ItemShip != null)
+                    if (ItemShip != null)
                     {
                         ItemShip.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                     }
                     var ItemShipMusicClose = DropShip.transform.Find("ItemShip/Music");
-                    if(ItemShipMusicClose != null)
+                    if (ItemShipMusicClose != null)
                     {
                         ItemShipMusicClose.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                     }
@@ -444,8 +456,110 @@ namespace LethalExpansion
                 rigidbody.isKinematic = true;
                 rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
                 SceneManager.MoveGameObjectToScene(OutOfBounds, scene);
-
             }
+        }
+        IEnumerator LoadCustomMoon(Scene scene)
+        {
+            yield return null;
+            if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
+            {
+                if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
+                {
+                    CheckAndRemoveIllegalComponents(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform);
+                    GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
+                    currentWaterSurface = mainPrefab.transform.Find("Environment/Water");
+                    if (mainPrefab != null)
+                    {
+                        SceneManager.MoveGameObjectToScene(mainPrefab, scene);
+                        var DiageticBackground = mainPrefab.transform.Find("Systems/Audio/DiageticBackground");
+                        if (DiageticBackground != null)
+                        {
+                            DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
+                        }
+                        Terrain[] Terrains = mainPrefab.GetComponentsInChildren<Terrain>();
+                        if (Terrains != null && Terrains.Length > 0)
+                        {
+                            foreach (Terrain terrain in Terrains)
+                            {
+                                terrain.drawInstanced = true;
+                            }
+                        }
+                    }
+                }
+            }
+            String[] _tmp = { "MapPropsContainer", "OutsideAINode", "SpawnDenialPoint", "ItemShipLandingNode", "OutsideLevelNavMesh" };
+            foreach (string s in _tmp)
+            {
+                if (GameObject.FindGameObjectWithTag(s) == null || GameObject.FindGameObjectsWithTag(s).Any(o => o.scene.name != "InitSceneLaunchOptions"))
+                {
+                    GameObject obj = new GameObject();
+                    obj.name = s;
+                    obj.tag = s;
+                    obj.transform.position = new Vector3(0, -200, 0);
+                    SceneManager.MoveGameObjectToScene(obj, scene);
+                }
+            }
+            GameObject DropShip = GameObject.Find("ItemShipAnimContainer");
+            if (DropShip != null)
+            {
+                var ItemShip = DropShip.transform.Find("ItemShip");
+                if (ItemShip != null)
+                {
+                    ItemShip.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
+                }
+                var ItemShipMusicClose = DropShip.transform.Find("ItemShip/Music");
+                if (ItemShipMusicClose != null)
+                {
+                    ItemShipMusicClose.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
+                }
+                var ItemShipMusicFar = DropShip.transform.Find("ItemShip/Music/Music (1)");
+                if (ItemShipMusicFar != null)
+                {
+                    ItemShipMusicFar.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
+                }
+            }
+            RuntimeDungeon runtimeDungeon = GameObject.FindObjectOfType<RuntimeDungeon>(false);
+            if (runtimeDungeon == null)
+            {
+                GameObject dungeonGenerator = new GameObject();
+                dungeonGenerator.name = "DungeonGenerator";
+                dungeonGenerator.tag = "DungeonGenerator";
+                dungeonGenerator.transform.position = new Vector3(0, -200, 0);
+                runtimeDungeon = dungeonGenerator.AddComponent<RuntimeDungeon>();
+                runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
+                runtimeDungeon.Generator.LengthMultiplier = 0.8f;
+                runtimeDungeon.Generator.PauseBetweenRooms = 0.2f;
+                runtimeDungeon.GenerateOnStart = false;
+                runtimeDungeon.Root = dungeonGenerator;
+                runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
+                UnityNavMeshAdapter dungeonNavMesh = dungeonGenerator.AddComponent<UnityNavMeshAdapter>();
+                dungeonNavMesh.BakeMode = UnityNavMeshAdapter.RuntimeNavMeshBakeMode.FullDungeonBake;
+                dungeonNavMesh.LayerMask = 35072; //256 + 2048 + 32768 = 35072
+                SceneManager.MoveGameObjectToScene(dungeonGenerator, scene);
+            }
+            else
+            {
+                if (runtimeDungeon.Generator.DungeonFlow == null)
+                {
+                    runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
+                }
+            }
+
+            runtimeDungeon.Generator.DungeonFlow.GlobalProps.First(p => p.ID == 1231).Count = new IntRange(RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite(), RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite());
+
+            GameObject OutOfBounds = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            OutOfBounds.name = "OutOfBounds";
+            OutOfBounds.layer = 13;
+            OutOfBounds.transform.position = new Vector3(0, -300, 0);
+            OutOfBounds.transform.localScale = new Vector3(1000, 5, 1000);
+            BoxCollider boxCollider = OutOfBounds.GetComponent<BoxCollider>();
+            boxCollider.isTrigger = true;
+            OutOfBounds.AddComponent<OutOfBoundsTrigger>();
+            Rigidbody rigidbody = OutOfBounds.AddComponent<Rigidbody>();
+            rigidbody.useGravity = false;
+            rigidbody.isKinematic = true;
+            rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            SceneManager.MoveGameObjectToScene(OutOfBounds, scene);
         }
         private List<Type> whitelist = new List<Type> {
             //Base
@@ -540,6 +654,8 @@ namespace LethalExpansion
             typeof(SI_NetworkPrefabInstancier),
             typeof(SI_InteractTrigger),
             typeof(SI_DamagePlayer),
+            typeof(SI_SoundYDistance),
+            typeof(SI_AudioOutputInterface),
             typeof(PlayerShip)
         };
 

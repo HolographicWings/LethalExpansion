@@ -324,6 +324,8 @@ namespace LethalExpansion.Patches
             typeof(SI_ItemDropship),
             typeof(SI_InteractTrigger),
             typeof(SI_DamagePlayer),
+            typeof(SI_SoundYDistance),
+            typeof(SI_AudioOutputInterface),
             typeof(PlayerShip)
         };
         static void CheckAndRemoveIllegalComponents(Transform prefab, List<Type> whitelist)
