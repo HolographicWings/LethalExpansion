@@ -78,6 +78,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.5
+	- Fixed missing saplin star in Christmas Village. (This is extremely important right ? :P)
 - 1.3.4
 	- Tiny improvements and additions to Christmas Village.
 - 1.3.3
