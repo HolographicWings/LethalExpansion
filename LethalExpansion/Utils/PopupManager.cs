@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace LethalExpansion.Utils
 {
-    internal class PopupManager
+    public class PopupManager
     {
         private static PopupManager _instance;
         private PopupManager() { }
@@ -71,7 +71,7 @@ namespace LethalExpansion.Utils
             }
         }
     }
-    internal class PopupObject
+    public class PopupObject
     {
         public GameObject baseObject;
         public TMP_Text title;

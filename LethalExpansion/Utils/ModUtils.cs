@@ -2,7 +2,7 @@
 
 namespace LethalExpansion.Utils
 {
-    internal static class ModUtils
+    public static class ModUtils
     {
         public static T[] RemoveElementFromArray<T>(T[] originalArray, int indexToRemove)
         {

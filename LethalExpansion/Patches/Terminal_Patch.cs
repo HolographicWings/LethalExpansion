@@ -13,7 +13,7 @@ using UnityEngine;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(Terminal))]
-    internal class Terminal_Patch
+    public class Terminal_Patch
     {
         private static int[] defaultMoonRoutePrices = null;
         private static TerminalKeyword[] defaultTerminalKeywords;

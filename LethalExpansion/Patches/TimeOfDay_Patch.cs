@@ -10,7 +10,7 @@ using UnityEngine;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(TimeOfDay))]
-    internal class TimeOfDay_Patch
+    public class TimeOfDay_Patch
     {
         [HarmonyPatch(nameof(TimeOfDay.SyncNewProfitQuotaClientRpc))]
         [HarmonyPostfix]

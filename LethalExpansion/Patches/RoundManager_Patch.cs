@@ -13,7 +13,7 @@ using Unity.AI.Navigation;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(RoundManager))]
-    internal class RoundManager_Patch
+    public class RoundManager_Patch
     {
         [HarmonyPatch(nameof(RoundManager.DespawnPropsAtEndOfRound))]
         [HarmonyPrefix]

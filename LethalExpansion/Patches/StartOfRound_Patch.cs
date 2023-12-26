@@ -10,7 +10,7 @@ using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(StartOfRound))]
-    internal class StartOfRound_Patch
+    public class StartOfRound_Patch
     {
         public static int[] currentWeathers = new int[0];
 

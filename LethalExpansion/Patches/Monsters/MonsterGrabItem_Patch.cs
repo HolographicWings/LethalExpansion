@@ -7,7 +7,7 @@ using Unity.Netcode;
 
 namespace LethalExpansion.Patches.Monsters
 {
-    internal class MonsterGrabItem_Patch
+    public class MonsterGrabItem_Patch
     {
         public static void MonsterGrabItem(EnemyAI __instance, NetworkObject item)
         {

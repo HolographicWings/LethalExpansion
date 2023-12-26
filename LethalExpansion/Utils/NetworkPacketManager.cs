@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace LethalExpansion.Utils
 {
-    internal class NetworkPacketManager
+    public class NetworkPacketManager
     {
         private static NetworkPacketManager _instance;
         private NetworkPacketManager() { }

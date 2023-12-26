@@ -4,7 +4,7 @@ using LethalExpansion.Utils;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(MenuManager))]
-    internal class MenuManager_Patch
+    public class MenuManager_Patch
     {
         [HarmonyPatch(nameof(MenuManager.StartHosting))]
         [HarmonyPostfix]

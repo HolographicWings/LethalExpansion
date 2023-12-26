@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(AudioReverbTrigger))]
-    internal class AudioReverbTrigger_Patch
+    public class AudioReverbTrigger_Patch
     {
         [HarmonyPatch(nameof(AudioReverbTrigger.ChangeAudioReverbForPlayer))]
         [HarmonyPostfix]
