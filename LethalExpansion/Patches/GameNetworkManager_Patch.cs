@@ -20,7 +20,7 @@ using UnityEngine.Video;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(GameNetworkManager))]
-    internal class GameNetworkManager_Patch
+    public class GameNetworkManager_Patch
     {
         [HarmonyPatch("Start")]
         [HarmonyPrefix]

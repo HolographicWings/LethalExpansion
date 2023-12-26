@@ -10,7 +10,7 @@ using UnityEngine;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(InteractTrigger))]
-    internal class InteractTrigger_Patch
+    public class InteractTrigger_Patch
     {
         [HarmonyPatch("Start")]
         [HarmonyPostfix]

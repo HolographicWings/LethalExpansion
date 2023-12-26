@@ -7,7 +7,7 @@ using static LethalExpansion.Utils.NetworkPacketManager;
 
 namespace LethalExpansion.Utils
 {
-    internal class ChatMessageProcessor
+    public class ChatMessageProcessor
     {
         public static bool ProcessMessage(string message)
         {

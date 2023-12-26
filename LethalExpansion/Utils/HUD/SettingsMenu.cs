@@ -12,7 +12,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 namespace LethalExpansion.Utils.HUD
 {
-    internal class SettingsMenu
+    public class SettingsMenu
     {
         private static SettingsMenu _instance;
         private SettingsMenu() { }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(GrabbableObject))]
-    internal class GrabbableObject_Patch
+    public class GrabbableObject_Patch
     {
         [HarmonyPatch(nameof(GrabbableObject.GrabItem))]
         [HarmonyPrefix]

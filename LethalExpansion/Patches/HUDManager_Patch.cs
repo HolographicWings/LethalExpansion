@@ -5,7 +5,7 @@ using UnityEngine;
 namespace LethalExpansion.Patches
 {
     [HarmonyPatch(typeof(HUDManager))]
-    internal class HUDManager_Patch
+    public class HUDManager_Patch
     {
         [HarmonyPatch("AddChatMessage")]
         [HarmonyPrefix]

@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace LethalExpansion.Utils.HUD
 {
-    internal class SettingMenu_DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class SettingMenu_DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public UnityEvent onBeginDragEvent;
         public UnityEvent onDragEvent;
