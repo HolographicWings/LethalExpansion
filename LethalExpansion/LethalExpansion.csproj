@@ -232,6 +232,7 @@
     <Compile Include="Utils\AssetBundlesManager.cs" />
     <Compile Include="Utils\AssetGather.cs" />
     <Compile Include="Utils\ChatMessageProcessor.cs" />
+    <Compile Include="Utils\ComponentWhitelists.cs" />
     <Compile Include="Utils\ConfigItem.cs" />
     <Compile Include="Utils\ConfigManager.cs" />
     <Compile Include="MonoBehaviours\SettingMenu_DragAndDrop.cs" />

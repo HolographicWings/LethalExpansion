@@ -37,14 +37,15 @@ namespace LethalExpansion
     [BepInDependency("BrutalCompanyPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("MoonOfTheDay", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("beeisyou.LandmineFix", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("LethalAdjustments", BepInDependency.DependencyFlags.SoftDependency)]
     public class LethalExpansion : BaseUnityPlugin
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.5";
+        private const string VersionString = "1.3.6";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 3, 5)
+            new Version(1, 3, 6)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -55,7 +56,8 @@ namespace LethalExpansion
             { "BrutalCompanyPlus",compatibility.unknown },
             { "MoonOfTheDay",compatibility.good },
             { "Television_Controller",compatibility.bad },
-            { "beeisyou.LandmineFix",compatibility.perfect }
+            { "beeisyou.LandmineFix",compatibility.perfect },
+            { "LethalAdjustments",compatibility.good }
         };
         private enum compatibility
         {
@@ -146,6 +148,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("QuotaBaseIncrease", 100, "Expeditions", "Change the Quota Base Increase.", 0, 300, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("KickPlayerWithoutMod", false, "Lobby", "Kick the players without Lethal Expansion installer. (Will be kicked anyway if LoadModules is True)", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("BrutalCompanyPlusCompatibility", false, "Compatibility", "Leave Brutal Company Plus control the Quota settings.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("LethalAdjustmentsCompatibility", false, "Compatibility", "Leave Lethal Adjustments control the Dungeon settings.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("SettingsDebug", false, "Debug", "Show an output of every settings in the Console. (The Console must listen Info messages)", sync: false));
 
             ConfigManager.Instance.ReadConfig();
@@ -561,103 +564,7 @@ namespace LethalExpansion
             rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
             SceneManager.MoveGameObjectToScene(OutOfBounds, scene);
         }
-        private List<Type> whitelist = new List<Type> {
-            //Base
-            typeof(Transform),
-            //Mesh
-            typeof(MeshFilter),
-            typeof(MeshRenderer),
-            typeof(SkinnedMeshRenderer),
-            //Physics
-            typeof(MeshCollider),
-            typeof(BoxCollider),
-            typeof(SphereCollider),
-            typeof(CapsuleCollider),
-            typeof(SphereCollider),
-            typeof(TerrainCollider),
-            typeof(WheelCollider),
-            typeof(ArticulationBody),
-            typeof(ConstantForce),
-            typeof(ConfigurableJoint),
-            typeof(FixedJoint),
-            typeof(HingeJoint),
-            typeof(Cloth),
-            typeof(Rigidbody),
-            //Netcode
-            typeof(NetworkObject),
-            typeof(NetworkRigidbody),
-            typeof(NetworkTransform),
-            typeof(NetworkAnimator),
-            //Animation
-            typeof(Animator),
-            typeof(Animation),
-            //Terrain
-            typeof(Terrain),
-            typeof(Tree),
-            typeof(WindZone),
-            //Rendering
-            typeof(DecalProjector),
-            typeof(LODGroup),
-            typeof(Light),
-            typeof(HDAdditionalLightData),
-            typeof(LightProbeGroup),
-            typeof(LightProbeProxyVolume),
-            typeof(LocalVolumetricFog),
-            typeof(OcclusionArea),
-            typeof(OcclusionPortal),
-            typeof(ReflectionProbe),
-            typeof(PlanarReflectionProbe),
-            typeof(HDAdditionalReflectionData),
-            typeof(Skybox),
-            typeof(SortingGroup),
-            typeof(SpriteRenderer),
-            typeof(Volume),
-            //Audio
-            typeof(AudioSource),
-            typeof(AudioReverbZone),
-            typeof(AudioReverbFilter),
-            typeof(AudioChorusFilter),
-            typeof(AudioDistortionFilter),
-            typeof(AudioEchoFilter),
-            typeof(AudioHighPassFilter),
-            typeof(AudioLowPassFilter),
-            typeof(AudioListener),
-            //Effect
-            typeof(LensFlare),
-            typeof(TrailRenderer),
-            typeof(LineRenderer),
-            typeof(ParticleSystem),
-            typeof(ParticleSystemRenderer),
-            typeof(ParticleSystemForceField),
-            typeof(Projector),
-            //Video
-            typeof(VideoPlayer),
-            //Navigation
-            typeof(NavMeshSurface),
-            typeof(NavMeshModifier),
-            typeof(NavMeshModifierVolume),
-            typeof(NavMeshLink),
-            typeof(NavMeshObstacle),
-            typeof(OffMeshLink),
-            //LethalSDK
-            typeof(SI_AudioReverbPresets),
-            typeof(SI_AudioReverbTrigger),
-            typeof(SI_DungeonGenerator),
-            typeof(SI_MatchLocalPlayerPosition),
-            typeof(SI_AnimatedSun),
-            typeof(SI_EntranceTeleport),
-            typeof(SI_ScanNode),
-            typeof(SI_DoorLock),
-            typeof(SI_WaterSurface),
-            typeof(SI_Ladder),
-            typeof(SI_ItemDropship),
-            typeof(SI_NetworkPrefabInstancier),
-            typeof(SI_InteractTrigger),
-            typeof(SI_DamagePlayer),
-            typeof(SI_SoundYDistance),
-            typeof(SI_AudioOutputInterface),
-            typeof(PlayerShip)
-        };
+        
 
         void CheckAndRemoveIllegalComponents(Transform root)
         {
@@ -666,7 +573,7 @@ namespace LethalExpansion
                 var components = root.GetComponents<Component>();
                 foreach (var component in components)
                 {
-                    if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
+                    if (!ComponentWhitelists.moonPrefabWhitelist.Any(whitelistType => component.GetType() == whitelistType))
                     {
                         LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
                         GameObject.Destroy(component);
@@ -739,9 +646,12 @@ namespace LethalExpansion
                 TimeOfDay.Instance.quotaVariables.baseIncrease = ConfigManager.Instance.FindItemValue<int>("QuotaBaseIncrease");
                 TimeOfDay.Instance.quotaVariables.increaseSteepness = ConfigManager.Instance.FindItemValue<int>("QuotaIncreaseSteepness");
             }
-            RoundManager.Instance.scrapAmountMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapAmountMultiplier");
-            RoundManager.Instance.scrapValueMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapValueMultiplier");
-            RoundManager.Instance.mapSizeMultiplier = ConfigManager.Instance.FindItemValue<float>("MapSizeMultiplier");
+            if (!ConfigManager.Instance.FindItemValue<bool>("LethalAdjustmentsCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "LethalAdjustments"))
+            {
+                RoundManager.Instance.scrapAmountMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapAmountMultiplier");
+                RoundManager.Instance.scrapValueMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapValueMultiplier");
+                RoundManager.Instance.mapSizeMultiplier = ConfigManager.Instance.FindItemValue<float>("MapSizeMultiplier");
+            }
             StartOfRound.Instance.maxShipItemCapacity = ConfigManager.Instance.FindItemValue<int>("MaxItemsInShip");
 
             if (!alreadypatched)
