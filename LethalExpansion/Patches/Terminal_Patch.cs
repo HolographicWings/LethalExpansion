@@ -438,11 +438,11 @@ namespace LethalExpansion.Patches
                                                 moonInfo.displayText = $"{newMoon.PlanetName}\r\n----------------------\r\n\r\n";
                                                 if (!string.IsNullOrWhiteSpace(newMoon.PlanetLore))
                                                 {
-                                                    moonInfo.displayText += newMoon.PlanetLore;
+                                                    moonInfo.displayText += $"{newMoon.PlanetLore}\r\n";
                                                 }
                                                 else
                                                 {
-                                                    moonInfo.displayText += "No info about this moon can be found.";
+                                                    moonInfo.displayText += "No info about this moon can be found.\r\n";
                                                 }
                                                 moonInfo.clearPreviousText = true;
                                                 moonInfo.maxCharactersToType = 35;
