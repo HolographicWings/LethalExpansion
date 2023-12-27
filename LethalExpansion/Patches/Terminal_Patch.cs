@@ -25,6 +25,7 @@ namespace LethalExpansion.Patches
         public static List<int> fireExitAmounts = new List<int>();
 
         public static TerminalKeyword routeKeyword;
+        public static TerminalKeyword infoKeyword;
 
         public static List<string> newScrapsNames = new List<string>();
         public static List<string> newMoonsNames = new List<string>();
@@ -35,6 +36,7 @@ namespace LethalExpansion.Patches
             scrapsPatched = false;
             moonsPatched = false;
             routeKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "route");
+            infoKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "info");
             //RemoveMoon(__instance, "Experimentation");
             Hotfix_DoubleRoutes();
             GatherAssets();
@@ -270,7 +272,7 @@ namespace LethalExpansion.Patches
                                                 }
                                                 newLevel.lockedForDemo = true;
                                                 newLevel.spawnEnemiesAndScrap = newMoon.SpawnEnemiesAndScrap;
-                                                if (newMoon.PlanetDescription != null && newMoon.PlanetDescription.Length > 0)
+                                                if (!string.IsNullOrWhiteSpace(newMoon.PlanetDescription))
                                                 {
                                                     newLevel.LevelDescription = newMoon.PlanetDescription;
                                                 }
@@ -425,11 +427,31 @@ namespace LethalExpansion.Patches
                                             new CompatibleNoun(){noun = confirmKeyword, result = moonRouteConfirm},
                                                 };
 
-                                                CompatibleNoun moonNoun = new CompatibleNoun();
+                                                CompatibleNoun moonRouteNoun = new CompatibleNoun();
 
-                                                moonNoun.noun = moonKeyword;
-                                                moonNoun.result = moonRoute;
-                                                routeKeyword.compatibleNouns = routeKeyword.compatibleNouns.AddItem(moonNoun).ToArray();
+                                                moonRouteNoun.noun = moonKeyword;
+                                                moonRouteNoun.result = moonRoute;
+                                                routeKeyword.compatibleNouns = routeKeyword.compatibleNouns.AddItem(moonRouteNoun).ToArray();
+
+                                                TerminalNode moonInfo = ScriptableObject.CreateInstance<TerminalNode>();
+                                                moonInfo.name = newMoon.MoonName.ToLower() + "Info";
+                                                moonInfo.displayText = $"{newMoon.PlanetName}\r\n----------------------\r\n\r\n";
+                                                if (!string.IsNullOrWhiteSpace(newMoon.PlanetLore))
+                                                {
+                                                    moonInfo.displayText += newMoon.PlanetLore;
+                                                }
+                                                else
+                                                {
+                                                    moonInfo.displayText += "No info about this moon can be found.";
+                                                }
+                                                moonInfo.clearPreviousText = true;
+                                                moonInfo.maxCharactersToType = 35;
+
+                                                CompatibleNoun moonInfoNoun = new CompatibleNoun();
+
+                                                moonInfoNoun.noun = moonKeyword;
+                                                moonInfoNoun.result = moonInfo;
+                                                infoKeyword.compatibleNouns = infoKeyword.compatibleNouns.AddItem(moonInfoNoun).ToArray();
 
                                                 StartOfRound.Instance.levels = StartOfRound.Instance.levels.AddItem(newLevel).ToArray();
 
