@@ -65,6 +65,6 @@ jobs:
           audio
           misc
         deps: |
-          BepInEx-BepInExPack-5.4.2100
+          BepInEx-BepInExPack@5.4.2100
         website: https://github.com/HolographicWings/LethalExpansion
         file: ./Releases/LethalExpansion_v${{ env.VERSION }}.zip

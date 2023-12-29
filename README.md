@@ -78,6 +78,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.7
+	- Added Coomfy Dungeon Compatibility.
 - 1.3.6
 	- Added Lethal Adjustments Compatibility.
 - 1.3.5

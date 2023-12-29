@@ -23,9 +23,9 @@ namespace LethalExpansion.Utils
                     string onlineVersion = await httpClient.GetStringAsync(url);
                     CompareVersions(onlineVersion);
                 }
-                catch (HttpRequestException e)
+                catch (HttpRequestException ex)
                 {
-                    Console.WriteLine("Erreur lors de la récupération de la version : " + e.Message);
+                    LethalExpansion.Log.LogError(ex.Message);
                 }
             }
         }

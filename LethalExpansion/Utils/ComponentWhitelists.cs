@@ -113,7 +113,8 @@ namespace LethalExpansion.Utils
             typeof(SI_SoundYDistance),
             typeof(SI_AudioOutputInterface),
             typeof(PlayerShip)
-        }; public static List<Type> scrapWhitelist = new List<Type> {
+        };
+        public static List<Type> scrapWhitelist = new List<Type> {
             //Base
             typeof(Transform),
             //Mesh

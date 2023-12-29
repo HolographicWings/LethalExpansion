@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -28,16 +29,26 @@ namespace LethalExpansion.Utils
             }
         }
         List<PopupObject> popups = new List<PopupObject>();
-        public void InstantiatePopup(Scene sceneFocus, string title = "Popup", string content = "", string button1 = "Ok", string button2 = "Cancel", UnityAction button1Action = null, UnityAction button2Action = null, bool button1Destroy = true, bool button2Destroy = true)
+        public void InstantiatePopup(Scene sceneFocus, string title = "Popup", string content = "", string button1 = "Ok", string button2 = "Cancel", UnityAction button1Action = null, UnityAction button2Action = null, int titlesize = 24, int contentsize = 24, int button1size = 24, int button2size = 24)
         {
             if(sceneFocus != null && sceneFocus.isLoaded)
             {
-                var canvas = GameObject.FindAnyObjectByType<Canvas>();
-                if (canvas == null)
+                GameObject[] rootObjects = sceneFocus.GetRootGameObjects();
+                Canvas canvas = null;
+                foreach (GameObject obj in rootObjects)
+                {
+                    canvas = obj.GetComponentInChildren<Canvas>();
+                    if (canvas != null)
+                    {
+                        break;
+                    }
+                }
+                if (canvas == null || canvas.gameObject.scene != sceneFocus)
                 {
                     var canvasObject = new GameObject();
                     canvasObject.name = "Canvas";
                     canvas = canvasObject.AddComponent<Canvas>();
+                    SceneManager.MoveGameObjectToScene(canvas.gameObject, sceneFocus);
                 }
                 var _tmp = GameObject.Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Popup.prefab"), canvas.transform);
                 if (_tmp != null)
@@ -52,20 +63,17 @@ namespace LethalExpansion.Utils
                     {
                         _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(button2Action);
                     }
-                    if (button1Destroy)
-                    {
-                        _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.Destroy(_tmp); });
-                    }
-                    if (button2Destroy)
-                    {
-                        _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.Destroy(_tmp); });
-                    }
+                    _tmp.transform.Find("Button1").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.Destroy(_tmp); });
+                    _tmp.transform.Find("Button2").gameObject.GetComponent<Button>().onClick.AddListener(() => { GameObject.Destroy(_tmp); });
                     PopupObject _instance = new PopupObject(_tmp, _tmp.transform.Find("Title").GetComponent<TMP_Text>(), _tmp.transform.Find("Panel/MainContent").GetComponent<TMP_Text>(), _tmp.transform.Find("Button1/Text").GetComponent<TMP_Text>(), _tmp.transform.Find("Button2/Text").GetComponent<TMP_Text>());
                     _instance.title.text = title;
+                    _instance.title.fontSize = titlesize;
                     _instance.content.text = content;
+                    _instance.content.fontSize = contentsize;
                     _instance.button1.text = button1;
+                    _instance.button1.fontSize = button1size;
                     _instance.button2.text = button2;
-                    SceneManager.MoveGameObjectToScene(_tmp, sceneFocus);
+                    _instance.button2.fontSize = button2size;
                     popups.Add(_instance);
                 }
             }

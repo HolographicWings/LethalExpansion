@@ -29,6 +29,7 @@ using Unity.Netcode.Components;
 using LethalSDK.Utils;
 using BepInEx.Bootstrap;
 using System.Collections;
+using UnityEngine.Events;
 
 namespace LethalExpansion
 {
@@ -42,10 +43,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.6";
+        private const string VersionString = "1.3.7";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 3, 6)
+            new Version(1, 3, 7)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -258,6 +259,21 @@ namespace LethalExpansion
                 if(lastKickReason != null && lastKickReason.Length > 0)
                 {
                     PopupManager.Instance.InstantiatePopup(scene, "Kicked from Lobby", $"You have been kicked\r\nReason: {lastKickReason}", button2: "Ignore");
+                }
+                Logger.LogInfo(!ConfigManager.Instance.FindEntryValue<bool>("CoomfyDungeonCompatibility"));
+                Logger.LogInfo(loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"));
+                Logger.LogInfo(!ConfigManager.Instance.FindEntryValue<bool>("CoomfyDungeonCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"));
+                if(!ConfigManager.Instance.FindEntryValue<bool>("CoomfyDungeonCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"))
+                {
+                    PopupManager.Instance.InstantiatePopup(scene,
+                        "CoomfyDungeon mod found",
+                        "Warning: CoomfyDungeon is incompatible with LethalExpansion, Would you like to enable the compatibility mode? Otherwise dungeon generation Desync may occurs!",
+                        "Yes",
+                        "No",
+                        new UnityAction(() => { ConfigManager.Instance.SetItemValue<bool>("CoomfyDungeonCompatibility", true); ConfigManager.Instance.SetEntryValue<bool>("CoomfyDungeonCompatibility", true); }),
+                        titlesize:20,
+                        contentsize:18
+                        );
                 }
             }
             if (scene.name == "CompanyBuilding")
