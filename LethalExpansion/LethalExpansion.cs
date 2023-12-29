@@ -57,7 +57,8 @@ namespace LethalExpansion
             { "MoonOfTheDay",compatibility.good },
             { "Television_Controller",compatibility.bad },
             { "beeisyou.LandmineFix",compatibility.perfect },
-            { "LethalAdjustments",compatibility.good }
+            { "LethalAdjustments",compatibility.good },
+            { "CoomfyDungeon", compatibility.bad }
         };
         private enum compatibility
         {
