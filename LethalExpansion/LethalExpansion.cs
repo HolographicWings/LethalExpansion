@@ -57,7 +57,8 @@ namespace LethalExpansion
             { "MoonOfTheDay",compatibility.good },
             { "Television_Controller",compatibility.bad },
             { "beeisyou.LandmineFix",compatibility.perfect },
-            { "LethalAdjustments",compatibility.good }
+            { "LethalAdjustments",compatibility.good },
+            { "CoomfyDungeon", compatibility.bad }
         };
         private enum compatibility
         {
@@ -149,6 +150,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("KickPlayerWithoutMod", false, "Lobby", "Kick the players without Lethal Expansion installer. (Will be kicked anyway if LoadModules is True)", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("BrutalCompanyPlusCompatibility", false, "Compatibility", "Leave Brutal Company Plus control the Quota settings.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("LethalAdjustmentsCompatibility", false, "Compatibility", "Leave Lethal Adjustments control the Dungeon settings.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("CoomfyDungeonCompatibility", false, "Compatibility", "Let Coomfy Dungeons control the Dungeon size & scrap settings.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("SettingsDebug", false, "Debug", "Show an output of every settings in the Console. (The Console must listen Info messages)", sync: false));
 
             ConfigManager.Instance.ReadConfig();
@@ -646,12 +648,21 @@ namespace LethalExpansion
                 TimeOfDay.Instance.quotaVariables.baseIncrease = ConfigManager.Instance.FindItemValue<int>("QuotaBaseIncrease");
                 TimeOfDay.Instance.quotaVariables.increaseSteepness = ConfigManager.Instance.FindItemValue<int>("QuotaIncreaseSteepness");
             }
-            if (!ConfigManager.Instance.FindItemValue<bool>("LethalAdjustmentsCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "LethalAdjustments"))
+            
+            bool hasLethalAdjustmentCompat = ConfigManager.Instance.FindItemValue<bool>("LethalAdjustmentsCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "LethalAdjustments");
+            bool ignoreScrapAmountAndMapSize = hasLethalAdjustmentCompat || (ConfigManager.Instance.FindItemValue<bool>("CoomfyDungeonCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"));
+
+            if (!hasLethalAdjustmentCompat)
+            {
+                RoundManager.Instance.scrapValueMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapValueMultiplier");
+            }
+            
+            if (!ignoreScrapAmountAndMapSize)
             {
                 RoundManager.Instance.scrapAmountMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapAmountMultiplier");
-                RoundManager.Instance.scrapValueMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapValueMultiplier");
                 RoundManager.Instance.mapSizeMultiplier = ConfigManager.Instance.FindItemValue<float>("MapSizeMultiplier");
             }
+            
             StartOfRound.Instance.maxShipItemCapacity = ConfigManager.Instance.FindItemValue<int>("MaxItemsInShip");
 
             if (!alreadypatched)
