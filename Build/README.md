@@ -77,7 +77,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 ## Changes :
 - 1.3.9
 	- Attempt to fix a crash that happen on certain setups when loading a custom moon.
-	- Increased AutomaticDeadlineStage cap to 3000 (from 1000)
+	- Increased AutomaticDeadlineStage cap to 3000 (from 1000).
+	- Slighty improved Compatibility logging.
 - 1.3.8
 	- Fixed a critical bug with SDK's character validator.
 - 1.3.7
