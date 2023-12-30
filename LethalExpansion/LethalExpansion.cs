@@ -53,13 +53,14 @@ namespace LethalExpansion
             { "com.sinai.unityexplorer",compatibility.medium },
             { "HDLethalCompany",compatibility.good },
             { "LC_API",compatibility.good },
-            { "me.swipez.melonloader.morecompany",compatibility.unknown },
-            { "BrutalCompanyPlus",compatibility.unknown },
+            { "me.swipez.melonloader.morecompany",compatibility.medium },
+            { "BrutalCompanyPlus",compatibility.medium },
             { "MoonOfTheDay",compatibility.good },
             { "Television_Controller",compatibility.bad },
             { "beeisyou.LandmineFix",compatibility.perfect },
             { "LethalAdjustments",compatibility.good },
-            { "CoomfyDungeon", compatibility.bad }
+            { "CoomfyDungeon", compatibility.bad },
+            { "BiggerLobby", compatibility.critical }
         };
         private enum compatibility
         {
@@ -111,11 +112,66 @@ namespace LethalExpansion
                 {
                     if (CompatibleMods.ContainsKey(plugin.Metadata.GUID))
                     {
-                        Logger.LogInfo($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                        switch (CompatibleMods[plugin.Metadata.GUID])
+                        {
+                            case compatibility.unknown:
+                                Console.BackgroundColor = ConsoleColor.Gray;
+                                Logger.LogInfo("                              ");
+                                Console.ResetColor();
+                                Logger.LogInfo($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                                break;
+                            case compatibility.perfect:
+                                Console.BackgroundColor = ConsoleColor.Blue;
+                                Logger.LogInfo("                              ");
+                                Console.ResetColor();
+                                Logger.LogInfo($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                                break;
+                            case compatibility.good:
+                                Console.BackgroundColor = ConsoleColor.Green;
+                                Logger.LogInfo("                              ");
+                                Console.ResetColor();
+                                Logger.LogInfo($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                                break;
+                            case compatibility.medium:
+                                Console.BackgroundColor = ConsoleColor.Yellow;
+                                Logger.LogInfo("                              ");
+                                Console.ResetColor();
+                                Logger.LogWarning($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                                break;
+                            case compatibility.bad:
+                                Console.BackgroundColor = ConsoleColor.Red;
+                                Logger.LogInfo("                              ");
+                                Console.ResetColor();
+                                Logger.LogError($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                                break;
+                            case compatibility.critical:
+                                Console.BackgroundColor = ConsoleColor.DarkRed;
+                                Logger.LogInfo("                              ");
+                                Console.ResetColor();
+                                Logger.LogFatal($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                                break;
+                            case compatibility.incompatible:
+                                Console.BackgroundColor = ConsoleColor.Magenta;
+                                Logger.LogInfo("                              ");
+                                Console.ResetColor();
+                                Logger.LogFatal($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                                break;
+                            default:
+                                Console.BackgroundColor = ConsoleColor.Gray;
+                                Logger.LogInfo("                              ");
+                                Console.ResetColor();
+                                Logger.LogInfo($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
+                                break;
+                        }
+                        Logger.LogInfo("------------------------------");
                     }
                     else
                     {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Logger.LogInfo("          ");
+                        Console.ResetColor();
                         Logger.LogInfo($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {compatibility.unknown}");
+                        Logger.LogInfo("------------------------------");
                     }
                 }
             }
@@ -140,7 +196,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("24HoursClock", false, "HUD", "Display a 24h clock instead of 12h.", sync: false));
             ConfigManager.Instance.AddItem(new ConfigItem("ClockAlwaysVisible", false, "HUD", "Display clock while inside of the Ship."));
             ConfigManager.Instance.AddItem(new ConfigItem("AutomaticDeadline", false, "Expeditions", "Automatically increase the Deadline depending of the required quota."));
-            ConfigManager.Instance.AddItem(new ConfigItem("AutomaticDeadlineStage", 300, "Expeditions", "Increase the quota deadline of one day each time the quota exceeds this value.", 100, 1000));
+            ConfigManager.Instance.AddItem(new ConfigItem("AutomaticDeadlineStage", 300, "Expeditions", "Increase the quota deadline of one day each time the quota exceeds this value.", 100, 3000));
             ConfigManager.Instance.AddItem(new ConfigItem("LoadModules", true, "Modules", "Load SDK Modules that add new content to the game. Disable it to play with Vanilla players. (RESTART REQUIRED)", sync:false, optional: false, requireRestart:true));
             ConfigManager.Instance.AddItem(new ConfigItem("MaxItemsInShip", 45, "Expeditions", "Change the Items cap can be kept in the ship.", 10, 500));
             ConfigManager.Instance.AddItem(new ConfigItem("ShowMoonWeatherInCatalogue", true, "HUD", "Display the current weather of Moons in the Terminal's Moon Catalogue.", sync: true));
@@ -260,9 +316,6 @@ namespace LethalExpansion
                 {
                     PopupManager.Instance.InstantiatePopup(scene, "Kicked from Lobby", $"You have been kicked\r\nReason: {lastKickReason}", button2: "Ignore");
                 }
-                Logger.LogInfo(!ConfigManager.Instance.FindEntryValue<bool>("CoomfyDungeonCompatibility"));
-                Logger.LogInfo(loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"));
-                Logger.LogInfo(!ConfigManager.Instance.FindEntryValue<bool>("CoomfyDungeonCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"));
                 if(!ConfigManager.Instance.FindEntryValue<bool>("CoomfyDungeonCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"))
                 {
                     PopupManager.Instance.InstantiatePopup(scene,
@@ -271,6 +324,16 @@ namespace LethalExpansion
                         "Yes",
                         "No",
                         new UnityAction(() => { ConfigManager.Instance.SetItemValue<bool>("CoomfyDungeonCompatibility", true); ConfigManager.Instance.SetEntryValue<bool>("CoomfyDungeonCompatibility", true); }),
+                        titlesize:20,
+                        contentsize:18
+                        );
+                }
+                if(loadedPlugins.Any(p => p.Metadata.GUID == "BiggerLobby"))
+                {
+                    PopupManager.Instance.InstantiatePopup(scene,
+                        "BiggerLobby mod found",
+                        "Warning: BiggerLobby is incompatible with LethalExpansion, host/client synchronization will break and dungeon generation Desync may occurs!",
+                        button2: "Ignore",
                         titlesize:20,
                         contentsize:18
                         );
@@ -357,6 +420,17 @@ namespace LethalExpansion
             {
                 SpaceLight.SetActive(false);
                 terrainfixer.SetActive(false);
+                if (ConfigManager.Instance.FindItemValue<bool>("SettingsDebug"))
+                {
+                    foreach (var entry in ConfigManager.Instance.GetAll())
+                    {
+                        Log.LogInfo("==========");
+                        Log.LogInfo(entry.Key);
+                        Log.LogInfo(entry.Value);
+                        Log.LogInfo(entry.DefaultValue);
+                        Log.LogInfo(entry.Sync);
+                    }
+                }
             }
             if (scene.name == "InitSceneLaunchOptions" && isInGame)
             {
@@ -377,7 +451,14 @@ namespace LethalExpansion
                         Log.LogInfo(entry.Sync);
                     }
                 }
-                //StartCoroutine(LoadCustomMoon(scene));
+                LoadCustomMoon(scene).GetAwaiter();
+            }
+        }
+        async Task LoadCustomMoon(Scene scene)
+        {
+            await Task.Delay(400);
+            try
+            {
                 if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
                 {
                     if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
@@ -416,6 +497,7 @@ namespace LethalExpansion
                         SceneManager.MoveGameObjectToScene(obj, scene);
                     }
                 }
+                await Task.Delay(200);
                 GameObject DropShip = GameObject.Find("ItemShipAnimContainer");
                 if (DropShip != null)
                 {
@@ -435,6 +517,7 @@ namespace LethalExpansion
                         ItemShipMusicFar.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                     }
                 }
+                await Task.Delay(200);
                 RuntimeDungeon runtimeDungeon = GameObject.FindObjectOfType<RuntimeDungeon>(false);
                 if (runtimeDungeon == null)
                 {
@@ -477,110 +560,13 @@ namespace LethalExpansion
                 rigidbody.isKinematic = true;
                 rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
                 SceneManager.MoveGameObjectToScene(OutOfBounds, scene);
-            }
-        }
-        IEnumerator LoadCustomMoon(Scene scene)
-        {
-            yield return null;
-            if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
-            {
-                if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
-                {
-                    CheckAndRemoveIllegalComponents(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform);
-                    GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
-                    currentWaterSurface = mainPrefab.transform.Find("Environment/Water");
-                    if (mainPrefab != null)
-                    {
-                        SceneManager.MoveGameObjectToScene(mainPrefab, scene);
-                        var DiageticBackground = mainPrefab.transform.Find("Systems/Audio/DiageticBackground");
-                        if (DiageticBackground != null)
-                        {
-                            DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
-                        }
-                        Terrain[] Terrains = mainPrefab.GetComponentsInChildren<Terrain>();
-                        if (Terrains != null && Terrains.Length > 0)
-                        {
-                            foreach (Terrain terrain in Terrains)
-                            {
-                                terrain.drawInstanced = true;
-                            }
-                        }
-                    }
-                }
-            }
-            String[] _tmp = { "MapPropsContainer", "OutsideAINode", "SpawnDenialPoint", "ItemShipLandingNode", "OutsideLevelNavMesh" };
-            foreach (string s in _tmp)
-            {
-                if (GameObject.FindGameObjectWithTag(s) == null || GameObject.FindGameObjectsWithTag(s).Any(o => o.scene.name != "InitSceneLaunchOptions"))
-                {
-                    GameObject obj = new GameObject();
-                    obj.name = s;
-                    obj.tag = s;
-                    obj.transform.position = new Vector3(0, -200, 0);
-                    SceneManager.MoveGameObjectToScene(obj, scene);
-                }
-            }
-            GameObject DropShip = GameObject.Find("ItemShipAnimContainer");
-            if (DropShip != null)
-            {
-                var ItemShip = DropShip.transform.Find("ItemShip");
-                if (ItemShip != null)
-                {
-                    ItemShip.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
-                }
-                var ItemShipMusicClose = DropShip.transform.Find("ItemShip/Music");
-                if (ItemShipMusicClose != null)
-                {
-                    ItemShipMusicClose.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
-                }
-                var ItemShipMusicFar = DropShip.transform.Find("ItemShip/Music/Music (1)");
-                if (ItemShipMusicFar != null)
-                {
-                    ItemShipMusicFar.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
-                }
-            }
-            RuntimeDungeon runtimeDungeon = GameObject.FindObjectOfType<RuntimeDungeon>(false);
-            if (runtimeDungeon == null)
-            {
-                GameObject dungeonGenerator = new GameObject();
-                dungeonGenerator.name = "DungeonGenerator";
-                dungeonGenerator.tag = "DungeonGenerator";
-                dungeonGenerator.transform.position = new Vector3(0, -200, 0);
-                runtimeDungeon = dungeonGenerator.AddComponent<RuntimeDungeon>();
-                runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
-                runtimeDungeon.Generator.LengthMultiplier = 0.8f;
-                runtimeDungeon.Generator.PauseBetweenRooms = 0.2f;
-                runtimeDungeon.GenerateOnStart = false;
-                runtimeDungeon.Root = dungeonGenerator;
-                runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
-                UnityNavMeshAdapter dungeonNavMesh = dungeonGenerator.AddComponent<UnityNavMeshAdapter>();
-                dungeonNavMesh.BakeMode = UnityNavMeshAdapter.RuntimeNavMeshBakeMode.FullDungeonBake;
-                dungeonNavMesh.LayerMask = 35072; //256 + 2048 + 32768 = 35072
-                SceneManager.MoveGameObjectToScene(dungeonGenerator, scene);
-            }
-            else
-            {
-                if (runtimeDungeon.Generator.DungeonFlow == null)
-                {
-                    runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
-                }
-            }
 
-            runtimeDungeon.Generator.DungeonFlow.GlobalProps.First(p => p.ID == 1231).Count = new IntRange(RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite(), RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite());
-
-            GameObject OutOfBounds = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            OutOfBounds.name = "OutOfBounds";
-            OutOfBounds.layer = 13;
-            OutOfBounds.transform.position = new Vector3(0, -300, 0);
-            OutOfBounds.transform.localScale = new Vector3(1000, 5, 1000);
-            BoxCollider boxCollider = OutOfBounds.GetComponent<BoxCollider>();
-            boxCollider.isTrigger = true;
-            OutOfBounds.AddComponent<OutOfBoundsTrigger>();
-            Rigidbody rigidbody = OutOfBounds.AddComponent<Rigidbody>();
-            rigidbody.useGravity = false;
-            rigidbody.isKinematic = true;
-            rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
-            SceneManager.MoveGameObjectToScene(OutOfBounds, scene);
+                await Task.Delay(200);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex);
+            }
         }
         
 
