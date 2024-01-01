@@ -43,10 +43,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.10";
+        private const string VersionString = "1.3.11";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 3, 10)
+            new Version(1, 3, 11)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -162,7 +162,7 @@ namespace LethalExpansion
                     else
                     {
                         Console.BackgroundColor = ConsoleColor.Gray;
-                        Logger.LogInfo("          ");
+                        Logger.LogInfo("                              ");
                         Console.ResetColor();
                         Logger.LogInfo($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {compatibility.unknown}");
                         Logger.LogInfo("------------------------------");
@@ -547,8 +547,6 @@ namespace LethalExpansion
                         runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
                     }
                 }
-
-                runtimeDungeon.Generator.DungeonFlow.GlobalProps.First(p => p.ID == 1231).Count = new IntRange(RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite(), RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite());
 
                 GameObject OutOfBounds = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 OutOfBounds.name = "OutOfBounds";

@@ -117,5 +117,53 @@ namespace LethalExpansion.Patches
                 zeroQuotaWorkaround = false;
             }
         }
+        [HarmonyPatch(nameof(RoundManager.GenerateNewFloor))]
+        [HarmonyPrefix]
+        public static bool GenerateNewFloor_Prefix(RoundManager __instance)
+        {
+            if (!__instance.hasInitializedLevelRandomSeed)
+            {
+                __instance.hasInitializedLevelRandomSeed = true;
+                __instance.InitializeRandomNumberGenerators();
+            }
+            if (__instance.currentLevel.dungeonFlowTypes != null && __instance.currentLevel.dungeonFlowTypes.Length != 0)
+            {
+                List<int> list = new List<int>();
+                for (int i = 0; i < __instance.currentLevel.dungeonFlowTypes.Length; i++)
+                {
+                    list.Add(__instance.currentLevel.dungeonFlowTypes[i].rarity);
+                }
+                int id = __instance.currentLevel.dungeonFlowTypes[__instance.GetRandomWeightedIndex(list.ToArray(), __instance.LevelRandom)].id;
+                __instance.dungeonGenerator.Generator.DungeonFlow = __instance.dungeonFlowTypes[id];
+
+                if (RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite() != 0)
+                {
+                    RoundManager.Instance.dungeonGenerator.Generator.DungeonFlow.GlobalProps.First(p => p.ID == 1231).Count = new IntRange(RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite(), RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite());
+                }
+
+                if (id < __instance.firstTimeDungeonAudios.Length && __instance.firstTimeDungeonAudios[id] != null)
+                {
+                    EntranceTeleport[] array = GameObject.FindObjectsOfType<EntranceTeleport>();
+                    if (array != null && array.Length != 0)
+                    {
+                        for (int j = 0; j < array.Length; j++)
+                        {
+                            if (array[j].isEntranceToBuilding)
+                            {
+                                array[j].firstTimeAudio = __instance.firstTimeDungeonAudios[id];
+                                array[j].dungeonFlowId = id;
+                            }
+                        }
+                    }
+                }
+            }
+            __instance.dungeonGenerator.Generator.ShouldRandomizeSeed = false;
+            __instance.dungeonGenerator.Generator.Seed = __instance.LevelRandom.Next();
+            Debug.Log(string.Format("GenerateNewFloor(). Map generator's random seed: {0}", __instance.dungeonGenerator.Generator.Seed));
+            __instance.dungeonGenerator.Generator.LengthMultiplier = __instance.currentLevel.factorySizeMultiplier * __instance.mapSizeMultiplier;
+            __instance.dungeonGenerator.Generate();
+
+            return false;
+        }
     }
 }

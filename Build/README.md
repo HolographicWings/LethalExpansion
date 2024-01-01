@@ -75,8 +75,10 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.11
+	- Fixed multiple firexists wasn't working since the moon loading became asynchronous.
 - 1.3.10
-	- Added incompatibility note about Boombox Controller Mod
+	- Added incompatibility note about Boombox Controller Mod.
 	- Reduced spawn luck of Christmas Star in Christmas Village.
 - 1.3.9
 	- Attempt to fix a crash that happen on certain setups when loading a custom moon.
