@@ -43,10 +43,10 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.8";
+        private const string VersionString = "1.3.10";
         public static readonly Version ModVersion = new Version(VersionString);
         private readonly Version[] CompatibleModVersions = {
-            new Version(1, 3, 8)
+            new Version(1, 3, 10)
         };
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
@@ -60,7 +60,8 @@ namespace LethalExpansion
             { "beeisyou.LandmineFix",compatibility.perfect },
             { "LethalAdjustments",compatibility.good },
             { "CoomfyDungeon", compatibility.bad },
-            { "BiggerLobby", compatibility.critical }
+            { "BiggerLobby", compatibility.critical },
+            { "KoderTech.BoomboxController", compatibility.critical }
         };
         private enum compatibility
         {
@@ -69,8 +70,7 @@ namespace LethalExpansion
             good = 2,
             medium = 3,
             bad = 4,
-            critical = 5,
-            incompatible = 6
+            critical = 5
         }
         List<PluginInfo> loadedPlugins = new List<PluginInfo>();
 
@@ -145,12 +145,6 @@ namespace LethalExpansion
                                 Logger.LogError($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
                                 break;
                             case compatibility.critical:
-                                Console.BackgroundColor = ConsoleColor.DarkRed;
-                                Logger.LogInfo("                              ");
-                                Console.ResetColor();
-                                Logger.LogFatal($"Plugin: {plugin.Metadata.Name} - Version: {plugin.Metadata.Version} - Compatibility: {CompatibleMods[plugin.Metadata.GUID]}");
-                                break;
-                            case compatibility.incompatible:
                                 Console.BackgroundColor = ConsoleColor.Magenta;
                                 Logger.LogInfo("                              ");
                                 Console.ResetColor();
@@ -179,7 +173,6 @@ namespace LethalExpansion
             config = Config;
 
             ConfigManager.Instance.AddItem(new ConfigItem("GlobalTimeSpeedMultiplier", 1.4f, "Time", "Change the global time speed", 0.1f, 3f, sync: true));
-            ConfigManager.Instance.AddItem(new ConfigItem("LengthOfHours", 60, "Time", "Change amount of seconds in one hour", 1, 300));
             ConfigManager.Instance.AddItem(new ConfigItem("NumberOfHours", 18, "Time", "Max lenght of an Expedition in hours. (Begin at 6 AM | 18 = Midnight)", 6, 20));
             ConfigManager.Instance.AddItem(new ConfigItem("DeadlineDaysAmount", 3, "Expeditions", "Change amount of days for the Quota.", 1, 9, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("StartingCredits", 60, "Expeditions", "Change amount of starting Credit.", 0, 1000, sync: true));
@@ -333,6 +326,16 @@ namespace LethalExpansion
                     PopupManager.Instance.InstantiatePopup(scene,
                         "BiggerLobby mod found",
                         "Warning: BiggerLobby is incompatible with LethalExpansion, host/client synchronization will break and dungeon generation Desync may occurs!",
+                        button2: "Ignore",
+                        titlesize:20,
+                        contentsize:18
+                        );
+                }
+                if(loadedPlugins.Any(p => p.Metadata.GUID == "KoderTech.BoomboxController"))
+                {
+                    PopupManager.Instance.InstantiatePopup(scene,
+                        "BoomboxController mod found",
+                        "Warning: BoomboxController is incompatible with LethalExpansion, host/client synchronization will break and dungeon generation Desync may occurs!",
                         button2: "Ignore",
                         titlesize:20,
                         contentsize:18
@@ -640,7 +643,6 @@ namespace LethalExpansion
             }
 
             TimeOfDay.Instance.globalTimeSpeedMultiplier = ConfigManager.Instance.FindItemValue<float>("GlobalTimeSpeedMultiplier");
-            TimeOfDay.Instance.lengthOfHours = ConfigManager.Instance.FindItemValue<int>("LengthOfHours");
             TimeOfDay.Instance.numberOfHours = ConfigManager.Instance.FindItemValue<int>("NumberOfHours");
             if(!ConfigManager.Instance.FindItemValue<bool>("BrutalCompanyPlusCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "BrutalCompanyPlus"))
             {
