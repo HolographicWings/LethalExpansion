@@ -78,6 +78,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.12
+	- Added a compatibility patch for MoreMoneyStart.
 - 1.3.11
 	- Fixed multiple firexists wasn't working since the moon loading became asynchronous.
 - 1.3.10

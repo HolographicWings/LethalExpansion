@@ -43,11 +43,11 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.11";
+        private const string VersionString = "1.3.12";
         public static readonly Version ModVersion = new Version(VersionString);
-        private readonly Version[] CompatibleModVersions = {
+        /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
-        };
+        };*/
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
             { "com.sinai.unityexplorer",compatibility.medium },
@@ -61,7 +61,8 @@ namespace LethalExpansion
             { "LethalAdjustments",compatibility.good },
             { "CoomfyDungeon", compatibility.bad },
             { "BiggerLobby", compatibility.critical },
-            { "KoderTech.BoomboxController", compatibility.critical }
+            { "KoderTech.BoomboxController", compatibility.critical },
+            { "299792458.MoreMoneyStart", compatibility.good }
         };
         private enum compatibility
         {
@@ -201,6 +202,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("BrutalCompanyPlusCompatibility", false, "Compatibility", "Leave Brutal Company Plus control the Quota settings.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("LethalAdjustmentsCompatibility", false, "Compatibility", "Leave Lethal Adjustments control the Dungeon settings.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("CoomfyDungeonCompatibility", false, "Compatibility", "Let Coomfy Dungeons control the Dungeon size & scrap settings.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("MoreMoneyStartCompatibility", false, "Compatibility", "Let MoreMoneyStart control the Starting credits amount.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("SettingsDebug", false, "Debug", "Show an output of every settings in the Console. (The Console must listen Info messages)", sync: false));
 
             ConfigManager.Instance.ReadConfig();
@@ -640,32 +642,64 @@ namespace LethalExpansion
                 }
             }
 
-            TimeOfDay.Instance.globalTimeSpeedMultiplier = ConfigManager.Instance.FindItemValue<float>("GlobalTimeSpeedMultiplier");
-            TimeOfDay.Instance.numberOfHours = ConfigManager.Instance.FindItemValue<int>("NumberOfHours");
-            if(!ConfigManager.Instance.FindItemValue<bool>("BrutalCompanyPlusCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "BrutalCompanyPlus"))
-            {
-                TimeOfDay.Instance.quotaVariables.deadlineDaysAmount = ConfigManager.Instance.FindItemValue<int>("DeadlineDaysAmount");
-                TimeOfDay.Instance.quotaVariables.startingQuota = ConfigManager.Instance.FindItemValue<int>("StartingQuota");
-                TimeOfDay.Instance.quotaVariables.startingCredits = ConfigManager.Instance.FindItemValue<int>("StartingCredits");
-                TimeOfDay.Instance.quotaVariables.baseIncrease = ConfigManager.Instance.FindItemValue<int>("QuotaBaseIncrease");
-                TimeOfDay.Instance.quotaVariables.increaseSteepness = ConfigManager.Instance.FindItemValue<int>("QuotaIncreaseSteepness");
-            }
-            
-            bool hasLethalAdjustmentCompat = ConfigManager.Instance.FindItemValue<bool>("LethalAdjustmentsCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "LethalAdjustments");
-            bool ignoreScrapAmountAndMapSize = hasLethalAdjustmentCompat || (ConfigManager.Instance.FindItemValue<bool>("CoomfyDungeonCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"));
+            bool patchGlobalTimeSpeedMultiplier = true;
+            bool patchNumberOfHours = true;
+            bool patchDeadlineDaysAmount = true;
+            bool patchStartingQuota = true;
+            bool patchStartingCredits = true;
+            bool patchBaseIncrease = true;
+            bool patchIncreaseSteepness = true;
+            bool patchScrapValueMultiplier = true;
+            bool patchScrapAmountMultiplier = true;
+            bool patchMapSizeMultiplier = true;
+            bool patchMaxShipItemCapacity = true;
 
-            if (!hasLethalAdjustmentCompat)
+            if (!ConfigManager.Instance.FindItemValue<bool>("BrutalCompanyPlusCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "BrutalCompanyPlus"))
             {
+                patchDeadlineDaysAmount = false;
+                patchStartingQuota = false;
+                patchStartingCredits = false;
+                patchBaseIncrease = false;
+                patchIncreaseSteepness = false;
+            }
+            if (!ConfigManager.Instance.FindItemValue<bool>("LethalAdjustmentsCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "LethalAdjustments"))
+            {
+                patchScrapValueMultiplier = false;
+                patchScrapAmountMultiplier = false;
+                patchMapSizeMultiplier = false;
+            }
+            if (!ConfigManager.Instance.FindItemValue<bool>("CoomfyDungeonCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"))
+            {
+                patchScrapAmountMultiplier = false;
+                patchMapSizeMultiplier = false;
+            }
+            if (!ConfigManager.Instance.FindItemValue<bool>("MoreMoneyStartCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "299792458.MoreMoneyStart"))
+            {
+                patchStartingCredits = false;
+            }
+
+            if(patchGlobalTimeSpeedMultiplier)
+                TimeOfDay.Instance.globalTimeSpeedMultiplier = ConfigManager.Instance.FindItemValue<float>("GlobalTimeSpeedMultiplier");
+            if (patchNumberOfHours)
+                TimeOfDay.Instance.numberOfHours = ConfigManager.Instance.FindItemValue<int>("NumberOfHours");
+            if (patchDeadlineDaysAmount)
+                TimeOfDay.Instance.quotaVariables.deadlineDaysAmount = ConfigManager.Instance.FindItemValue<int>("DeadlineDaysAmount");
+            if (patchStartingQuota)
+                TimeOfDay.Instance.quotaVariables.startingQuota = ConfigManager.Instance.FindItemValue<int>("StartingQuota");
+            if (patchStartingCredits)
+                TimeOfDay.Instance.quotaVariables.startingCredits = ConfigManager.Instance.FindItemValue<int>("StartingCredits");
+            if (patchBaseIncrease)
+                TimeOfDay.Instance.quotaVariables.baseIncrease = ConfigManager.Instance.FindItemValue<int>("QuotaBaseIncrease");
+            if (patchIncreaseSteepness)
+                TimeOfDay.Instance.quotaVariables.increaseSteepness = ConfigManager.Instance.FindItemValue<int>("QuotaIncreaseSteepness");
+            if (patchScrapValueMultiplier)
                 RoundManager.Instance.scrapValueMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapValueMultiplier");
-            }
-            
-            if (!ignoreScrapAmountAndMapSize)
-            {
+            if (patchScrapAmountMultiplier)
                 RoundManager.Instance.scrapAmountMultiplier = ConfigManager.Instance.FindItemValue<float>("ScrapAmountMultiplier");
+            if (patchMapSizeMultiplier)
                 RoundManager.Instance.mapSizeMultiplier = ConfigManager.Instance.FindItemValue<float>("MapSizeMultiplier");
-            }
-            
-            StartOfRound.Instance.maxShipItemCapacity = ConfigManager.Instance.FindItemValue<int>("MaxItemsInShip");
+            if (patchMaxShipItemCapacity)
+                StartOfRound.Instance.maxShipItemCapacity = ConfigManager.Instance.FindItemValue<int>("MaxItemsInShip");
 
             if (!alreadypatched)
             {
