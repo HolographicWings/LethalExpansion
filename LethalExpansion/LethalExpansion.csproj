@@ -246,9 +246,6 @@
     <None Include="lethalexpansion.lem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Modules\christmasvillage.lem">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Modules\oldseaport.lem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
