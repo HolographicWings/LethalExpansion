@@ -80,7 +80,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 ## Changes :
 - 1.3.12
 	- Added a compatibility patch for MoreMoneyStart.
-	- Removed Christmas village and moved it to an [independent mod](https://github.com/HolographicWings/ChristmasVillage_Legacy).
+	- Removed Christmas village and moved it to an [independent mod](https://github.com/HolographicWings/ChristmasVillage_LethalCompany).
 	- Added a setting to roll back to Synchronous custom moon loading.
 - 1.3.11
 	- Fixed multiple firexists wasn't working since the moon loading became asynchronous.
