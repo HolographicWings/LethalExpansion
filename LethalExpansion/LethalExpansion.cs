@@ -459,15 +459,15 @@ namespace LethalExpansion
                 }
                 if (ConfigManager.Instance.FindItemValue<bool>("LegacyMoonLoading"))
                 {
-                    LoadCustomMoonAsync(scene).RunSynchronously();
+                    LoadCustomMoon(scene).RunSynchronously();
                 }
                 else
                 {
-                    LoadCustomMoonAsync(scene).GetAwaiter();
+                    LoadCustomMoon(scene).GetAwaiter();
                 }
             }
         }
-        async Task LoadCustomMoonAsync(Scene scene)
+        async Task LoadCustomMoon(Scene scene)
         {
             await Task.Delay(400);
             try
