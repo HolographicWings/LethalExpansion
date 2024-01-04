@@ -79,7 +79,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 
 ## Changes :
 - 1.3.14
-	- Changed Boombox Controller compatibility not from critical to good.
+	- Changed Boombox Controller compatibility note from critical to good.
 	- Added an experimental recursive scrap patch to add custom scraps on custom moons of other modules without dependency.
 - 1.3.13
 	- Fixed tiny issue with compatibility patches.
