@@ -75,6 +75,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.13
+	- Fixed tiny issue with compatibility patches.
 - 1.3.12
 	- Added a compatibility patch for MoreMoneyStart.
 	- Removed Christmas village and moved it to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/ChristmasVillage_Legacy).

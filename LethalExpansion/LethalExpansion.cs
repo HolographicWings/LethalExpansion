@@ -43,7 +43,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.12";
+        private const string VersionString = "1.3.13";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -662,7 +662,7 @@ namespace LethalExpansion
             bool patchMapSizeMultiplier = true;
             bool patchMaxShipItemCapacity = true;
 
-            if (!ConfigManager.Instance.FindItemValue<bool>("BrutalCompanyPlusCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "BrutalCompanyPlus"))
+            if (ConfigManager.Instance.FindItemValue<bool>("BrutalCompanyPlusCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "BrutalCompanyPlus"))
             {
                 patchDeadlineDaysAmount = false;
                 patchStartingQuota = false;
@@ -670,23 +670,23 @@ namespace LethalExpansion
                 patchBaseIncrease = false;
                 patchIncreaseSteepness = false;
             }
-            if (!ConfigManager.Instance.FindItemValue<bool>("LethalAdjustmentsCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "LethalAdjustments"))
+            if (ConfigManager.Instance.FindItemValue<bool>("LethalAdjustmentsCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "LethalAdjustments"))
             {
                 patchScrapValueMultiplier = false;
                 patchScrapAmountMultiplier = false;
                 patchMapSizeMultiplier = false;
             }
-            if (!ConfigManager.Instance.FindItemValue<bool>("CoomfyDungeonCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"))
+            if (ConfigManager.Instance.FindItemValue<bool>("CoomfyDungeonCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"))
             {
                 patchScrapAmountMultiplier = false;
                 patchMapSizeMultiplier = false;
             }
-            if (!ConfigManager.Instance.FindItemValue<bool>("MoreMoneyStartCompatibility") || !loadedPlugins.Any(p => p.Metadata.GUID == "299792458.MoreMoneyStart"))
+            if (ConfigManager.Instance.FindItemValue<bool>("MoreMoneyStartCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "299792458.MoreMoneyStart"))
             {
                 patchStartingCredits = false;
             }
 
-            if(patchGlobalTimeSpeedMultiplier)
+            if (patchGlobalTimeSpeedMultiplier)
                 TimeOfDay.Instance.globalTimeSpeedMultiplier = ConfigManager.Instance.FindItemValue<float>("GlobalTimeSpeedMultiplier");
             if (patchNumberOfHours)
                 TimeOfDay.Instance.numberOfHours = ConfigManager.Instance.FindItemValue<int>("NumberOfHours");
