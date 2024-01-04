@@ -61,7 +61,7 @@ namespace LethalExpansion
             { "LethalAdjustments",compatibility.good },
             { "CoomfyDungeon", compatibility.bad },
             { "BiggerLobby", compatibility.critical },
-            { "KoderTech.BoomboxController", compatibility.critical },
+            { "KoderTech.BoomboxController", compatibility.good },
             { "299792458.MoreMoneyStart", compatibility.good }
         };
         private enum compatibility
@@ -334,22 +334,9 @@ namespace LethalExpansion
                         contentsize:18
                         );
                 }
-                if(loadedPlugins.Any(p => p.Metadata.GUID == "KoderTech.BoomboxController"))
-                {
-                    PopupManager.Instance.InstantiatePopup(scene,
-                        "BoomboxController mod found",
-                        "Warning: BoomboxController is incompatible with LethalExpansion, host/client synchronization will break and dungeon generation Desync may occurs!",
-                        button2: "Ignore",
-                        titlesize:20,
-                        contentsize:18
-                        );
-                }
             }
             if (scene.name == "CompanyBuilding")
             {
-                /*GameObject Labyrinth = Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/labyrinth.prefab"));
-                SceneManager.MoveGameObjectToScene(Labyrinth, scene);*/
-
                 SpaceLight.SetActive(false);
                 terrainfixer.SetActive(false);
             }

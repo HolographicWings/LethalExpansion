@@ -18,6 +18,7 @@ namespace LethalExpansion.Patches
         private static int[] defaultMoonRoutePrices = null;
         private static TerminalKeyword[] defaultTerminalKeywords;
         public static bool scrapsPatched = false;
+        public static bool scrapsRecursivelyPatched = false;
         public static bool moonsPatched = false;
         public static bool assetsGotten = false;
         public static bool flowFireExitSaved = false;
@@ -33,6 +34,7 @@ namespace LethalExpansion.Patches
         public static void MainPatch(Terminal __instance)
         {
             scrapsPatched = false;
+            scrapsRecursivelyPatched = false;
             moonsPatched = false;
             routeKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "route");
             //RemoveMoon(__instance, "Experimentation");
@@ -41,6 +43,7 @@ namespace LethalExpansion.Patches
             AddScraps(__instance);
             ResetTerminalKeywords(__instance);
             AddMoons(__instance);
+            AddScrapsRecursive(__instance);
             ResetMoonsRoutePrices();
             UpdateMoonsRoutePrices();
             UpdateMoonsCatalogue(__instance);
@@ -172,20 +175,38 @@ namespace LethalExpansion.Patches
                                             }
                                             else
                                             {
-                                                var ddqdz = newScrap.perPlanetSpawnWeight();
+                                                ScrapSpawnChancePerScene[] chances = newScrap.perPlanetSpawnWeight();
                                                 foreach (SelectableLevel level in __instance.moonsCatalogueList)
                                                 {
                                                     try
                                                     {
-                                                        if (ddqdz.Any(l => l.SceneName == level.PlanetName))
+                                                        if (chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others"))
                                                         {
-                                                            var tmp = ddqdz.First(l => l.SceneName == level.PlanetName);
+                                                            ScrapSpawnChancePerScene chance = new ScrapSpawnChancePerScene(string.Empty, 0);
+                                                            try
+                                                            {
+                                                                chance = chances.First(l => l.SceneName == level.PlanetName);
+                                                            }
+                                                            catch
+                                                            {
+                                                                try
+                                                                {
+                                                                    chance = chances.First(l => l.SceneName == "Others");
+                                                                }
+                                                                catch(Exception ex)
+                                                                {
+                                                                    LethalExpansion.Log.LogError(ex);
+                                                                }
+                                                            }
 
-                                                            SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
-                                                            itemRarity.spawnableItem = tmpItem;
-                                                            itemRarity.rarity = tmp.SpawnWeight;
+                                                            if(chance.SceneName != string.Empty)
+                                                            {
+                                                                SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                                                itemRarity.spawnableItem = tmpItem;
+                                                                itemRarity.rarity = chance.SpawnWeight;
 
-                                                            level.spawnableScrap.Add(itemRarity);
+                                                                level.spawnableScrap.Add(itemRarity);
+                                                            }
                                                         }
                                                     }
                                                     catch (Exception ex)
@@ -213,6 +234,106 @@ namespace LethalExpansion.Patches
                     }
                 }
                 scrapsPatched = true;
+            }
+        }
+        public static void AddScrapsRecursive(Terminal __instance)
+        {
+            if (ConfigManager.Instance.FindItemValue<bool>("LoadModules") && !scrapsRecursivelyPatched)
+            {
+                foreach (KeyValuePair<String, (AssetBundle, ModManifest)> bundle in AssetBundlesManager.Instance.assetBundles)
+                {
+                    (AssetBundle, ModManifest) _tmp = AssetBundlesManager.Instance.Load(bundle.Key);
+
+                    if (_tmp.Item1 != null && _tmp.Item2 != null)
+                    {
+                        if (_tmp.Item2.scraps != null)
+                        {
+                            foreach (var newScrap in _tmp.Item2.scraps)
+                            {
+                                if (newScrap != null && newScrap.prefab != null && (newScrap.RequiredBundles == null || AssetBundlesManager.Instance.BundlesLoaded(newScrap.RequiredBundles)) && (newScrap.IncompatibleBundles == null || !AssetBundlesManager.Instance.IncompatibleBundlesLoaded(newScrap.IncompatibleBundles)))
+                                {
+                                    if (newScrapsNames.Contains(newScrap.itemName))
+                                    {
+                                        try
+                                        {
+                                            string[] vanillaBlacklist = new string[] { "41 Experimentation", "220 Assurance", "56 Vow", "21 Offense", "61 March", "85 Rend", "7 Dine", "8 Titan"};
+                                            Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
+
+                                            if (newScrap.useGlobalSpawnWeight)
+                                            {
+                                                SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                                itemRarity.spawnableItem = tmpItem;
+                                                itemRarity.rarity = newScrap.globalSpawnWeight;
+                                                foreach (SelectableLevel level in __instance.moonsCatalogueList)
+                                                {
+                                                    if (!vanillaBlacklist.Contains(level.PlanetName))
+                                                    {
+                                                        level.spawnableScrap.Add(itemRarity);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                ScrapSpawnChancePerScene[] chances = newScrap.perPlanetSpawnWeight();
+                                                foreach (SelectableLevel level in __instance.moonsCatalogueList)
+                                                {
+                                                    try
+                                                    {
+                                                        if (!vanillaBlacklist.Contains(level.PlanetName))
+                                                        {
+                                                            if (chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others"))
+                                                            {
+                                                                ScrapSpawnChancePerScene chance = new ScrapSpawnChancePerScene(string.Empty, 0);
+                                                                try
+                                                                {
+                                                                    chance = chances.First(l => l.SceneName == level.PlanetName);
+                                                                }
+                                                                catch
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        chance = chances.First(l => l.SceneName == "Others");
+                                                                    }
+                                                                    catch (Exception ex)
+                                                                    {
+                                                                        LethalExpansion.Log.LogError(ex);
+                                                                    }
+                                                                }
+
+                                                                if (chance.SceneName != string.Empty)
+                                                                {
+                                                                    SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                                                    itemRarity.spawnableItem = tmpItem;
+                                                                    itemRarity.rarity = chance.SpawnWeight;
+
+                                                                    level.spawnableScrap.Add(itemRarity);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        LethalExpansion.Log.LogError(ex.Message);
+                                                    }
+                                                }
+                                            }
+                                            LethalExpansion.Log.LogInfo($"{newScrap.itemName} Scrap patched recursively.");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            LethalExpansion.Log.LogError(ex.Message);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        LethalExpansion.Log.LogWarning($"{newScrap.itemName} Scrap already added.");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                scrapsRecursivelyPatched = true;
             }
         }
         public static void AddMoons(Terminal __instance)
@@ -296,25 +417,25 @@ namespace LethalExpansion.Patches
                                                 newLevel.overrideWeatherType = (LevelWeatherType)(int)newMoon.OverwriteWeatherType;
                                                 newLevel.currentWeather = LevelWeatherType.None;
 
-                                                var tmpRandomWeatherTypes1 = newMoon.RandomWeatherTypes();
+                                                RandomWeatherPair[] tmpRandomWeatherTypes1 = newMoon.RandomWeatherTypes();
                                                 List<RandomWeatherWithVariables> tmpRandomWeatherTypes2 = new List<RandomWeatherWithVariables>();
-                                                foreach (var item in tmpRandomWeatherTypes1)
+                                                foreach (RandomWeatherPair item in tmpRandomWeatherTypes1)
                                                 {
                                                     tmpRandomWeatherTypes2.Add(new RandomWeatherWithVariables() { weatherType = (LevelWeatherType)(int)item.Weather, weatherVariable = item.WeatherVariable1, weatherVariable2 = item.WeatherVariable2 });
                                                 }
                                                 newLevel.randomWeathers = tmpRandomWeatherTypes2.ToArray();
 
-                                                var tmpDungeonFlowTypes1 = newMoon.DungeonFlowTypes();
+                                                DungeonFlowPair[] tmpDungeonFlowTypes1 = newMoon.DungeonFlowTypes();
                                                 List<IntWithRarity> tmpDungeonFlowTypes2 = new List<IntWithRarity>();
-                                                foreach (var item in tmpDungeonFlowTypes1)
+                                                foreach (DungeonFlowPair item in tmpDungeonFlowTypes1)
                                                 {
                                                     tmpDungeonFlowTypes2.Add(new IntWithRarity() { id = item.ID, rarity = item.Rarity });
                                                 }
                                                 newLevel.dungeonFlowTypes = tmpDungeonFlowTypes2.ToArray();
 
-                                                var tmpSpawnableScrap1 = newMoon.SpawnableScrap();
+                                                SpawnableScrapPair[] tmpSpawnableScrap1 = newMoon.SpawnableScrap();
                                                 List<SpawnableItemWithRarity> tmpSpawnableScrap2 = new List<SpawnableItemWithRarity>();
-                                                foreach (var item in tmpSpawnableScrap1)
+                                                foreach (SpawnableScrapPair item in tmpSpawnableScrap1)
                                                 {
                                                     try
                                                     {
@@ -322,7 +443,7 @@ namespace LethalExpansion.Patches
                                                     }
                                                     catch (Exception ex)
                                                     {
-                                                        LethalExpansion.Log.LogError(ex.Message);
+                                                        LethalExpansion.Log.LogWarning(ex.Message);
                                                     }
                                                 }
                                                 newLevel.spawnableScrap = tmpSpawnableScrap2;
@@ -341,9 +462,9 @@ namespace LethalExpansion.Patches
 
                                                 newLevel.maxEnemyPowerCount = newMoon.MaxEnemyPowerCount;
 
-                                                var tmpEnemies1 = newMoon.Enemies();
+                                                SpawnableEnemiesPair[] tmpEnemies1 = newMoon.Enemies();
                                                 List<SpawnableEnemyWithRarity> tmpEnemies2 = new List<SpawnableEnemyWithRarity>();
-                                                foreach (var item in tmpEnemies1)
+                                                foreach (SpawnableEnemiesPair item in tmpEnemies1)
                                                 {
                                                     tmpEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
                                                 }
@@ -352,17 +473,17 @@ namespace LethalExpansion.Patches
                                                 newLevel.enemySpawnChanceThroughoutDay = newMoon.EnemySpawnChanceThroughoutDay;
                                                 newLevel.spawnProbabilityRange = newMoon.SpawnProbabilityRange;
 
-                                                var tmpSpawnableMapObjects1 = newMoon.SpawnableMapObjects();
+                                                SpawnableMapObjectPair[] tmpSpawnableMapObjects1 = newMoon.SpawnableMapObjects();
                                                 List<SpawnableMapObject> tmpSpawnableMapObjects2 = new List<SpawnableMapObject>();
-                                                foreach (var item in tmpSpawnableMapObjects1)
+                                                foreach (SpawnableMapObjectPair item in tmpSpawnableMapObjects1)
                                                 {
                                                     tmpSpawnableMapObjects2.Add(new SpawnableMapObject() { prefabToSpawn = AssetGather.Instance.mapObjects[item.ObjectName], spawnFacingAwayFromWall = item.SpawnFacingAwayFromWall, numberToSpawn = item.SpawnRate });
                                                 }
                                                 newLevel.spawnableMapObjects = tmpSpawnableMapObjects2.ToArray();
 
-                                                var tmpSpawnableOutsideObjects1 = newMoon.SpawnableOutsideObjects();
+                                                SpawnableOutsideObjectPair[] tmpSpawnableOutsideObjects1 = newMoon.SpawnableOutsideObjects();
                                                 List<SpawnableOutsideObjectWithRarity> tmpSpawnableOutsideObjects2 = new List<SpawnableOutsideObjectWithRarity>();
-                                                foreach (var item in tmpSpawnableOutsideObjects1)
+                                                foreach (SpawnableOutsideObjectPair item in tmpSpawnableOutsideObjects1)
                                                 {
                                                     tmpSpawnableOutsideObjects2.Add(new SpawnableOutsideObjectWithRarity() { spawnableObject = AssetGather.Instance.outsideObjects[item.ObjectName], randomAmount = item.SpawnRate });
                                                 }
@@ -371,17 +492,17 @@ namespace LethalExpansion.Patches
                                                 newLevel.maxOutsideEnemyPowerCount = newMoon.MaxOutsideEnemyPowerCount;
                                                 newLevel.maxDaytimeEnemyPowerCount = newMoon.MaxDaytimeEnemyPowerCount;
 
-                                                var tmpOutsideEnemies1 = newMoon.OutsideEnemies();
+                                                SpawnableEnemiesPair[] tmpOutsideEnemies1 = newMoon.OutsideEnemies();
                                                 List<SpawnableEnemyWithRarity> tmpOutsideEnemies2 = new List<SpawnableEnemyWithRarity>();
-                                                foreach (var item in tmpOutsideEnemies1)
+                                                foreach (SpawnableEnemiesPair item in tmpOutsideEnemies1)
                                                 {
                                                     tmpOutsideEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
                                                 }
                                                 newLevel.OutsideEnemies = tmpOutsideEnemies2;
 
-                                                var tmpDaytimeEnemies1 = newMoon.DaytimeEnemies();
+                                                SpawnableEnemiesPair[] tmpDaytimeEnemies1 = newMoon.DaytimeEnemies();
                                                 List<SpawnableEnemyWithRarity> tmpDaytimeEnemies2 = new List<SpawnableEnemyWithRarity>();
-                                                foreach (var item in tmpDaytimeEnemies1)
+                                                foreach (SpawnableEnemiesPair item in tmpDaytimeEnemies1)
                                                 {
                                                     tmpDaytimeEnemies2.Add(new SpawnableEnemyWithRarity() { enemyType = AssetGather.Instance.enemies[item.EnemyName], rarity = item.SpawnWeight });
                                                 }
@@ -421,8 +542,8 @@ namespace LethalExpansion.Patches
                                                 moonRoute.itemCost = newMoon.RoutePrice;
                                                 moonRoute.terminalOptions = new CompatibleNoun[]
                                                 {
-                                            new CompatibleNoun(){noun = denyKeyword, result = cancelRouteNode != null ? cancelRouteNode : new TerminalNode()},
-                                            new CompatibleNoun(){noun = confirmKeyword, result = moonRouteConfirm},
+                                                    new CompatibleNoun(){noun = denyKeyword, result = cancelRouteNode != null ? cancelRouteNode : new TerminalNode()},
+                                                    new CompatibleNoun(){noun = confirmKeyword, result = moonRouteConfirm},
                                                 };
 
                                                 CompatibleNoun moonNoun = new CompatibleNoun();
