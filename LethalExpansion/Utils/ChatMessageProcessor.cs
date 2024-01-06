@@ -74,7 +74,7 @@ namespace LethalExpansion.Utils
                     case "clientinfo": //client receive info request from host
                         if (!LethalExpansion.ishost && sender == 0)
                         {
-                            string configPacket = $"{LethalExpansion.ModVersion.ToString()}-";
+                            string configPacket = $"{LethalExpansion.ModVersion.ToString()}$";
                             foreach (var bundle in AssetBundlesManager.Instance.assetBundles)
                             {
                                 configPacket += $"{bundle.Key}v{bundle.Value.Item2.GetVersion().ToString()}&";
@@ -121,9 +121,9 @@ namespace LethalExpansion.Utils
                         if (LethalExpansion.ishost && sender != 0)
                         {
                             string[] values;
-                            if (packet.Contains('-'))
+                            if (packet.Contains('$'))
                             {
-                                values = packet.Split('-');
+                                values = packet.Split('$');
                             }
                             else
                             {

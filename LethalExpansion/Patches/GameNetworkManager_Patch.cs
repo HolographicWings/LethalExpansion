@@ -102,10 +102,28 @@ namespace LethalExpansion.Patches
                                         tmpItem.materialVariants = newScrap.materialVariants;
                                         tmpItem.canBeInspected = false;
 
-                                        PhysicsProp physicsProp = newScrap.prefab.AddComponent<PhysicsProp>();
-                                        physicsProp.grabbable = true;
-                                        physicsProp.itemProperties = tmpItem;
-                                        physicsProp.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
+                                        object physicsProp = null;
+                                        switch (newScrap.scrapType)
+                                        {
+                                            case ScrapType.Normal:
+                                                physicsProp = newScrap.prefab.AddComponent<PhysicsProp>();
+                                                ((PhysicsProp)physicsProp).grabbable = true;
+                                                ((PhysicsProp)physicsProp).itemProperties = tmpItem;
+                                                ((PhysicsProp)physicsProp).mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
+                                                break;
+                                            case ScrapType.Shovel:
+                                                physicsProp = newScrap.prefab.AddComponent<Shovel>();
+                                                ((Shovel)physicsProp).grabbable = true;
+                                                ((Shovel)physicsProp).itemProperties = tmpItem;
+                                                ((Shovel)physicsProp).mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
+                                                ((Shovel)physicsProp).shovelHitForce = newScrap.shovelHitForce;
+                                                ((Shovel)physicsProp).isHoldingButton = newScrap.isHoldingButton;
+                                                ((Shovel)physicsProp).reelUp = newScrap.reelUp;
+                                                ((Shovel)physicsProp).swing = newScrap.swing;
+                                                ((Shovel)physicsProp).hitSFX = newScrap.hitSFX;
+                                                ((Shovel)physicsProp).shovelAudio = newScrap.prefab.GetComponent<AudioSource>();
+                                                break;
+                                        }
 
                                         AudioSource audioSource = newScrap.prefab.AddComponent<AudioSource>();
                                         audioSource.playOnAwake = false;
