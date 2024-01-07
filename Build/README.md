@@ -75,6 +75,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.16
+	- Reversed networking change with Entrances that causing issues.
 - 1.3.15
 	- New experimental method to ensure the proper loading of the custom moons.
 	- Small networking fix with Entrances.
