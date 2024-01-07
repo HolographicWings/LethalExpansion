@@ -112,6 +112,7 @@ namespace LethalExpansion.Utils
             typeof(SI_DamagePlayer),
             typeof(SI_SoundYDistance),
             typeof(SI_AudioOutputInterface),
+            typeof(SI_NetworkDataInterfacing),
             typeof(PlayerShip)
         };
         public static List<Type> scrapWhitelist = new List<Type> {
