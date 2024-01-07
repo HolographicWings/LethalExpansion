@@ -55,7 +55,10 @@ namespace LethalExpansion.Patches
             }
             NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "hostweathers", string.Empty, 0);
             LethalExpansion.Log.LogInfo("Terminal Main Patch.");
-            //AssetGather.Instance.GetList();
+            if (ConfigManager.Instance.FindItemValue<bool>("SettingsDebug"))
+            {
+                AssetGather.Instance.GetList();
+            }
         }
         private static void GatherAssets()
         {
@@ -67,6 +70,94 @@ namespace LethalExpansion.Patches
                     AssetGather.Instance.AddAudioClip(item.dropSFX);
                     AssetGather.Instance.AddAudioClip(item.pocketSFX);
                     AssetGather.Instance.AddAudioClip(item.throwSFX);
+                    if(item.spawnPrefab != null)
+                    {
+                        List<Type> componentTypes = new List<Type>
+                        {
+                            typeof(Shovel),
+                            typeof(FlashlightItem),
+                            typeof(WalkieTalkie),
+                            typeof(ExtensionLadderItem),
+                            typeof(NoisemakerProp),
+                            typeof(PatcherTool),
+                            typeof(WhoopieCushionItem),
+                            typeof(ShotgunItem),
+                            typeof(RemoteProp),
+                            typeof(AudioSource)
+                        };
+                        List<System.Object> foundComponents = new List<System.Object>();
+                        foreach (Type type in componentTypes)
+                        {
+                            Component component = item.spawnPrefab.GetComponent(type);
+
+                            if (component != null)
+                            {
+                                foundComponents.Add(component);
+                            }
+                        }
+                        foreach (System.Object component in foundComponents)
+                        {
+                            switch (component.GetType().Name)
+                            {
+                                case "Shovel":
+                                    AssetGather.Instance.AddAudioClip(((Shovel)component).reelUp);
+                                    AssetGather.Instance.AddAudioClip(((Shovel)component).swing);
+                                    AssetGather.Instance.AddAudioClip(((Shovel)component).hitSFX);
+                                    break;
+                                case "FlashlightItem":
+                                    AssetGather.Instance.AddAudioClip(((FlashlightItem)component).flashlightClips);
+                                    AssetGather.Instance.AddAudioClip(((FlashlightItem)component).outOfBatteriesClip);
+                                    AssetGather.Instance.AddAudioClip(((FlashlightItem)component).flashlightFlicker);
+                                    break;
+                                case "WalkieTalkie":
+                                    AssetGather.Instance.AddAudioClip(((WalkieTalkie)component).stopTransmissionSFX);
+                                    AssetGather.Instance.AddAudioClip(((WalkieTalkie)component).startTransmissionSFX);
+                                    AssetGather.Instance.AddAudioClip(((WalkieTalkie)component).switchWalkieTalkiePowerOff);
+                                    AssetGather.Instance.AddAudioClip(((WalkieTalkie)component).switchWalkieTalkiePowerOn);
+                                    AssetGather.Instance.AddAudioClip(((WalkieTalkie)component).talkingOnWalkieTalkieNotHeldSFX);
+                                    AssetGather.Instance.AddAudioClip(((WalkieTalkie)component).playerDieOnWalkieTalkieSFX);
+                                    break;
+                                case "ExtensionLadderItem":
+                                    AssetGather.Instance.AddAudioClip(((ExtensionLadderItem)component).hitRoof);
+                                    AssetGather.Instance.AddAudioClip(((ExtensionLadderItem)component).fullExtend);
+                                    AssetGather.Instance.AddAudioClip(((ExtensionLadderItem)component).hitWall);
+                                    AssetGather.Instance.AddAudioClip(((ExtensionLadderItem)component).ladderExtendSFX);
+                                    AssetGather.Instance.AddAudioClip(((ExtensionLadderItem)component).ladderFallSFX);
+                                    AssetGather.Instance.AddAudioClip(((ExtensionLadderItem)component).ladderShrinkSFX);
+                                    AssetGather.Instance.AddAudioClip(((ExtensionLadderItem)component).blinkWarningSFX);
+                                    AssetGather.Instance.AddAudioClip(((ExtensionLadderItem)component).lidOpenSFX);
+                                    break;
+                                case "NoisemakerProp":
+                                    AssetGather.Instance.AddAudioClip(((NoisemakerProp)component).noiseSFX);
+                                    AssetGather.Instance.AddAudioClip(((NoisemakerProp)component).noiseSFXFar);
+                                    break;
+                                case "PatcherTool":
+                                    AssetGather.Instance.AddAudioClip(((PatcherTool)component).activateClips);
+                                    AssetGather.Instance.AddAudioClip(((PatcherTool)component).beginShockClips);
+                                    AssetGather.Instance.AddAudioClip(((PatcherTool)component).overheatClips);
+                                    AssetGather.Instance.AddAudioClip(((PatcherTool)component).finishShockClips);
+                                    AssetGather.Instance.AddAudioClip(((PatcherTool)component).outOfBatteriesClip);
+                                    AssetGather.Instance.AddAudioClip(((PatcherTool)component).detectAnomaly);
+                                    AssetGather.Instance.AddAudioClip(((PatcherTool)component).scanAnomaly);
+                                    break;
+                                case "WhoopieCushionItem":
+                                    AssetGather.Instance.AddAudioClip(((WhoopieCushionItem)component).fartAudios);
+                                    break;
+                                case "ShotgunItem":
+                                    AssetGather.Instance.AddAudioClip(((ShotgunItem)component).gunShootSFX);
+                                    AssetGather.Instance.AddAudioClip(((ShotgunItem)component).gunReloadSFX);
+                                    AssetGather.Instance.AddAudioClip(((ShotgunItem)component).gunReloadFinishSFX);
+                                    AssetGather.Instance.AddAudioClip(((ShotgunItem)component).noAmmoSFX);
+                                    AssetGather.Instance.AddAudioClip(((ShotgunItem)component).gunSafetySFX);
+                                    AssetGather.Instance.AddAudioClip(((ShotgunItem)component).switchSafetyOnSFX);
+                                    AssetGather.Instance.AddAudioClip(((ShotgunItem)component).switchSafetyOffSFX);
+                                    break;
+                                case "AudioSource":
+                                    AssetGather.Instance.AddAudioClip(((AudioSource)component).clip);
+                                    break;
+                            }
+                        }
+                    }
                 }
                 AssetGather.Instance.AddSprites(GameObject.Find("Environment/HangarShip/StartGameLever").GetComponent<InteractTrigger>().hoverIcon);
                 AssetGather.Instance.AddSprites(GameObject.Find("Environment/HangarShip/Terminal/TerminalTrigger/TerminalScript").GetComponent<InteractTrigger>().hoverIcon);
@@ -128,6 +219,20 @@ namespace LethalExpansion.Patches
             {
                 AudioClip defaultDropSound = AssetGather.Instance.audioClips["DropCan"];
                 AudioClip defaultGrabSound = AssetGather.Instance.audioClips["ShovelPickUp"];
+
+                AudioClip defaultShovelReelUp = AssetGather.Instance.audioClips["ShovelReelUp"];
+                AudioClip defaultShovelSwing = AssetGather.Instance.audioClips["ShovelSwing"];
+                AudioClip[] defaultShovelHitSFXs = new AudioClip[] { AssetGather.Instance.audioClips["ShovelHitDefault"], AssetGather.Instance.audioClips["ShovelHitDefault2"] };
+
+                AudioClip[] defaultFlashlightClips = new AudioClip[] { AssetGather.Instance.audioClips["FlashlightClick"] };
+                AudioClip defaultFlashlightOutOfBatteriesClip = AssetGather.Instance.audioClips["FlashlightOutOfBatteries"];
+                AudioClip defaultFlashlightFlicker = AssetGather.Instance.audioClips["FlashlightFlicker"];
+
+                AudioClip[] defaultNoisemakerNoiseSFX = new AudioClip[] { AssetGather.Instance.audioClips["ClownHorn1"] };
+                AudioClip[] defaultNoisemakerNoiseSFXFar = new AudioClip[] { AssetGather.Instance.audioClips["ClownHornFar"] };
+
+                AudioClip[] defaultWhoopieCushionAudios = new AudioClip[] { AssetGather.Instance.audioClips["Fart1"],AssetGather.Instance.audioClips["Fart2"],AssetGather.Instance.audioClips["Fart3"],AssetGather.Instance.audioClips["Fart5"] };
+
                 foreach (KeyValuePair<String, (AssetBundle, ModManifest)> bundle in AssetBundlesManager.Instance.assetBundles)
                 {
                     (AssetBundle, ModManifest) _tmp = AssetBundlesManager.Instance.Load(bundle.Key);
@@ -147,7 +252,10 @@ namespace LethalExpansion.Patches
                                             Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
 
                                             AudioSource audioSource = newScrap.prefab.GetComponent<AudioSource>();
-                                            audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
+                                            if(audioSource != null)
+                                            {
+                                                audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
+                                            }
 
                                             AudioClip _tpmGrabSFX = null;
                                             if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.grabSFX))
@@ -161,6 +269,119 @@ namespace LethalExpansion.Patches
                                                 _tpmDropSFX = AssetGather.Instance.audioClips[newScrap.dropSFX];
                                             }
                                             tmpItem.dropSFX = _tpmDropSFX != null ? _tpmDropSFX : defaultDropSound;
+
+                                            object physicsProp = null;
+                                            switch (newScrap.scrapType)
+                                            {
+                                                case ScrapType.Shovel:
+                                                    physicsProp = newScrap.prefab.GetComponent<Shovel>();
+                                                    if(physicsProp != null)
+                                                    {
+                                                        AudioClip reelUp = null;
+                                                        if (newScrap.reelUp.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.reelUp))
+                                                        {
+                                                            reelUp = AssetGather.Instance.audioClips[newScrap.reelUp];
+                                                        }
+                                                        AudioClip swing = null;
+                                                        if (newScrap.swing.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.swing))
+                                                        {
+                                                            swing = AssetGather.Instance.audioClips[newScrap.swing];
+                                                        }
+                                                        List<AudioClip> hitSFX = new List<AudioClip>();
+                                                        if (newScrap.hitSFX != null && newScrap.hitSFX.Length > 0)
+                                                        {
+                                                            foreach (string clip in newScrap.hitSFX)
+                                                            {
+                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                {
+                                                                    hitSFX.Add(AssetGather.Instance.audioClips[clip]);
+                                                                }
+                                                            }
+                                                        }
+                                                        ((Shovel)physicsProp).reelUp = reelUp != null ? reelUp : defaultShovelReelUp;
+                                                        ((Shovel)physicsProp).swing = swing != null ? swing : defaultShovelSwing;
+                                                        ((Shovel)physicsProp).hitSFX = hitSFX != null && hitSFX.Count > 0 ? hitSFX.ToArray() : defaultShovelHitSFXs;
+                                                    }
+                                                    break;
+                                                case ScrapType.Flashlight:
+                                                    physicsProp = newScrap.prefab.GetComponent<FlashlightItem>();
+                                                    if (physicsProp != null)
+                                                    {
+                                                        AudioClip outOfBatteriesClip = null;
+                                                        if (newScrap.outOfBatteriesClip.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.outOfBatteriesClip))
+                                                        {
+                                                            outOfBatteriesClip = AssetGather.Instance.audioClips[newScrap.outOfBatteriesClip];
+                                                        }
+                                                        AudioClip flashlightFlicker = null;
+                                                        if (newScrap.flashlightFlicker.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.flashlightFlicker))
+                                                        {
+                                                            flashlightFlicker = AssetGather.Instance.audioClips[newScrap.flashlightFlicker];
+                                                        }
+                                                        List<AudioClip> flashlightClips = new List<AudioClip>();
+                                                        if (newScrap.flashlightClips != null && newScrap.flashlightClips.Length > 0)
+                                                        {
+                                                            foreach (string clip in newScrap.flashlightClips)
+                                                            {
+                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                {
+                                                                    flashlightClips.Add(AssetGather.Instance.audioClips[clip]);
+                                                                }
+                                                            }
+                                                        }
+                                                        ((FlashlightItem)physicsProp).outOfBatteriesClip = outOfBatteriesClip != null ? outOfBatteriesClip : defaultFlashlightOutOfBatteriesClip;
+                                                        ((FlashlightItem)physicsProp).flashlightFlicker = flashlightFlicker != null ? flashlightFlicker : defaultFlashlightFlicker;
+                                                        ((FlashlightItem)physicsProp).flashlightClips = flashlightClips != null && flashlightClips.Count > 0 ? flashlightClips.ToArray() : defaultFlashlightClips;
+                                                    }
+                                                    break;
+                                                case ScrapType.Noisemaker:
+                                                    physicsProp = newScrap.prefab.GetComponent<NoisemakerProp>();
+                                                    if (physicsProp != null)
+                                                    {
+                                                        List<AudioClip> noiseSFX = new List<AudioClip>();
+                                                        if (newScrap.noiseSFX != null && newScrap.noiseSFX.Length > 0)
+                                                        {
+                                                            foreach (string clip in newScrap.noiseSFX)
+                                                            {
+                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                {
+                                                                    noiseSFX.Add(AssetGather.Instance.audioClips[clip]);
+                                                                }
+                                                            }
+                                                        }
+                                                        List<AudioClip> noiseSFXFar = new List<AudioClip>();
+                                                        if (newScrap.noiseSFXFar != null && newScrap.noiseSFXFar.Length > 0)
+                                                        {
+                                                            foreach (string clip in newScrap.noiseSFXFar)
+                                                            {
+                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                {
+                                                                    noiseSFXFar.Add(AssetGather.Instance.audioClips[clip]);
+                                                                }
+                                                            }
+                                                        }
+                                                        ((NoisemakerProp)physicsProp).noiseSFX = noiseSFX != null && noiseSFX.Count > 0 ? noiseSFX.ToArray() : defaultNoisemakerNoiseSFX;
+                                                        ((NoisemakerProp)physicsProp).noiseSFXFar = noiseSFXFar != null && noiseSFXFar.Count > 0 ? noiseSFXFar.ToArray() : defaultNoisemakerNoiseSFXFar;
+                                                    }
+                                                    break;
+                                                case ScrapType.WhoopieCushion:
+                                                    physicsProp = newScrap.prefab.GetComponent<WhoopieCushionItem>();
+                                                    if (physicsProp != null)
+                                                    {
+                                                        List<AudioClip> fartAudios = new List<AudioClip>();
+                                                        if (newScrap.fartAudios != null && newScrap.fartAudios.Length > 0)
+                                                        {
+                                                            foreach (string clip in newScrap.fartAudios)
+                                                            {
+                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                {
+                                                                    fartAudios.Add(AssetGather.Instance.audioClips[clip]);
+                                                                }
+                                                            }
+                                                        }
+                                                        ((WhoopieCushionItem)physicsProp).fartAudios = fartAudios != null && fartAudios.Count > 0 ? fartAudios.ToArray() : defaultWhoopieCushionAudios;
+                                                    }
+                                                    break;
+                                            }
 
                                             StartOfRound.Instance.allItemsList.itemsList.Add(tmpItem);
                                             if (newScrap.useGlobalSpawnWeight)

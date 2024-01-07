@@ -46,47 +46,47 @@ namespace LethalExpansion.Utils
 
         public void GetList()
         {
-            LethalExpansion.Log.LogInfo("Audio Clips");
+            LethalExpansion.Log.LogInfo("===Audio Clips===");
             foreach (var item in audioClips)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
             }
-            LethalExpansion.Log.LogInfo("Audio Mixers");
+            LethalExpansion.Log.LogInfo("===Audio Mixers===");
             foreach (var item in audioMixers)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
             }
-            LethalExpansion.Log.LogInfo("Planet Prefabs");
+            LethalExpansion.Log.LogInfo("===Planet Prefabs===");
             foreach (var item in planetPrefabs)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
             }
-            LethalExpansion.Log.LogInfo("Map Objects");
+            LethalExpansion.Log.LogInfo("===Map Objects===");
             foreach (var item in mapObjects)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
             }
-            LethalExpansion.Log.LogInfo("Outside Objects");
+            LethalExpansion.Log.LogInfo("===Outside Objects===");
             foreach (var item in outsideObjects)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
             }
-            LethalExpansion.Log.LogInfo("Scraps");
+            LethalExpansion.Log.LogInfo("===Scraps===");
             foreach (var item in scraps)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
             }
-            LethalExpansion.Log.LogInfo("Level Ambiances");
+            LethalExpansion.Log.LogInfo("===Level Ambiances===");
             foreach (var item in levelAmbiances)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
             }
-            LethalExpansion.Log.LogInfo("Enemies");
+            LethalExpansion.Log.LogInfo("===Enemies===");
             foreach (var item in enemies)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
             }
-            LethalExpansion.Log.LogInfo("Sprites");
+            LethalExpansion.Log.LogInfo("===Sprites===");
             foreach (var item in sprites)
             {
                 LethalExpansion.Log.LogInfo(item.Key);
@@ -106,6 +106,26 @@ namespace LethalExpansion.Utils
             if (clip != null && !audioClips.ContainsKey(name) && !audioClips.ContainsValue(clip))
             {
                 audioClips.Add(name, clip);
+            }
+        }
+        public void AddAudioClip(AudioClip[] clips)
+        {
+            foreach(AudioClip clip in clips)
+            {
+                if (clip != null && !audioClips.ContainsKey(clip.name) && !audioClips.ContainsValue(clip))
+                {
+                    audioClips.Add(clip.name, clip);
+                }
+            }
+        }
+        public void AddAudioClip(string[] names, AudioClip[] clips)
+        {
+            for(int i = 0; i < clips.Length && i < names.Length; i++)
+            {
+                if (clips[i] != null && !audioClips.ContainsKey(names[i]) && !audioClips.ContainsValue(clips[i]))
+                {
+                    audioClips.Add(names[i], clips[i]);
+                }
             }
         }
         #endregion

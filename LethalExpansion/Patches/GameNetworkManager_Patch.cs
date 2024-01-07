@@ -107,23 +107,44 @@ namespace LethalExpansion.Patches
                                         {
                                             case ScrapType.Normal:
                                                 physicsProp = newScrap.prefab.AddComponent<PhysicsProp>();
-                                                ((PhysicsProp)physicsProp).grabbable = true;
-                                                ((PhysicsProp)physicsProp).itemProperties = tmpItem;
-                                                ((PhysicsProp)physicsProp).mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
                                                 break;
                                             case ScrapType.Shovel:
                                                 physicsProp = newScrap.prefab.AddComponent<Shovel>();
-                                                ((Shovel)physicsProp).grabbable = true;
-                                                ((Shovel)physicsProp).itemProperties = tmpItem;
-                                                ((Shovel)physicsProp).mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
                                                 ((Shovel)physicsProp).shovelHitForce = newScrap.shovelHitForce;
                                                 ((Shovel)physicsProp).isHoldingButton = newScrap.isHoldingButton;
-                                                ((Shovel)physicsProp).reelUp = newScrap.reelUp;
-                                                ((Shovel)physicsProp).swing = newScrap.swing;
-                                                ((Shovel)physicsProp).hitSFX = newScrap.hitSFX;
                                                 ((Shovel)physicsProp).shovelAudio = newScrap.prefab.GetComponent<AudioSource>();
                                                 break;
+                                            case ScrapType.Flashlight:
+                                                physicsProp = newScrap.prefab.AddComponent<FlashlightItem>();
+                                                ((FlashlightItem)physicsProp).usingPlayerHelmetLight = newScrap.usingPlayerHelmetLight;
+                                                ((FlashlightItem)physicsProp).flashlightInterferenceLevel = newScrap.flashlightInterferenceLevel;
+                                                ((FlashlightItem)physicsProp).flashlightBulb = newScrap.flashlightBulb;
+                                                ((FlashlightItem)physicsProp).flashlightBulbGlow = newScrap.flashlightBulbGlow;
+                                                ((FlashlightItem)physicsProp).flashlightAudio = newScrap.flashlightAudio;
+                                                ((FlashlightItem)physicsProp).bulbLight = newScrap.bulbLight;
+                                                ((FlashlightItem)physicsProp).bulbDark = newScrap.bulbDark;
+                                                ((FlashlightItem)physicsProp).flashlightMesh = newScrap.flashlightMesh;
+                                                ((FlashlightItem)physicsProp).flashlightTypeID = newScrap.flashlightTypeID;
+                                                ((FlashlightItem)physicsProp).changeMaterial = newScrap.changeMaterial;
+                                                break;
+                                            case ScrapType.Noisemaker:
+                                                physicsProp = newScrap.prefab.AddComponent<NoisemakerProp>();
+                                                ((NoisemakerProp)physicsProp).noiseAudio = newScrap.noiseAudio;
+                                                ((NoisemakerProp)physicsProp).noiseAudioFar = newScrap.noiseAudioFar;
+                                                ((NoisemakerProp)physicsProp).noiseRange = newScrap.noiseRange;
+                                                ((NoisemakerProp)physicsProp).maxLoudness = newScrap.maxLoudness;
+                                                ((NoisemakerProp)physicsProp).minLoudness = newScrap.minLoudness;
+                                                ((NoisemakerProp)physicsProp).maxPitch = newScrap.maxPitch;
+                                                ((NoisemakerProp)physicsProp).triggerAnimator = newScrap.triggerAnimator;
+                                                break;
+                                            case ScrapType.WhoopieCushion:
+                                                physicsProp = newScrap.prefab.AddComponent<WhoopieCushionItem>();
+                                                ((WhoopieCushionItem)physicsProp).whoopieCushionAudio = newScrap.whoopieCushionAudio;
+                                                break;
                                         }
+                                        ((PhysicsProp)physicsProp).grabbable = true;
+                                        ((PhysicsProp)physicsProp).itemProperties = tmpItem;
+                                        ((PhysicsProp)physicsProp).mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
 
                                         AudioSource audioSource = newScrap.prefab.AddComponent<AudioSource>();
                                         audioSource.playOnAwake = false;
@@ -179,11 +200,6 @@ namespace LethalExpansion.Patches
                     LethalExpansion.Log.LogError(ex.Message);
                 }
             }
-            /*LethalExpansion.Log.LogInfo("1");
-            var objtest = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/itemshipanimcontainer.prefab");
-            GameObject.DontDestroyOnLoad(objtest);
-            __instance.GetComponent<NetworkManager>().PrefabHandler.AddNetworkPrefab(objtest);
-            LethalExpansion.Log.LogInfo("2");*/
         }
         static void CheckAndRemoveIllegalComponents(Transform prefab, List<Type> whitelist)
         {

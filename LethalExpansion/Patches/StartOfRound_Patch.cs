@@ -4,8 +4,6 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static LethalExpansion.Utils.NetworkPacketManager;
-using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
 namespace LethalExpansion.Patches
 {
@@ -81,7 +79,7 @@ namespace LethalExpansion.Patches
                     weathers += (int)__instance.levels[i].currentWeather + "&";
                 }
                 weathers = weathers.Remove(weathers.Length - 1);
-                NetworkPacketManager.Instance.sendPacket(packetType.data, "hostweathers", weathers, -1, false);
+                NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.data, "hostweathers", weathers, -1, false);
                 LethalExpansion.weathersReadyToShare = true;
             }
         }

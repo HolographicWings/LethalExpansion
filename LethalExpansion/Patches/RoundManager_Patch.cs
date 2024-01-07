@@ -9,6 +9,9 @@ using DunGen;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
+using System.Collections;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace LethalExpansion.Patches
 {
@@ -116,6 +119,31 @@ namespace LethalExpansion.Patches
                 TimeOfDay.Instance.profitQuota = 0;
                 zeroQuotaWorkaround = false;
             }
+        }
+        [HarmonyPatch(nameof(RoundManager.LoadNewLevel))]
+        [HarmonyPrefix]
+        public static bool LoadNewLevel_Prefix(RoundManager __instance, int randomSeed, SelectableLevel newLevel)
+        {
+            if (!LethalExpansion.dungeonGeneratorReady)
+            {
+                LethalExpansion.Log.LogInfo("Waiting for Generator...");
+                CheckDungeonGeneratorReady(__instance, randomSeed, newLevel).GetAwaiter();
+                return false;
+            }
+            return true;
+        }
+        private static async Task CheckDungeonGeneratorReady(RoundManager __instance, int randomSeed, SelectableLevel newLevel)
+        {
+            while (true)
+            {
+                if (LethalExpansion.dungeonGeneratorReady)
+                {
+                    break;
+                }
+
+                await Task.Delay(250);
+            }
+            RoundManager.Instance.LoadNewLevel(randomSeed, newLevel);
         }
         [HarmonyPatch(nameof(RoundManager.GenerateNewFloor))]
         [HarmonyPrefix]

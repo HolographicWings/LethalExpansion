@@ -43,7 +43,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.14";
+        private const string VersionString = "1.3.15";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -83,6 +83,7 @@ namespace LethalExpansion
         public static bool alreadypatched = false;
         public static bool weathersReadyToShare = false;
         public static bool isInGame = false;
+        public static bool dungeonGeneratorReady = false;
 
         public static int delayedLevelChange = -1;
 
@@ -297,6 +298,7 @@ namespace LethalExpansion
                 hostDataWaiting = true;
                 ishost = false;
                 alreadypatched = false;
+                dungeonGeneratorReady = false;
 
                 LethalExpansion.delayedLevelChange = -1;
 
@@ -339,6 +341,7 @@ namespace LethalExpansion
             {
                 SpaceLight.SetActive(false);
                 terrainfixer.SetActive(false);
+                dungeonGeneratorReady = true;
             }
             if (scene.name == "SampleSceneRelay")
             {
@@ -413,6 +416,7 @@ namespace LethalExpansion
             {
                 SpaceLight.SetActive(false);
                 terrainfixer.SetActive(false);
+                dungeonGeneratorReady = true;
                 if (ConfigManager.Instance.FindItemValue<bool>("SettingsDebug"))
                 {
                     foreach (var entry in ConfigManager.Instance.GetAll())
@@ -544,6 +548,7 @@ namespace LethalExpansion
                         runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
                     }
                 }
+                dungeonGeneratorReady = true;
 
                 GameObject OutOfBounds = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 OutOfBounds.name = "OutOfBounds";
@@ -608,6 +613,7 @@ namespace LethalExpansion
                 {
                     currentWaterSurface = null;
                 }
+                dungeonGeneratorReady = false;
                 Terminal_Patch.ResetFireExitAmounts();
             }
         }
