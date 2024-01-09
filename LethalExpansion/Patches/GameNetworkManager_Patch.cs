@@ -16,6 +16,8 @@ using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Video;
+using UnityEngine.SceneManagement;
+using LethalExpansion.Extenders;
 
 namespace LethalExpansion.Patches
 {
@@ -84,7 +86,33 @@ namespace LethalExpansion.Patches
                                         tmpItem.spawnPrefab = newScrap.prefab;
 
                                         tmpItem.twoHanded = newScrap.twoHanded;
-                                        tmpItem.twoHandedAnimation = newScrap.twoHandedAnimation;
+                                        switch (newScrap.HandedAnimation)
+                                        {
+                                            case GrabAnim.OneHanded:
+                                                tmpItem.twoHandedAnimation = false;
+                                                tmpItem.grabAnim = string.Empty;
+                                                break;
+                                            case GrabAnim.TwoHanded:
+                                                tmpItem.twoHandedAnimation = true;
+                                                tmpItem.grabAnim = "HoldLung";
+                                                break;
+                                            case GrabAnim.Shotgun:
+                                                tmpItem.twoHandedAnimation = true;
+                                                tmpItem.grabAnim = "HoldShotgun";
+                                                break;
+                                            case GrabAnim.Jetpack:
+                                                tmpItem.twoHandedAnimation = true;
+                                                tmpItem.grabAnim = "HoldJetpack";
+                                                break;
+                                            case GrabAnim.Clipboard:
+                                                tmpItem.twoHandedAnimation = false;
+                                                tmpItem.grabAnim = "GrabClipboard";
+                                                break;
+                                            default:
+                                                tmpItem.twoHandedAnimation = false;
+                                                tmpItem.grabAnim = string.Empty;
+                                                break;
+                                        }
                                         tmpItem.requiresBattery = newScrap.requiresBattery;
                                         tmpItem.isConductiveMetal = newScrap.isConductiveMetal;
 
@@ -102,49 +130,111 @@ namespace LethalExpansion.Patches
                                         tmpItem.materialVariants = newScrap.materialVariants;
                                         tmpItem.canBeInspected = false;
 
-                                        object physicsProp = null;
                                         switch (newScrap.scrapType)
                                         {
                                             case ScrapType.Normal:
-                                                physicsProp = newScrap.prefab.AddComponent<PhysicsProp>();
+                                                PhysicsProp pp = newScrap.prefab.AddComponent<PhysicsProp>();
+
+                                                pp.grabbable = true;
+                                                pp.itemProperties = tmpItem;
+                                                pp.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
                                                 break;
                                             case ScrapType.Shovel:
-                                                physicsProp = newScrap.prefab.AddComponent<Shovel>();
-                                                ((Shovel)physicsProp).shovelHitForce = newScrap.shovelHitForce;
-                                                ((Shovel)physicsProp).isHoldingButton = newScrap.isHoldingButton;
-                                                ((Shovel)physicsProp).shovelAudio = newScrap.prefab.GetComponent<AudioSource>();
+                                                Shovel s = newScrap.prefab.AddComponent<Shovel>();
+
+                                                s.grabbable = true;
+                                                s.itemProperties = tmpItem;
+                                                s.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
+
+                                                s.shovelHitForce = newScrap.shovelHitForce;
+                                                s.isHoldingButton = newScrap.isHoldingButton;
+                                                s.shovelAudio = newScrap.shovelAudio != null ? newScrap.shovelAudio : newScrap.prefab.GetComponent<AudioSource>();
+                                                if(s.shovelAudio == null)
+                                                {
+                                                    s.shovelAudio = newScrap.prefab.AddComponent<AudioSource>();
+                                                }
+                                                if(newScrap.prefab.GetComponent<OccludeAudio>() == null)
+                                                {
+                                                    newScrap.prefab.AddComponent<OccludeAudio>();
+                                                }
                                                 break;
                                             case ScrapType.Flashlight:
-                                                physicsProp = newScrap.prefab.AddComponent<FlashlightItem>();
-                                                ((FlashlightItem)physicsProp).usingPlayerHelmetLight = newScrap.usingPlayerHelmetLight;
-                                                ((FlashlightItem)physicsProp).flashlightInterferenceLevel = newScrap.flashlightInterferenceLevel;
-                                                ((FlashlightItem)physicsProp).flashlightBulb = newScrap.flashlightBulb;
-                                                ((FlashlightItem)physicsProp).flashlightBulbGlow = newScrap.flashlightBulbGlow;
-                                                ((FlashlightItem)physicsProp).flashlightAudio = newScrap.flashlightAudio;
-                                                ((FlashlightItem)physicsProp).bulbLight = newScrap.bulbLight;
-                                                ((FlashlightItem)physicsProp).bulbDark = newScrap.bulbDark;
-                                                ((FlashlightItem)physicsProp).flashlightMesh = newScrap.flashlightMesh;
-                                                ((FlashlightItem)physicsProp).flashlightTypeID = newScrap.flashlightTypeID;
-                                                ((FlashlightItem)physicsProp).changeMaterial = newScrap.changeMaterial;
+                                                FlashlightItem fi = newScrap.prefab.AddComponent<FlashlightItem>();
+
+                                                fi.grabbable = true;
+                                                fi.itemProperties = tmpItem;
+                                                fi.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
+
+                                                fi.usingPlayerHelmetLight = newScrap.usingPlayerHelmetLight;
+                                                fi.flashlightInterferenceLevel = newScrap.flashlightInterferenceLevel;
+                                                fi.flashlightBulb = newScrap.flashlightBulb;
+                                                if(fi.flashlightBulb == null)
+                                                {
+                                                    fi.flashlightBulb = new Light();
+                                                    fi.flashlightBulb.intensity = 0;
+                                                }
+                                                fi.flashlightBulbGlow = newScrap.flashlightBulbGlow;
+                                                if (fi.flashlightBulbGlow == null)
+                                                {
+                                                    fi.flashlightBulbGlow = new Light();
+                                                    fi.flashlightBulbGlow.intensity = 0;
+                                                }
+                                                fi.flashlightAudio = newScrap.flashlightAudio != null ? newScrap.flashlightAudio : newScrap.prefab.GetComponent<AudioSource>();
+                                                if (fi.flashlightAudio == null)
+                                                {
+                                                    fi.flashlightAudio = newScrap.prefab.AddComponent<AudioSource>();
+                                                }
+                                                if (newScrap.prefab.GetComponent<OccludeAudio>() == null)
+                                                {
+                                                    newScrap.prefab.AddComponent<OccludeAudio>();
+                                                }
+                                                fi.bulbLight = newScrap.bulbLight;
+                                                if (fi.bulbLight == null)
+                                                {
+                                                    fi.bulbLight = new Material(Shader.Find("HDRP/Lit"));
+                                                }
+                                                fi.bulbDark = newScrap.bulbDark;
+                                                if (fi.bulbDark == null)
+                                                {
+                                                    fi.bulbDark = new Material(Shader.Find("HDRP/Lit"));
+                                                }
+                                                fi.flashlightMesh = newScrap.flashlightMesh != null ? newScrap.flashlightMesh : fi.mainObjectRenderer;
+                                                fi.flashlightTypeID = newScrap.flashlightTypeID;
+                                                fi.changeMaterial = newScrap.changeMaterial;
                                                 break;
                                             case ScrapType.Noisemaker:
-                                                physicsProp = newScrap.prefab.AddComponent<NoisemakerProp>();
-                                                ((NoisemakerProp)physicsProp).noiseAudio = newScrap.noiseAudio;
-                                                ((NoisemakerProp)physicsProp).noiseAudioFar = newScrap.noiseAudioFar;
-                                                ((NoisemakerProp)physicsProp).noiseRange = newScrap.noiseRange;
-                                                ((NoisemakerProp)physicsProp).maxLoudness = newScrap.maxLoudness;
-                                                ((NoisemakerProp)physicsProp).minLoudness = newScrap.minLoudness;
-                                                ((NoisemakerProp)physicsProp).maxPitch = newScrap.maxPitch;
-                                                ((NoisemakerProp)physicsProp).triggerAnimator = newScrap.triggerAnimator;
+                                                NoisemakerProp np = newScrap.prefab.AddComponent<NoisemakerProp>();
+
+                                                np.grabbable = true;
+                                                np.itemProperties = tmpItem;
+                                                np.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
+
+                                                np.noiseAudio = newScrap.noiseAudio != null ? newScrap.noiseAudio : newScrap.prefab.GetComponent<AudioSource>();
+                                                if (np.noiseAudio == null)
+                                                {
+                                                    np.noiseAudio = newScrap.prefab.AddComponent<AudioSource>();
+                                                }
+                                                np.noiseAudioFar = newScrap.noiseAudioFar;
+                                                np.noiseRange = newScrap.noiseRange;
+                                                np.maxLoudness = newScrap.maxLoudness;
+                                                np.minLoudness = newScrap.minLoudness;
+                                                np.maxPitch = newScrap.maxPitch;
+                                                np.triggerAnimator = newScrap.triggerAnimator;
                                                 break;
                                             case ScrapType.WhoopieCushion:
-                                                physicsProp = newScrap.prefab.AddComponent<WhoopieCushionItem>();
-                                                ((WhoopieCushionItem)physicsProp).whoopieCushionAudio = newScrap.whoopieCushionAudio;
+                                                WhoopieCushionItem wci = newScrap.prefab.AddComponent<WhoopieCushionItem>();
+
+                                                wci.grabbable = true;
+                                                wci.itemProperties = tmpItem;
+                                                wci.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
+
+                                                wci.whoopieCushionAudio = newScrap.whoopieCushionAudio != null ? newScrap.whoopieCushionAudio : newScrap.prefab.GetComponent<AudioSource>();
+                                                if (wci.whoopieCushionAudio == null)
+                                                {
+                                                    wci.whoopieCushionAudio = newScrap.prefab.AddComponent<AudioSource>();
+                                                }
                                                 break;
                                         }
-                                        ((PhysicsProp)physicsProp).grabbable = true;
-                                        ((PhysicsProp)physicsProp).itemProperties = tmpItem;
-                                        ((PhysicsProp)physicsProp).mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
 
                                         AudioSource audioSource = newScrap.prefab.AddComponent<AudioSource>();
                                         audioSource.playOnAwake = false;

@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using LethalExpansion.Utils;
+using UnityEngine.SceneManagement;
 
 namespace LethalExpansion.Patches
 {
@@ -33,6 +34,17 @@ namespace LethalExpansion.Patches
                 __instance.versionNumberText.enableWordWrapping = false;
                 __instance.versionNumberText.text += $"     LEv{LethalExpansion.ModVersion.ToString()}";
             }
+        }
+        [HarmonyPatch(nameof(MenuManager.ConfirmHostButton))]
+        [HarmonyPrefix]
+        static bool ConfirmHostButton_Prefix(MenuManager __instance)
+        {
+            if (GameNetworkManager.Instance.saveFileNum == -1)
+            {
+                PopupManager.Instance.InstantiatePopup(SceneManager.GetSceneByName("MainMenu"), "You can't do this with LE", "Please disable LethalExpansion to play on the Challenge Moon.");
+                return false;
+            }
+            return true;
         }
     }
 }

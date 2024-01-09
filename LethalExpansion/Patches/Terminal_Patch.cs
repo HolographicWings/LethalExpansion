@@ -249,196 +249,226 @@ namespace LethalExpansion.Patches
                                     {
                                         try
                                         {
-                                            Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
-
-                                            AudioSource audioSource = newScrap.prefab.GetComponent<AudioSource>();
-                                            if(audioSource != null)
-                                            {
-                                                audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
-                                            }
-
-                                            AudioClip _tpmGrabSFX = null;
-                                            if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.grabSFX))
-                                            {
-                                                _tpmGrabSFX = AssetGather.Instance.audioClips[newScrap.grabSFX];
-                                            }
-                                            tmpItem.grabSFX = _tpmGrabSFX != null ? _tpmGrabSFX : defaultGrabSound;
-                                            AudioClip _tpmDropSFX = null;
-                                            if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.dropSFX))
-                                            {
-                                                _tpmDropSFX = AssetGather.Instance.audioClips[newScrap.dropSFX];
-                                            }
-                                            tmpItem.dropSFX = _tpmDropSFX != null ? _tpmDropSFX : defaultDropSound;
-
+                                            Item tmpItem = null;
                                             object physicsProp = null;
                                             switch (newScrap.scrapType)
                                             {
-                                                case ScrapType.Shovel:
-                                                    physicsProp = newScrap.prefab.GetComponent<Shovel>();
-                                                    if(physicsProp != null)
+                                                case ScrapType.Normal:
+                                                    PhysicsProp pp = newScrap.prefab.GetComponent<PhysicsProp>();
+                                                    if (pp != null)
                                                     {
-                                                        AudioClip reelUp = null;
-                                                        if (newScrap.reelUp.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.reelUp))
+                                                        tmpItem = pp.itemProperties;
+                                                    }
+                                                    break;
+                                                case ScrapType.Shovel:
+                                                    Shovel s = newScrap.prefab.GetComponent<Shovel>();
+                                                    if (s != null)
+                                                    {
+                                                        tmpItem = s.itemProperties;
+                                                        physicsProp = newScrap.prefab.GetComponent<Shovel>();
+                                                        if (physicsProp != null)
                                                         {
-                                                            reelUp = AssetGather.Instance.audioClips[newScrap.reelUp];
-                                                        }
-                                                        AudioClip swing = null;
-                                                        if (newScrap.swing.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.swing))
-                                                        {
-                                                            swing = AssetGather.Instance.audioClips[newScrap.swing];
-                                                        }
-                                                        List<AudioClip> hitSFX = new List<AudioClip>();
-                                                        if (newScrap.hitSFX != null && newScrap.hitSFX.Length > 0)
-                                                        {
-                                                            foreach (string clip in newScrap.hitSFX)
+                                                            AudioClip reelUp = null;
+                                                            if (newScrap.reelUp.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.reelUp))
                                                             {
-                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                reelUp = AssetGather.Instance.audioClips[newScrap.reelUp];
+                                                            }
+                                                            AudioClip swing = null;
+                                                            if (newScrap.swing.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.swing))
+                                                            {
+                                                                swing = AssetGather.Instance.audioClips[newScrap.swing];
+                                                            }
+                                                            List<AudioClip> hitSFX = new List<AudioClip>();
+                                                            if (newScrap.hitSFX != null && newScrap.hitSFX.Length > 0)
+                                                            {
+                                                                foreach (string clip in newScrap.hitSFX)
                                                                 {
-                                                                    hitSFX.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                    {
+                                                                        hitSFX.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    }
                                                                 }
                                                             }
+                                                            ((Shovel)physicsProp).reelUp = reelUp != null ? reelUp : defaultShovelReelUp;
+                                                            ((Shovel)physicsProp).swing = swing != null ? swing : defaultShovelSwing;
+                                                            ((Shovel)physicsProp).hitSFX = hitSFX != null && hitSFX.Count > 0 ? hitSFX.ToArray() : defaultShovelHitSFXs;
                                                         }
-                                                        ((Shovel)physicsProp).reelUp = reelUp != null ? reelUp : defaultShovelReelUp;
-                                                        ((Shovel)physicsProp).swing = swing != null ? swing : defaultShovelSwing;
-                                                        ((Shovel)physicsProp).hitSFX = hitSFX != null && hitSFX.Count > 0 ? hitSFX.ToArray() : defaultShovelHitSFXs;
                                                     }
                                                     break;
                                                 case ScrapType.Flashlight:
-                                                    physicsProp = newScrap.prefab.GetComponent<FlashlightItem>();
-                                                    if (physicsProp != null)
+                                                    FlashlightItem fi = newScrap.prefab.GetComponent<FlashlightItem>();
+                                                    if (fi != null)
                                                     {
-                                                        AudioClip outOfBatteriesClip = null;
-                                                        if (newScrap.outOfBatteriesClip.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.outOfBatteriesClip))
+                                                        tmpItem = fi.itemProperties;
+                                                        physicsProp = newScrap.prefab.GetComponent<FlashlightItem>();
+                                                        if (physicsProp != null)
                                                         {
-                                                            outOfBatteriesClip = AssetGather.Instance.audioClips[newScrap.outOfBatteriesClip];
-                                                        }
-                                                        AudioClip flashlightFlicker = null;
-                                                        if (newScrap.flashlightFlicker.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.flashlightFlicker))
-                                                        {
-                                                            flashlightFlicker = AssetGather.Instance.audioClips[newScrap.flashlightFlicker];
-                                                        }
-                                                        List<AudioClip> flashlightClips = new List<AudioClip>();
-                                                        if (newScrap.flashlightClips != null && newScrap.flashlightClips.Length > 0)
-                                                        {
-                                                            foreach (string clip in newScrap.flashlightClips)
+                                                            AudioClip outOfBatteriesClip = null;
+                                                            if (newScrap.outOfBatteriesClip.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.outOfBatteriesClip))
                                                             {
-                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                outOfBatteriesClip = AssetGather.Instance.audioClips[newScrap.outOfBatteriesClip];
+                                                            }
+                                                            AudioClip flashlightFlicker = null;
+                                                            if (newScrap.flashlightFlicker.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.flashlightFlicker))
+                                                            {
+                                                                flashlightFlicker = AssetGather.Instance.audioClips[newScrap.flashlightFlicker];
+                                                            }
+                                                            List<AudioClip> flashlightClips = new List<AudioClip>();
+                                                            if (newScrap.flashlightClips != null && newScrap.flashlightClips.Length > 0)
+                                                            {
+                                                                foreach (string clip in newScrap.flashlightClips)
                                                                 {
-                                                                    flashlightClips.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                    {
+                                                                        flashlightClips.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    }
                                                                 }
                                                             }
+                                                            ((FlashlightItem)physicsProp).outOfBatteriesClip = outOfBatteriesClip != null ? outOfBatteriesClip : defaultFlashlightOutOfBatteriesClip;
+                                                            ((FlashlightItem)physicsProp).flashlightFlicker = flashlightFlicker != null ? flashlightFlicker : defaultFlashlightFlicker;
+                                                            ((FlashlightItem)physicsProp).flashlightClips = flashlightClips != null && flashlightClips.Count > 0 ? flashlightClips.ToArray() : defaultFlashlightClips;
                                                         }
-                                                        ((FlashlightItem)physicsProp).outOfBatteriesClip = outOfBatteriesClip != null ? outOfBatteriesClip : defaultFlashlightOutOfBatteriesClip;
-                                                        ((FlashlightItem)physicsProp).flashlightFlicker = flashlightFlicker != null ? flashlightFlicker : defaultFlashlightFlicker;
-                                                        ((FlashlightItem)physicsProp).flashlightClips = flashlightClips != null && flashlightClips.Count > 0 ? flashlightClips.ToArray() : defaultFlashlightClips;
                                                     }
                                                     break;
                                                 case ScrapType.Noisemaker:
-                                                    physicsProp = newScrap.prefab.GetComponent<NoisemakerProp>();
-                                                    if (physicsProp != null)
+                                                    NoisemakerProp np = newScrap.prefab.GetComponent<NoisemakerProp>();
+                                                    if(np != null)
                                                     {
-                                                        List<AudioClip> noiseSFX = new List<AudioClip>();
-                                                        if (newScrap.noiseSFX != null && newScrap.noiseSFX.Length > 0)
+                                                        tmpItem = np.itemProperties;
+                                                        physicsProp = newScrap.prefab.GetComponent<NoisemakerProp>();
+                                                        if (physicsProp != null)
                                                         {
-                                                            foreach (string clip in newScrap.noiseSFX)
+                                                            List<AudioClip> noiseSFX = new List<AudioClip>();
+                                                            if (newScrap.noiseSFX != null && newScrap.noiseSFX.Length > 0)
                                                             {
-                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                foreach (string clip in newScrap.noiseSFX)
                                                                 {
-                                                                    noiseSFX.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                    {
+                                                                        noiseSFX.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    }
                                                                 }
                                                             }
-                                                        }
-                                                        List<AudioClip> noiseSFXFar = new List<AudioClip>();
-                                                        if (newScrap.noiseSFXFar != null && newScrap.noiseSFXFar.Length > 0)
-                                                        {
-                                                            foreach (string clip in newScrap.noiseSFXFar)
+                                                            List<AudioClip> noiseSFXFar = new List<AudioClip>();
+                                                            if (newScrap.noiseSFXFar != null && newScrap.noiseSFXFar.Length > 0)
                                                             {
-                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                foreach (string clip in newScrap.noiseSFXFar)
                                                                 {
-                                                                    noiseSFXFar.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                    {
+                                                                        noiseSFXFar.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    }
                                                                 }
                                                             }
+                                                            ((NoisemakerProp)physicsProp).noiseSFX = noiseSFX != null && noiseSFX.Count > 0 ? noiseSFX.ToArray() : defaultNoisemakerNoiseSFX;
+                                                            ((NoisemakerProp)physicsProp).noiseSFXFar = noiseSFXFar != null && noiseSFXFar.Count > 0 ? noiseSFXFar.ToArray() : defaultNoisemakerNoiseSFXFar;
                                                         }
-                                                        ((NoisemakerProp)physicsProp).noiseSFX = noiseSFX != null && noiseSFX.Count > 0 ? noiseSFX.ToArray() : defaultNoisemakerNoiseSFX;
-                                                        ((NoisemakerProp)physicsProp).noiseSFXFar = noiseSFXFar != null && noiseSFXFar.Count > 0 ? noiseSFXFar.ToArray() : defaultNoisemakerNoiseSFXFar;
                                                     }
                                                     break;
                                                 case ScrapType.WhoopieCushion:
-                                                    physicsProp = newScrap.prefab.GetComponent<WhoopieCushionItem>();
-                                                    if (physicsProp != null)
+                                                    WhoopieCushionItem wci = newScrap.prefab.GetComponent<WhoopieCushionItem>();
+                                                    if(wci != null)
                                                     {
-                                                        List<AudioClip> fartAudios = new List<AudioClip>();
-                                                        if (newScrap.fartAudios != null && newScrap.fartAudios.Length > 0)
+                                                        tmpItem = wci.itemProperties;
+                                                        physicsProp = newScrap.prefab.GetComponent<WhoopieCushionItem>();
+                                                        if (physicsProp != null)
                                                         {
-                                                            foreach (string clip in newScrap.fartAudios)
+                                                            List<AudioClip> fartAudios = new List<AudioClip>();
+                                                            if (newScrap.fartAudios != null && newScrap.fartAudios.Length > 0)
                                                             {
-                                                                if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                foreach (string clip in newScrap.fartAudios)
                                                                 {
-                                                                    fartAudios.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    if (AssetGather.Instance.audioClips.ContainsKey(clip))
+                                                                    {
+                                                                        fartAudios.Add(AssetGather.Instance.audioClips[clip]);
+                                                                    }
                                                                 }
                                                             }
+                                                            ((WhoopieCushionItem)physicsProp).fartAudios = fartAudios != null && fartAudios.Count > 0 ? fartAudios.ToArray() : defaultWhoopieCushionAudios;
                                                         }
-                                                        ((WhoopieCushionItem)physicsProp).fartAudios = fartAudios != null && fartAudios.Count > 0 ? fartAudios.ToArray() : defaultWhoopieCushionAudios;
                                                     }
                                                     break;
                                             }
 
-                                            StartOfRound.Instance.allItemsList.itemsList.Add(tmpItem);
-                                            if (newScrap.useGlobalSpawnWeight)
+                                            if (tmpItem != null)
                                             {
-                                                SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
-                                                itemRarity.spawnableItem = tmpItem;
-                                                itemRarity.rarity = newScrap.globalSpawnWeight;
-                                                foreach (SelectableLevel level in __instance.moonsCatalogueList)
+
+                                                AudioSource audioSource = newScrap.prefab.GetComponent<AudioSource>();
+                                                if (audioSource != null)
                                                 {
-                                                    level.spawnableScrap.Add(itemRarity);
+                                                    audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                                                 }
-                                            }
-                                            else
-                                            {
-                                                ScrapSpawnChancePerScene[] chances = newScrap.perPlanetSpawnWeight();
-                                                foreach (SelectableLevel level in __instance.moonsCatalogueList)
+
+                                                AudioClip _tpmGrabSFX = null;
+                                                if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.grabSFX))
                                                 {
-                                                    try
+                                                    _tpmGrabSFX = AssetGather.Instance.audioClips[newScrap.grabSFX];
+                                                }
+                                                tmpItem.grabSFX = _tpmGrabSFX != null ? _tpmGrabSFX : defaultGrabSound;
+                                                AudioClip _tpmDropSFX = null;
+                                                if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.dropSFX))
+                                                {
+                                                    _tpmDropSFX = AssetGather.Instance.audioClips[newScrap.dropSFX];
+                                                }
+                                                tmpItem.dropSFX = _tpmDropSFX != null ? _tpmDropSFX : defaultDropSound;
+
+                                                StartOfRound.Instance.allItemsList.itemsList.Add(tmpItem);
+                                                if (newScrap.useGlobalSpawnWeight)
+                                                {
+                                                    SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                                    itemRarity.spawnableItem = tmpItem;
+                                                    itemRarity.rarity = newScrap.globalSpawnWeight;
+                                                    foreach (SelectableLevel level in __instance.moonsCatalogueList)
                                                     {
-                                                        if (chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others"))
+                                                        level.spawnableScrap.Add(itemRarity);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ScrapSpawnChancePerScene[] chances = newScrap.perPlanetSpawnWeight();
+                                                    foreach (SelectableLevel level in __instance.moonsCatalogueList)
+                                                    {
+                                                        try
                                                         {
-                                                            ScrapSpawnChancePerScene chance = new ScrapSpawnChancePerScene(string.Empty, 0);
-                                                            try
+                                                            if (chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others"))
                                                             {
-                                                                chance = chances.First(l => l.SceneName == level.PlanetName);
-                                                            }
-                                                            catch
-                                                            {
+                                                                ScrapSpawnChancePerScene chance = new ScrapSpawnChancePerScene(string.Empty, 0);
                                                                 try
                                                                 {
-                                                                    chance = chances.First(l => l.SceneName == "Others");
+                                                                    chance = chances.First(l => l.SceneName == level.PlanetName);
                                                                 }
-                                                                catch(Exception ex)
+                                                                catch
                                                                 {
-                                                                    LethalExpansion.Log.LogError(ex);
+                                                                    try
+                                                                    {
+                                                                        chance = chances.First(l => l.SceneName == "Others");
+                                                                    }
+                                                                    catch (Exception ex)
+                                                                    {
+                                                                        LethalExpansion.Log.LogError(ex);
+                                                                    }
                                                                 }
-                                                            }
 
-                                                            if(chance.SceneName != string.Empty)
-                                                            {
-                                                                SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
-                                                                itemRarity.spawnableItem = tmpItem;
-                                                                itemRarity.rarity = chance.SpawnWeight;
+                                                                if (chance.SceneName != string.Empty)
+                                                                {
+                                                                    SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                                                    itemRarity.spawnableItem = tmpItem;
+                                                                    itemRarity.rarity = chance.SpawnWeight;
 
-                                                                level.spawnableScrap.Add(itemRarity);
+                                                                    level.spawnableScrap.Add(itemRarity);
+                                                                }
                                                             }
                                                         }
-                                                    }
-                                                    catch (Exception ex)
-                                                    {
-                                                        LethalExpansion.Log.LogError(ex.Message);
+                                                        catch (Exception ex)
+                                                        {
+                                                            LethalExpansion.Log.LogError(ex.Message);
+                                                        }
                                                     }
                                                 }
+                                                newScrapsNames.Add(tmpItem.itemName);
+                                                AssetGather.Instance.AddScrap(tmpItem);
+                                                LethalExpansion.Log.LogInfo($"{newScrap.itemName} Scrap added.");
                                             }
-                                            newScrapsNames.Add(tmpItem.itemName);
-                                            AssetGather.Instance.AddScrap(tmpItem);
-                                            LethalExpansion.Log.LogInfo($"{newScrap.itemName} Scrap added.");
                                         }
                                         catch (Exception ex)
                                         {
@@ -478,67 +508,109 @@ namespace LethalExpansion.Patches
                                         try
                                         {
                                             string[] vanillaBlacklist = new string[] { "41 Experimentation", "220 Assurance", "56 Vow", "21 Offense", "61 March", "85 Rend", "7 Dine", "8 Titan"};
-                                            Item tmpItem = newScrap.prefab.GetComponent<PhysicsProp>().itemProperties;
 
-                                            if (newScrap.useGlobalSpawnWeight)
+                                            Item tmpItem = null;
+                                            object physicsProp = null;
+                                            switch (newScrap.scrapType)
                                             {
-                                                SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
-                                                itemRarity.spawnableItem = tmpItem;
-                                                itemRarity.rarity = newScrap.globalSpawnWeight;
-                                                foreach (SelectableLevel level in __instance.moonsCatalogueList)
-                                                {
-                                                    if (!vanillaBlacklist.Contains(level.PlanetName))
+                                                case ScrapType.Normal:
+                                                    PhysicsProp pp = newScrap.prefab.GetComponent<PhysicsProp>();
+                                                    if (pp != null)
                                                     {
-                                                        level.spawnableScrap.Add(itemRarity);
+                                                        tmpItem = pp.itemProperties;
                                                     }
-                                                }
+                                                    break;
+                                                case ScrapType.Shovel:
+                                                    Shovel s = newScrap.prefab.GetComponent<Shovel>();
+                                                    if (s != null)
+                                                    {
+                                                        tmpItem = s.itemProperties;
+                                                    }
+                                                    break;
+                                                case ScrapType.Flashlight:
+                                                    FlashlightItem fi = newScrap.prefab.GetComponent<FlashlightItem>();
+                                                    if (fi != null)
+                                                    {
+                                                        tmpItem = fi.itemProperties;
+                                                    }
+                                                    break;
+                                                case ScrapType.Noisemaker:
+                                                    NoisemakerProp np = newScrap.prefab.GetComponent<NoisemakerProp>();
+                                                    if (np != null)
+                                                    {
+                                                        tmpItem = np.itemProperties;
+                                                    }
+                                                    break;
+                                                case ScrapType.WhoopieCushion:
+                                                    WhoopieCushionItem wci = newScrap.prefab.GetComponent<WhoopieCushionItem>();
+                                                    if (wci != null)
+                                                    {
+                                                        tmpItem = wci.itemProperties;
+                                                    }
+                                                    break;
                                             }
-                                            else
+                                            if (tmpItem != null)
                                             {
-                                                ScrapSpawnChancePerScene[] chances = newScrap.perPlanetSpawnWeight();
-                                                foreach (SelectableLevel level in __instance.moonsCatalogueList)
+                                                if (newScrap.useGlobalSpawnWeight)
                                                 {
-                                                    try
+                                                    SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                                    itemRarity.spawnableItem = tmpItem;
+                                                    itemRarity.rarity = newScrap.globalSpawnWeight;
+                                                    foreach (SelectableLevel level in __instance.moonsCatalogueList)
                                                     {
                                                         if (!vanillaBlacklist.Contains(level.PlanetName))
                                                         {
-                                                            if (chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others"))
+                                                            level.spawnableScrap.Add(itemRarity);
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ScrapSpawnChancePerScene[] chances = newScrap.perPlanetSpawnWeight();
+                                                    foreach (SelectableLevel level in __instance.moonsCatalogueList)
+                                                    {
+                                                        try
+                                                        {
+                                                            if (!vanillaBlacklist.Contains(level.PlanetName))
                                                             {
-                                                                ScrapSpawnChancePerScene chance = new ScrapSpawnChancePerScene(string.Empty, 0);
-                                                                try
+                                                                if (chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others"))
                                                                 {
-                                                                    chance = chances.First(l => l.SceneName == level.PlanetName);
-                                                                }
-                                                                catch
-                                                                {
+                                                                    ScrapSpawnChancePerScene chance = new ScrapSpawnChancePerScene(string.Empty, 0);
                                                                     try
                                                                     {
-                                                                        chance = chances.First(l => l.SceneName == "Others");
+                                                                        chance = chances.First(l => l.SceneName == level.PlanetName);
                                                                     }
-                                                                    catch (Exception ex)
+                                                                    catch
                                                                     {
-                                                                        LethalExpansion.Log.LogError(ex);
+                                                                        try
+                                                                        {
+                                                                            chance = chances.First(l => l.SceneName == "Others");
+                                                                        }
+                                                                        catch (Exception ex)
+                                                                        {
+                                                                            LethalExpansion.Log.LogError(ex);
+                                                                        }
                                                                     }
-                                                                }
 
-                                                                if (chance.SceneName != string.Empty)
-                                                                {
-                                                                    SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
-                                                                    itemRarity.spawnableItem = tmpItem;
-                                                                    itemRarity.rarity = chance.SpawnWeight;
+                                                                    if (chance.SceneName != string.Empty)
+                                                                    {
+                                                                        SpawnableItemWithRarity itemRarity = new SpawnableItemWithRarity();
+                                                                        itemRarity.spawnableItem = tmpItem;
+                                                                        itemRarity.rarity = chance.SpawnWeight;
 
-                                                                    level.spawnableScrap.Add(itemRarity);
+                                                                        level.spawnableScrap.Add(itemRarity);
+                                                                    }
                                                                 }
                                                             }
                                                         }
-                                                    }
-                                                    catch (Exception ex)
-                                                    {
-                                                        LethalExpansion.Log.LogError(ex.Message);
+                                                        catch (Exception ex)
+                                                        {
+                                                            LethalExpansion.Log.LogError(ex.Message);
+                                                        }
                                                     }
                                                 }
+                                                LethalExpansion.Log.LogInfo($"{newScrap.itemName} Scrap patched recursively.");
                                             }
-                                            LethalExpansion.Log.LogInfo($"{newScrap.itemName} Scrap patched recursively.");
                                         }
                                         catch (Exception ex)
                                         {
