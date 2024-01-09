@@ -3,7 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LethalExpansion", "LethalExpansion\LethalExpansion.csproj", "{F80EB3FD-9563-4F80-9FC7-3FCCE1655C13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LethalExpansion", "LethalExpansion\LethalExpansion.csproj", "{F80EB3FD-9563-4F80-9FC7-3FCCE1655C13}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github Items", "Github Items", "{F6E07BC4-B224-4C0D-83E0-3A8C809768A7}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		CONTRIBUTING.md = CONTRIBUTING.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", "{4B02FE11-5ED6-47EF-9CE9-93D08F28B3E2}"
+	ProjectSection(SolutionItems) = preProject
+		Dependencies.props = Dependencies.props
+		Paths.props = Paths.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
