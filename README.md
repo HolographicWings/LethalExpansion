@@ -78,6 +78,11 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.17
+	- Added several experimental animations support for scraps made with SDK (may fix two handed animations).
+	- Fixed some issues with new Scrap types.
+	- Checked compatibility with v47.
+	- Added a locker to don't go on the Challenge moon with LethalExpansion which can be cheaty (Please go on this moon on Vanilla to respect the Leaderboard).
 - 1.3.16
 	- Reversed networking change with Entrances that causing issues.
 - 1.3.15
