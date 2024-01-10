@@ -124,7 +124,7 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         public static bool LoadNewLevel_Prefix(RoundManager __instance, int randomSeed, SelectableLevel newLevel)
         {
-            if (!LethalExpansion.dungeonGeneratorReady)
+            if (!ConfigManager.Instance.FindItemValue<bool>("LegacyMoonLoading") && !LethalExpansion.dungeonGeneratorReady)
             {
                 LethalExpansion.Log.LogInfo("Waiting for Generator...");
                 CheckDungeonGeneratorReady(__instance, randomSeed, newLevel).GetAwaiter();
@@ -134,7 +134,10 @@ namespace LethalExpansion.Patches
         }
         private static async Task CheckDungeonGeneratorReady(RoundManager __instance, int randomSeed, SelectableLevel newLevel)
         {
-            while (true)
+            const int maxIterations = 40;
+            int currentIteration = 0;
+
+            while (currentIteration < maxIterations)
             {
                 if (LethalExpansion.dungeonGeneratorReady)
                 {
@@ -142,6 +145,7 @@ namespace LethalExpansion.Patches
                 }
 
                 await Task.Delay(250);
+                currentIteration++;
             }
             RoundManager.Instance.LoadNewLevel(randomSeed, newLevel);
         }

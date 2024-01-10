@@ -78,6 +78,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.18
+	- Finally fixed shovels.
 - 1.3.17
 	- Added several experimental animations support for scraps made with SDK (may fix two handed animations).
 	- Fixed some issues with new Scrap types.

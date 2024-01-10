@@ -43,11 +43,13 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.17";
+        private const string VersionString = "1.3.18";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
         };*/
+        public static readonly int[] CompatibleGameVersions = { 45, 47, 48, 49 };
+
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
             { "com.sinai.unityexplorer",compatibility.medium },
@@ -74,8 +76,6 @@ namespace LethalExpansion
             critical = 5
         }
         List<PluginInfo> loadedPlugins = new List<PluginInfo>();
-
-        public static readonly int[] CompatibleGameVersions = {45, 47};
 
         public static bool sessionWaiting = true;
         public static bool hostDataWaiting = true;

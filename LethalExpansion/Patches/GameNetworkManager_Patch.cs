@@ -142,12 +142,13 @@ namespace LethalExpansion.Patches
                                             case ScrapType.Shovel:
                                                 Shovel s = newScrap.prefab.AddComponent<Shovel>();
 
+                                                tmpItem.holdButtonUse = true;
+
                                                 s.grabbable = true;
                                                 s.itemProperties = tmpItem;
                                                 s.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
 
                                                 s.shovelHitForce = newScrap.shovelHitForce;
-                                                s.isHoldingButton = newScrap.isHoldingButton;
                                                 s.shovelAudio = newScrap.shovelAudio != null ? newScrap.shovelAudio : newScrap.prefab.GetComponent<AudioSource>();
                                                 if(s.shovelAudio == null)
                                                 {
