@@ -46,7 +46,7 @@ jobs:
         # asset_content_type: application/x-7z-compressed
 
     - name: Upload Release Asset Zip
-      uses: GreenTF/upload-thunderstore-package@v4.2
+      uses: GreenTF/upload-thunderstore-package@v4.3
       with:
         namespace: HolographicWings
         description: Large game expansion with SDK support and a plenty of features.
