@@ -149,97 +149,180 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 	- Added experimental Ladder support for new moons.
 <details>
   <summary>Old updates:</summary>
-	- 1.2.16
-		- Compatibility patch for MoonOfTheDay mod.
-	- 1.2.15
-		- Removed a debuging test i forgot that made the seed always same. (thanks to @MaxWasUnavailable to noticed it)
-	- 1.2.14
-		- Attempt to fix generation desync once and for all! (Thanks to Olskor to helped me with this issue)
-	- 1.2.13
-		- Attempt to fix issue preventing to join someone already orbitting a modded moon.
-		- Temporarily disabled the Version checker popup that was appearing sometimes outside of the Main Menu.
-	- 1.2.12
-		- Attempt to fix Weather desync.
-	- 1.2.11
-		- Fixed inside monsters spawning outside in custom moons.
-	- 1.2.10
-		- Fixed broken quota settings from 1.2.7.
-	- 1.2.9
-		- Reworked the assetbundles loading (again).
-		- Fixed audio file registered with another name don't register properly.
-	- 1.2.8
-		- Ajusted default spawn weight for new scraps.
-		- Ajusted version checker.
-	- 1.2.7
-		- Overall micro optimizations of assets made with SDK.
-		- Wateridge optimization first pass.
-		- Added Brutal Company Plus Compatibility.
-		- Several improvement in scrap and moon loaders.
-		- Security against template module overwrite.
-		- Added a timeout before kick clients who don't answer to network sync packets (Not working).
-		- Improved Configurable Popups focus.
-		- Fixed external scan nodes.
-		- Fixed custom audio files importation issues.
-	- 1.2.6
-		- More retrocompatibility with outdated modules.
-		- Fixing some exceptions when missing ScanNode on new scraps.
-	- 1.2.5
-		- Better sound loader for new scraps and SDK asset banks.
-	- 1.2.4
-		- Added two settings to configure the quota increment.
-		- Finished the Workaround for moons made with old versions of the SDK.
-	- 1.2.3
-		- Added a Workaround to keep minimal compatibility with moons made with old versions of the SDK and avoid crashing.
-	- 1.2.2
-		- Forgot to change the version number, occuring to always tell the mod is outdated.
-		- Added a second fire exit to Wateridge to test the Fire Exit Amount implementation of the SDK
-	- 1.2.1
-		- Removed a debug message.
-		- Nerfed Wateridge (less scraps, enemies spawn sooner).
-	- 1.2.0
-		- Network sync Rework (should fix the map generation desync).
-		- Added a workaround when playing with HDLethalCompany and using new moons with a missing Volume Profile.
-		- Added support for more Fire Exits in maps done with SDK.
-		- Added Item Drop Ship support for moons done with SDK.
-		- Fixed an issue that could break the new moons loading when missing modules.
-		- Increased the mods setting menu size to be able to read the last settings' description.
-		- Added settings to show or hide the Moons Current Weather, Dangeer Rank and Route Price.
-		- Removed the Labyrinth added the Company Building, it was a test.
-		- Added mod version to the Main Menu (compatible with MoreCompany).
-		- Added a Configurable Popup hud for Contextual Notifications. :
-		- Added a Version Checker.
-		- Fixed Moon Route prices getting wrong after returned to Main Menu then joined a new Lobby.
-	- 1.1.9 :
-		- Fixed terrain shader making the game crash when loading a moon with a terrain.
-	- 1.1.8 :
-		- Fixed urgent bug with the new Modules loader.
-	- 1.1.7 :
-		- Reworked the Modules loader to make it compatible with LC_API and R2Modman.
-		- New file extension for Modules.
-	- 1.1.6 :
-		- Renamed the Old Sea Port moon into Wateridge
-		- Added Orbit prefab and description for Wateridge
-		- Edited Wateridge scraps and monsters.
-		- Fixed network desync with global time speed.
-		- Added auto scroll in ship main monitor to see read text.
-		- Fixed an issue that prevent the new moons to load after returned from lobby to main menu.
-	- 1.1.5 :
-		- Support for 1.1.5 version of SDK.
-		- Minor fixes.
-	- 1.1.4 :
-		- Game Version 45 Ready.
-		- Added some error catches for SDK.
-	- 1.1.3 :
-		- Fixed bundle loading issue.
-	- 1.1.2 :
-		- Fixed new landmine system wasn't working.
-		- Fixed orbited moons stopping to show after leaving the Company Building.
-	- 1.1.1 :
-		- Fixed critical issue that prevent the mod to load.
-	- 1.1.0 :
-		- Support for 1.1.0 version of SDK (Full custom moons support)
-		- Removed useless assets and compressed the main skybox
-	- 1.0.1 : Removed useless patches
+	<ul>
+	    <li>1.2.16
+	        <ul>
+	            <li>Compatibility patch for MoonOfTheDay mod.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.15
+	        <ul>
+	            <li>Removed a debugging test I forgot that made the seed always same. (thanks to @MaxWasUnavailable to noticed it)</li>
+	        </ul>
+	    </li>
+	    <li>1.2.14
+	        <ul>
+	            <li>Attempt to fix generation desync once and for all! (Thanks to Olskor to helped me with this issue)</li>
+	        </ul>
+	    </li>
+	    <li>1.2.13
+	        <ul>
+	            <li>Attempt to fix issue preventing to join someone already orbiting a modded moon.</li>
+	            <li>Temporarily disabled the Version checker popup that was appearing sometimes outside of the Main Menu.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.12
+	        <ul>
+	            <li>Attempt to fix Weather desync.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.11
+	        <ul>
+	            <li>Fixed inside monsters spawning outside in custom moons.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.10
+	        <ul>
+	            <li>Fixed broken quota settings from 1.2.7.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.9
+	        <ul>
+	            <li>Reworked the assetbundles loading (again).</li>
+	            <li>Fixed audio file registered with another name don't register properly.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.8
+	        <ul>
+	            <li>Ajusted default spawn weight for new scraps.</li>
+	            <li>Ajusted version checker.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.7
+	        <ul>
+	            <li>Overall micro optimizations of assets made with SDK.</li>
+	            <li>Wateridge optimization first pass.</li>
+	            <li>Added Brutal Company Plus Compatibility.</li>
+	            <li>Several improvement in scrap and moon loaders.</li>
+	            <li>Security against template module overwrite.</li>
+	            <li>Added a timeout before kick clients who don't answer to network sync packets (Not working).</li>
+	            <li>Improved Configurable Popups focus.</li>
+	            <li>Fixed external scan nodes.</li>
+	            <li>Fixed custom audio files importation issues.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.6
+	        <ul>
+	            <li>More retrocompatibility with outdated modules.</li>
+	            <li>Fixing some exceptions when missing ScanNode on new scraps.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.5
+	        <ul>
+	            <li>Better sound loader for new scraps and SDK asset banks.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.4
+	        <ul>
+	            <li>Added two settings to configure the quota increment.</li>
+	            <li>Finished the Workaround for moons made with old versions of the SDK.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.3
+	        <ul>
+	            <li>Added a Workaround to keep minimal compatibility with moons made with old versions of the SDK and avoid crashing.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.2
+	        <ul>
+	            <li>Forgot to change the version number, occurring to always tell the mod is outdated.</li>
+	            <li>Added a second fire exit to Wateridge to test the Fire Exit Amount implementation of the SDK.</li>
+	        </ul>
+	    </li>
+	    <li>1.2.1
+	        <ul>
+	            <li>Removed a debug message.</li>
+	            <li>Nerfed Wateridge (less scraps, enemies spawn sooner).</li>
+	        </ul>
+	    </li>
+	    <li>1.2.0
+	        <ul>
+	            <li>Network sync Rework (should fix the map generation desync).</li>
+	            <li>Added a workaround when playing with HDLethalCompany and using new moons with a missing Volume Profile.</li>
+	            <li>Added support for more Fire Exits in maps done with SDK.</li>
+	            <li>Added Item Drop Ship support for moons done with SDK.</li>
+	            <li>Fixed an issue that could break the new moons loading when missing modules.</li>
+	            <li>Increased the mods setting menu size to be able to read the last settings' description.</li>
+	            <li>Added settings to show or hide the Moons Current Weather, Dangeer Rank and Route Price.</li>
+	            <li>Removed the Labyrinth added the Company Building, it was a test.</li>
+	            <li>Added mod version to the Main Menu (compatible with MoreCompany).</li>
+	            <li>Added a Configurable Popup hud for Contextual Notifications.</li>
+	            <li>Added a Version Checker.</li>
+	            <li>Fixed Moon Route prices getting wrong after returned to Main Menu then joined a new Lobby.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.9 :
+	        <ul>
+	            <li>Fixed terrain shader making the game crash when loading a moon with a terrain.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.8 :
+	        <ul>
+	            <li>Fixed urgent bug with the new Modules loader.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.7 :
+	        <ul>
+	            <li>Reworked the Modules loader to make it compatible with LC_API and R2Modman.</li>
+	            <li>New file extension for Modules.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.6 :
+	        <ul>
+	            <li>Renamed the Old Sea Port moon into Wateridge.</li>
+	            <li>Added Orbit prefab and description for Wateridge.</li>
+	            <li>Edited Wateridge scraps and monsters.</li>
+	            <li>Fixed network desync with global time speed.</li>
+	            <li>Added auto scroll in ship main monitor to see read text.</li>
+	            <li>Fixed an issue that prevent the new moons to load after returned from lobby to main menu.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.5 :
+	        <ul>
+	            <li>Support for 1.1.5 version of SDK.</li>
+	            <li>Minor fixes.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.4 :
+	        <ul>
+	            <li>Game Version 45 Ready.</li>
+	            <li>Added some error catches for SDK.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.3 :
+	        <ul>
+	            <li>Fixed bundle loading issue.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.2 :
+	        <ul>
+	            <li>Fixed new landmine system wasn't working.</li>
+	            <li>Fixed orbited moons stopping to show after leaving the Company Building.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.1 :
+	        <ul>
+	            <li>Fixed critical issue that prevent the mod to load.</li>
+	        </ul>
+	    </li>
+	    <li>1.1.0 :
+	        <ul>
+	            <li>Support for 1.1.0 version of SDK (Full custom moons support).</li>
+	            <li>Removed useless assets and compressed the main skybox.</li>
+	        </ul>
+	    </li>
+	    <li>1.0.1 : Removed useless patches.</li>
+	</ul>
 </details>
 
 ## Planned features :
