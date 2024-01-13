@@ -16,6 +16,7 @@ namespace LethalExpansion.Patches
         [HarmonyPostfix]
         public static void Start_Postfix(AudioReverbTrigger __instance)
         {
+            //interact trigger extension to add the "OnTriggerExit" event
             __instance.gameObject.AddComponent<InteractTrigger_Extension>();
         }
     }
@@ -28,6 +29,7 @@ namespace LethalExpansion.Patches
         }
         private void OnTriggerExit(Collider other)
         {
+            //invoke an event when a player leave an interact trigger
             if (trigger != null)
             {
                 if (!trigger.touchTrigger)

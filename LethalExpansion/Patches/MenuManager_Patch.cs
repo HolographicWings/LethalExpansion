@@ -39,6 +39,7 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         static bool ConfirmHostButton_Prefix(MenuManager __instance)
         {
+            //trying to load the Challenge moon with LE, avoid it
             if (GameNetworkManager.Instance.saveFileNum == -1)
             {
                 PopupManager.Instance.InstantiatePopup(SceneManager.GetSceneByName("MainMenu"), "You can't do this with LE", "Please disable LethalExpansion to play on the Challenge Moon.");

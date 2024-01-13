@@ -23,6 +23,7 @@ namespace LethalExpansion.Utils
                 return _instance;
             }
         }
+        //build a network packet (broadcast)
         public void sendPacket(packetType type, string header, string packet, long destination = -1, bool waitForAnswer = true)
         {
             HUDManager.Instance.AddTextToChatOnServer($"[sync]{(int)type}|{RoundManager.Instance.NetworkManager.LocalClientId}>{destination}|{header}={packet}[sync]");
@@ -31,6 +32,7 @@ namespace LethalExpansion.Utils
                 StartTimeout(destination);
             }
         }
+        //build a network packet (user specific)
         public void sendPacket(packetType type, string header, string packet, long[] destinations, bool waitForAnswer = true)
         {
             foreach (int destination in destinations)
@@ -83,6 +85,7 @@ namespace LethalExpansion.Utils
             await Task.Delay(5000, token);
             if (!token.IsCancellationRequested)
             {
+                //kick a player after a timeout, but maje an error for unknown reason
                 /*LethalExpansion.Log.LogWarning($"Kicking {id} for timeout.");
                 NetworkPacketManager.Instance.sendPacket(packetType.data, "kickreason", "Packet timeout.", id);
                 StartOfRound.Instance.KickPlayer(StartOfRound.Instance.ClientPlayerList[(ulong)id]);*/

@@ -33,12 +33,16 @@ namespace LethalExpansion.Patches
 
         public static void MainPatch(Terminal __instance)
         {
+            //reset flags
             scrapsPatched = false;
             scrapsRecursivelyPatched = false;
             moonsPatched = false;
+            //get the route terminal keyword for ulterior usage
             routeKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "route");
             //RemoveMoon(__instance, "Experimentation");
+            //remove duplicated moon routes
             Hotfix_DoubleRoutes();
+            //get a plenty of assets references for ulterior usage
             GatherAssets();
             AddScraps(__instance);
             ResetTerminalKeywords(__instance);
@@ -47,14 +51,19 @@ namespace LethalExpansion.Patches
             ResetMoonsRoutePrices();
             UpdateMoonsRoutePrices();
             UpdateMoonsCatalogue(__instance);
+            //keep the default fire exits amount of every dungeon flow
             SaveFireExitAmounts();
-            if(LethalExpansion.delayedLevelChange != -1)
+            //if the moon description and orbit loading is delayed when trying to join a lobby already orbitting a modded moon
+            if (LethalExpansion.delayedLevelChange != -1)
             {
+                //retry to load it's description and orbit since the new moons have been added
                 StartOfRound.Instance.ChangeLevel(LethalExpansion.delayedLevelChange);
                 StartOfRound.Instance.ChangePlanet();
             }
+            //request weathers to host
             NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "hostweathers", string.Empty, 0);
             LethalExpansion.Log.LogInfo("Terminal Main Patch.");
+            //get the list of gathered asset references if in debug mode
             if (ConfigManager.Instance.FindItemValue<bool>("SettingsDebug"))
             {
                 AssetGather.Instance.GetList();

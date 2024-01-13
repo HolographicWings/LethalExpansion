@@ -34,6 +34,7 @@ namespace LethalExpansion.Utils
         {
             if (LethalExpansion.ModVersion < Version.Parse(onlineVersion))
             {
+                //show a popup in main menu if the mod is not up to date
                 PopupManager.Instance.InstantiatePopup(SceneManager.GetSceneByName("MainMenu"), "Update", "Lethal Expansion is not up to date " + onlineVersion, "Update", "Ignore", new UnityAction(() => { Application.OpenURL("https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/"); }));
             }
         }

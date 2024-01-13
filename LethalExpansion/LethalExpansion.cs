@@ -34,6 +34,7 @@ using UnityEngine.Events;
 namespace LethalExpansion
 {
     [BepInPlugin(PluginGUID, PluginName, VersionString)]
+    //soft dependencies to ajust the load order, some may be removed
     [BepInDependency("me.swipez.melonloader.morecompany", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("BrutalCompanyPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("MoonOfTheDay", BepInDependency.DependencyFlags.SoftDependency)]
@@ -48,8 +49,10 @@ namespace LethalExpansion
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
         };*/
+        //show a warning if the game version is not in this array
         public static readonly int[] CompatibleGameVersions = { 45, 47, 48, 49 };
 
+        //compatibility flags, use the mod GUID
         private readonly Dictionary<string, compatibility> CompatibleMods = new Dictionary<string, compatibility>
         {
             { "com.sinai.unityexplorer",compatibility.medium },
@@ -77,16 +80,24 @@ namespace LethalExpansion
         }
         List<PluginInfo> loadedPlugins = new List<PluginInfo>();
 
+        //this flag gets false when joined a lobby either as host or client
         public static bool sessionWaiting = true;
+        //this flag is true while the client waits for the settings of the host
         public static bool hostDataWaiting = true;
         public static bool ishost = false;
+        //this flag gets true when the scraps and moons have been added
         public static bool alreadypatched = false;
+        //this flag is for the host and sets to true when the weathers have been taken randomly and are ready to be shared with clients (as the moon loading is delayed by the settings sharing, clients will have other weathers than host)
         public static bool weathersReadyToShare = false;
+        //this flag avoid the InitSceneLaunchOptions scene to act normally and will concider it as the scene for custom moons
         public static bool isInGame = false;
+        //this flag waits for the fully load of the moon
         public static bool dungeonGeneratorReady = false;
 
+        //this flag is used to delay the loading of the level description and orbit planet when a client join a lobby already on a modded moon, the moons are loaded when joining the lobby because that require the terminal, joining a lobby with a modded moon will make an error and cancel the joining
         public static int delayedLevelChange = -1;
 
+        //keep the reason of the last kick
         public static string lastKickReason = string.Empty;
 
         private static readonly Harmony Harmony = new Harmony(PluginGUID);
@@ -94,10 +105,11 @@ namespace LethalExpansion
 
         public static ConfigFile config;
 
-        public static NetworkManager networkManager;
-
+        //light to show the planet in space
         public GameObject SpaceLight;
+        //terrain shader preloader
         public GameObject terrainfixer;
+        //water surface reference
         public static Transform currentWaterSurface;
 
         private void Awake()
@@ -108,6 +120,7 @@ namespace LethalExpansion
 
             Logger.LogInfo("Getting other plugins list");
             loadedPlugins = GetLoadedPlugins();
+            //output all found mods compatibility
             foreach (var plugin in loadedPlugins)
             {
                 if (plugin.Metadata.GUID != PluginGUID)
@@ -174,6 +187,7 @@ namespace LethalExpansion
 
             config = Config;
 
+            //add an entry here automatically add it to the settings menu
             ConfigManager.Instance.AddItem(new ConfigItem("GlobalTimeSpeedMultiplier", 1.4f, "Time", "Change the global time speed", 0.1f, 3f, sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("NumberOfHours", 18, "Time", "Max lenght of an Expedition in hours. (Begin at 6 AM | 18 = Midnight)", 6, 20));
             ConfigManager.Instance.AddItem(new ConfigItem("DeadlineDaysAmount", 3, "Expeditions", "Change amount of days for the Quota.", 1, 9, sync: true));
@@ -242,6 +256,7 @@ namespace LethalExpansion
             harmony.Patch(HoarderBugAI_DropItem_Method, null, new HarmonyMethod(MonsterDropItem_Patch_Method), null, null, null);
             harmony.Patch(HoarderBugAI_KillEnemy_Method, null, new HarmonyMethod(KillEnemy_Patch_Method), null, null, null);
 
+            //enable the water support in the HDRP asset, useless while the water shaders are not embed in game, maybe theres a way to add them in the LethalExpansion module ?
             HDRenderPipelineAsset hdAsset = GraphicsSettings.currentRenderPipeline as HDRenderPipelineAsset;
             if (hdAsset != null)
             {
@@ -261,6 +276,8 @@ namespace LethalExpansion
         {
             return Chainloader.PluginInfos.Values.ToList();
         }
+
+        //generate a terrain to preload it's shader
         private int width = 256;
         private int height = 256;
         private int depth = 20;
@@ -285,15 +302,13 @@ namespace LethalExpansion
 
             return Mathf.PerlinNoise(xCoord, yCoord);
         }
+
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             Logger.LogInfo("Loading scene: " + scene.name);
-            if (scene.name == "InitScene")
-            {
-                networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
-            }
             if (scene.name == "MainMenu")
             {
+                //reset flags to their default values
                 sessionWaiting = true;
                 hostDataWaiting = true;
                 ishost = false;
@@ -304,17 +319,22 @@ namespace LethalExpansion
 
                 isInGame = false;
 
+                //get a reference of the non diagetic game audio mixer group
                 AssetGather.Instance.AddAudioMixer(GameObject.Find("Canvas/MenuManager").GetComponent<AudioSource>().outputAudioMixerGroup.audioMixer);
 
+                //load the settings menu
                 SettingsMenu.Instance.InitSettingsMenu();
 
+                //check for update and show a popup if not up to date
                 //VersionChecker.CheckVersion().GetAwaiter();
 
+                //if the player has been kicked, show a popup with the reason
                 if(lastKickReason != null && lastKickReason.Length > 0)
                 {
                     PopupManager.Instance.InstantiatePopup(scene, "Kicked from Lobby", $"You have been kicked\r\nReason: {lastKickReason}", button2: "Ignore");
                 }
-                if(!ConfigManager.Instance.FindEntryValue<bool>("CoomfyDungeonCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"))
+                //CoomfyDungeon compatibility popup
+                if (!ConfigManager.Instance.FindEntryValue<bool>("CoomfyDungeonCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "CoomfyDungeon"))
                 {
                     PopupManager.Instance.InstantiatePopup(scene,
                         "CoomfyDungeon mod found",
@@ -326,7 +346,8 @@ namespace LethalExpansion
                         contentsize:18
                         );
                 }
-                if(loadedPlugins.Any(p => p.Metadata.GUID == "BiggerLobby"))
+                //BiggerLobby compatibility popup
+                if (loadedPlugins.Any(p => p.Metadata.GUID == "BiggerLobby"))
                 {
                     PopupManager.Instance.InstantiatePopup(scene,
                         "BiggerLobby mod found",
@@ -339,31 +360,50 @@ namespace LethalExpansion
             }
             if (scene.name == "CompanyBuilding")
             {
-                SpaceLight.SetActive(false);
-                terrainfixer.SetActive(false);
+                //disable the space light, the terrain fixer and enable the flag to generate the dungeon if it exist
+                if(SpaceLight != null)
+                {
+                    SpaceLight.SetActive(false);
+                }
+                if (terrainfixer != null)
+                {
+                    terrainfixer.SetActive(false);
+                }
                 dungeonGeneratorReady = true;
             }
             if (scene.name == "SampleSceneRelay")
             {
+                //instantiate the spacelight
                 SpaceLight = Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/SpaceLight.prefab"));
+                //move the spacelight to SampleSceneRelay
                 SceneManager.MoveGameObjectToScene(SpaceLight, scene);
 
+                //instantiate the fixed monitor wall and save it's mesh (this is a modifier version of the 8x monitor mesh, with an independant material on each one to allow to customize it's behaviour)
                 Mesh FixedMonitorWallMesh = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Meshes/MonitorWall.fbx").GetComponent<MeshFilter>().mesh;
+                //find the vanilla monitor wall
                 GameObject MonitorWall = GameObject.Find("Environment/HangarShip/ShipModels2b/MonitorWall/Cube");
+                //change the vanilla monitor wall mesh with the edited one
                 MonitorWall.GetComponent<MeshFilter>().mesh = FixedMonitorWallMesh;
 
+                //find the mesh renderer of the monitor wall
                 MeshRenderer MonitorWallMeshRenderer = MonitorWall.GetComponent<MeshRenderer>();
 
+                //instantiate the water surface from the Flooding weather
                 GameObject waterSurface = GameObject.Instantiate(GameObject.Find("Systems/GameSystems/TimeAndWeather/Flooding"));
+                //remove the FloodWeather component from the water surface
                 Destroy(waterSurface.GetComponent<FloodWeather>());
                 waterSurface.name = "WaterSurface";
                 waterSurface.transform.position = Vector3.zero;
+                //remove the mesh from the water surface mesh filter
                 waterSurface.transform.Find("Water").GetComponent<MeshFilter>().sharedMesh = null;
+                //save the water surface in singleton
                 SpawnPrefab.Instance.waterSurface = waterSurface;
 
+                //create a new dark blue material
                 /*Material BlueScreenMaterial = new Material(MonitorWallMeshRenderer.materials[1]);
                 BlueScreenMaterial.SetColor("_BaseColor", new Color32(0,0,80, 255));*/
 
+                //define a material array for the edited monitor wall
                 Material[] materialArray = new Material[9];
                 materialArray[0] = MonitorWallMeshRenderer.materials[0];
                 materialArray[1] = MonitorWallMeshRenderer.materials[1];
@@ -377,15 +417,20 @@ namespace LethalExpansion
                 materialArray[7] = MonitorWallMeshRenderer.materials[1];
                 materialArray[8] = MonitorWallMeshRenderer.materials[2];
 
+                //set the monitor wall materials to the array made above
                 MonitorWallMeshRenderer.materials = materialArray;
 
+                //apply the auto scroll patch to the main monitor text
                 StartOfRound.Instance.screenLevelDescription.gameObject.AddComponent<AutoScrollText>();
 
+                //disable blue texts on the monitor walls
                 /*MonitorWall.transform.Find("Canvas (1)/MainContainer/BG").gameObject.SetActive(false);
                 MonitorWall.transform.Find("Canvas (1)/MainContainer/BG (1)").gameObject.SetActive(false);*/
 
+                //get a reference of the diagetic game audio mixer group
                 AssetGather.Instance.AddAudioMixer(GameObject.Find("Systems/Audios/DiageticBackground").GetComponent<AudioSource>().outputAudioMixerGroup.audioMixer);
 
+                //create a terrain dummy to preload it's shader
                 terrainfixer = new GameObject();
                 terrainfixer.name = "terrainfixer";
                 terrainfixer.transform.position = new Vector3(0, -500, 0);
@@ -396,10 +441,13 @@ namespace LethalExpansion
                 terrainData.SetHeights(0, 0, GenerateHeights());
                 terrain.terrainData = terrainData;
 
+                //reset fire exit overwrites on every dungeon flows
                 Terminal_Patch.ResetFireExitAmounts();
 
+                //get a reference 
                 UnityEngine.Object[] array = Resources.FindObjectsOfTypeAll(typeof(Volume));
 
+                //fix for an old version of LethalCompany HD by avoiding every HDRP Volumes to be null
                 for (int i = 0; i < array.Length; i++)
                 {
                     if((array[i] as Volume).sharedProfile == null)
@@ -408,15 +456,25 @@ namespace LethalExpansion
                     }
                 }
 
+                //start the session, if host, will apply the settings, if client, will wait for host to sent his settings
                 waitForSession().GetAwaiter();
 
+                //define isInGame flag to true because custom moons use the InitSceneLaunchOptions scene
                 isInGame = true;
             }
             if (scene.name.StartsWith("Level"))
             {
-                SpaceLight.SetActive(false);
-                terrainfixer.SetActive(false);
+                //disable the space light, the terrain fixer and enable the flag to generate the dungeon if it exist
+                if (SpaceLight != null)
+                {
+                    SpaceLight.SetActive(false);
+                }
+                if (terrainfixer != null)
+                {
+                    terrainfixer.SetActive(false);
+                }
                 dungeonGeneratorReady = true;
+                //output every config values if SettingsDebug setting is true
                 if (ConfigManager.Instance.FindItemValue<bool>("SettingsDebug"))
                 {
                     foreach (var entry in ConfigManager.Instance.GetAll())
@@ -429,14 +487,24 @@ namespace LethalExpansion
                     }
                 }
             }
+            //the isInGame is required to know of InitSceneLaunchOptions is actually used to spawn a custom moon
             if (scene.name == "InitSceneLaunchOptions" && isInGame)
             {
-                SpaceLight.SetActive(false);
-                terrainfixer.SetActive(false);
+                //disable the space light, the terrain fixer
+                if (SpaceLight != null)
+                {
+                    SpaceLight.SetActive(false);
+                }
+                if (terrainfixer != null)
+                {
+                    terrainfixer.SetActive(false);
+                }
+                //disable the space light, the terrain fixer
                 foreach (GameObject obj in scene.GetRootGameObjects())
                 {
                     obj.SetActive(false);
                 }
+                //output every config values if SettingsDebug setting is true
                 if (ConfigManager.Instance.FindItemValue<bool>("SettingsDebug"))
                 {
                     foreach(var entry in ConfigManager.Instance.GetAll())
@@ -448,6 +516,7 @@ namespace LethalExpansion
                         Log.LogInfo(entry.Sync);
                     }
                 }
+                //load the moon asynchronously by default, except if the setting LegacyMoonLoading is enabled
                 if (ConfigManager.Instance.FindItemValue<bool>("LegacyMoonLoading"))
                 {
                     LoadCustomMoon(scene).RunSynchronously();
@@ -460,38 +529,49 @@ namespace LethalExpansion
         }
         async Task LoadCustomMoon(Scene scene)
         {
+            //several delays when loading a moon this first one could maybe be removed but the other ones are required, otherwise crashes have been reported
             await Task.Delay(400);
             try
             {
+                //if the moon prefab is not null
                 if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab != null)
                 {
                     if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
                     {
+                        //remove components that are not in the whitelist for safety of players (to avoid custom script importation)
                         CheckAndRemoveIllegalComponents(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform);
+                        //instantiate moon prefab
                         GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
+                        //old water manager, must be remade
                         currentWaterSurface = mainPrefab.transform.Find("Environment/Water");
                         if (mainPrefab != null)
                         {
+                            //move the moon to the InitSceneLaunchOptions scene
                             SceneManager.MoveGameObjectToScene(mainPrefab, scene);
-                            var DiageticBackground = mainPrefab.transform.Find("Systems/Audio/DiageticBackground");
+                            //find the DiageticBackground object to define it with the proper audio mixer
+                            Transform DiageticBackground = mainPrefab.transform.Find("Systems/Audio/DiageticBackground");
                             if (DiageticBackground != null)
                             {
                                 DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                             }
+                            //get all terrains
                             Terrain[] Terrains = mainPrefab.GetComponentsInChildren<Terrain>();
                             if (Terrains != null && Terrains.Length > 0)
                             {
                                 foreach (Terrain terrain in Terrains)
                                 {
+                                    //enable the GPU Instancing on every terrain (fixed crashes on some setups)
                                     terrain.drawInstanced = true;
                                 }
                             }
                         }
                     }
                 }
+                //gameobjects required in a moon
                 String[] _tmp = { "MapPropsContainer", "OutsideAINode", "SpawnDenialPoint", "ItemShipLandingNode", "OutsideLevelNavMesh" };
                 foreach (string s in _tmp)
                 {
+                    //create theses objects if they are missing to avoid errors
                     if (GameObject.FindGameObjectWithTag(s) == null || GameObject.FindGameObjectsWithTag(s).Any(o => o.scene.name != "InitSceneLaunchOptions"))
                     {
                         GameObject obj = new GameObject();
@@ -502,27 +582,33 @@ namespace LethalExpansion
                     }
                 }
                 await Task.Delay(200);
+                //get the item drop ship
                 GameObject DropShip = GameObject.Find("ItemShipAnimContainer");
                 if (DropShip != null)
                 {
                     var ItemShip = DropShip.transform.Find("ItemShip");
                     if (ItemShip != null)
                     {
+                        //define it's audio mixer to the Diagetic one (main audio)
                         ItemShip.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                     }
                     var ItemShipMusicClose = DropShip.transform.Find("ItemShip/Music");
                     if (ItemShipMusicClose != null)
                     {
+                        //define it's audio mixer to the Diagetic one (music)
                         ItemShipMusicClose.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                     }
                     var ItemShipMusicFar = DropShip.transform.Find("ItemShip/Music/Music (1)");
                     if (ItemShipMusicFar != null)
                     {
+                        //define it's audio mixer to the Diagetic one (music far)
                         ItemShipMusicFar.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                     }
                 }
                 await Task.Delay(200);
+                //get the Dungeon generator
                 RuntimeDungeon runtimeDungeon = GameObject.FindObjectOfType<RuntimeDungeon>(false);
+                //if the Dungeon generator is null, create a valid one
                 if (runtimeDungeon == null)
                 {
                     GameObject dungeonGenerator = new GameObject();
@@ -543,13 +629,16 @@ namespace LethalExpansion
                 }
                 else
                 {
+                    //if the Dungeon generator have no dungeon flow, put the Facility as default one
                     if (runtimeDungeon.Generator.DungeonFlow == null)
                     {
                         runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
                     }
                 }
+                //enable the flag to generate the dungeon if it exist
                 dungeonGeneratorReady = true;
 
+                //spawn an Out Of Bounds cube to teleport a player who fall under the map
                 GameObject OutOfBounds = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 OutOfBounds.name = "OutOfBounds";
                 OutOfBounds.layer = 13;
@@ -571,8 +660,8 @@ namespace LethalExpansion
                 Log.LogError(ex);
             }
         }
-        
 
+        //remove components from a parent that are not in the whitelist for safety of players (to avoid custom script importation)
         void CheckAndRemoveIllegalComponents(Transform root)
         {
             try
@@ -605,7 +694,8 @@ namespace LethalExpansion
             }
             if (scene.name.StartsWith("Level") || scene.name == "CompanyBuilding" || (scene.name == "InitSceneLaunchOptions" && isInGame))
             {
-                if(SpaceLight != null)
+                //enable back the space light and remove the current water surface
+                if (SpaceLight != null)
                 {
                     SpaceLight.SetActive(true);
                 }
@@ -613,17 +703,21 @@ namespace LethalExpansion
                 {
                     currentWaterSurface = null;
                 }
+                //disable the flag to generate the dungeon if it exist
                 dungeonGeneratorReady = false;
+                //reset fire exit overwrites on every dungeon flows
                 Terminal_Patch.ResetFireExitAmounts();
             }
         }
         private async Task waitForSession()
         {
+            //wait while joining a lobby
             while (sessionWaiting)
             {
                 await Task.Delay(1000);
             }
 
+            //for clients, request the settings of the host
             if (!ishost)
             {
                 while (!sessionWaiting && hostDataWaiting)
@@ -634,6 +728,7 @@ namespace LethalExpansion
             }
             else
             {
+                //for host, get the settings from the config file and keep them in memory (client will do it when the host will send them it's settings)
                 for (int i = 0; i < ConfigManager.Instance.GetAll().Count; i++)
                 {
                     if (ConfigManager.Instance.MustBeSync(i))
@@ -643,6 +738,7 @@ namespace LethalExpansion
                 }
             }
 
+            //flags to skip a patch for compatibility
             bool patchGlobalTimeSpeedMultiplier = true;
             bool patchNumberOfHours = true;
             bool patchDeadlineDaysAmount = true;
@@ -679,6 +775,7 @@ namespace LethalExpansion
                 patchStartingCredits = false;
             }
 
+            //apply the settings
             if (patchGlobalTimeSpeedMultiplier)
                 TimeOfDay.Instance.globalTimeSpeedMultiplier = ConfigManager.Instance.FindItemValue<float>("GlobalTimeSpeedMultiplier");
             if (patchNumberOfHours)
@@ -702,8 +799,10 @@ namespace LethalExpansion
             if (patchMaxShipItemCapacity)
                 StartOfRound.Instance.maxShipItemCapacity = ConfigManager.Instance.FindItemValue<int>("MaxItemsInShip");
 
+            //wait for the new scraps and moons to be added
             if (!alreadypatched)
             {
+                //begin to add the scraps and moons
                 Terminal_Patch.MainPatch(GameObject.Find("TerminalScript").GetComponent<Terminal>());
                 alreadypatched = true;
             }
@@ -716,6 +815,7 @@ namespace LethalExpansion
             {
                 return;
             }
+            //output when a setting is changed
             Log.LogInfo(string.Format("{0} Changed to {1}", settingChangedEventArgs.ChangedSetting.Definition.Key, settingChangedEventArgs.ChangedSetting.BoxedValue));
         }
     }

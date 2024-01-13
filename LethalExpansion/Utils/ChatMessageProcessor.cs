@@ -11,10 +11,12 @@ namespace LethalExpansion.Utils
     {
         public static bool ProcessMessage(string message)
         {
+            //packets begins and ends by [sync], in that case the packet will not be shown in the chat
             if (Regex.IsMatch(message, @"^\[sync\].*\[sync\]$"))
             {
                 try
                 {
+                    //cut the [sync] to get the content of the packet
                     string content = Regex.Match(message, @"^\[sync\](.*)\[sync\]$").Groups[1].Value;
 
                     string[] parts = content.Split('|');

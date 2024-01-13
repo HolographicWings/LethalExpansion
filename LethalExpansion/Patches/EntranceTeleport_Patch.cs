@@ -17,7 +17,8 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         public static bool SetAudioPreset_Prefix(EntranceTeleport __instance, int playerObj)
         {
-            if(GameObject.FindObjectOfType<AudioReverbPresets>() == null)
+            //avoid error when the moon don't contain any Audio Reverb Presets and the player try to enter or leave the dungeon
+            if (GameObject.FindObjectOfType<AudioReverbPresets>() == null)
             {
                 __instance.PlayAudioAtTeleportPositions();
                 return false;
@@ -33,6 +34,7 @@ namespace LethalExpansion.Patches
         [HarmonyPostfix]
         public static void TeleportPlayer_Postfix(EntranceTeleport __instance)
         {
+            //disable the water surfaces when entering in the dungeon and enable them back when leaving the dungeon
             var water = GameObject.FindObjectOfType<SI_WaterSurface>();
             if(water != null)
             {

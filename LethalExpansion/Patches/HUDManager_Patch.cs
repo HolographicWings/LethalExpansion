@@ -11,6 +11,7 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         static bool ChatInterpreter(HUDManager __instance, string chatMessage)
         {
+            //if the message begins and ends with [sync], don't show it in chat and process it's content
             if (ChatMessageProcessor.ProcessMessage(chatMessage))
             {
                 return false;

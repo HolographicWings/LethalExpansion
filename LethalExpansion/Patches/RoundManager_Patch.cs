@@ -22,6 +22,7 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         public static bool DespawnPropsAtEndOfRound_Prefix(RoundManager __instance, bool despawnAllItems)
         {
+            //patch to disable items wipe when all team die
             LethalExpansion.Log.LogInfo("Despawn all items.");
             if (ConfigManager.Instance.FindItemValue<bool>("PreventScrapWipeWhenAllPlayersDie"))
             {
@@ -58,6 +59,7 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         public static bool SpawnMapObjects_Prefix(RoundManager __instance)
         {
+            //avoid an error when loading a moon with missing data
             if (__instance.currentLevel.spawnableMapObjects == null)
             {
                 return false;
@@ -68,6 +70,7 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         public static bool PlotOutEnemiesForNextHour_Prefix(RoundManager __instance)
         {
+            //avoid an error when loading a moon with missing data
             if (__instance.currentLevel.enemySpawnChanceThroughoutDay == null)
             {
                 return false;
@@ -78,6 +81,7 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         public static bool SpawnEnemiesOutside_Prefix(RoundManager __instance)
         {
+            //avoid an error when loading a moon with missing data
             if (__instance.currentLevel.outsideEnemySpawnChanceThroughDay == null)
             {
                 return false;
@@ -88,6 +92,7 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         public static bool SpawnDaytimeEnemiesOutside_Prefix(RoundManager __instance)
         {
+            //avoid an error when loading a moon with missing data
             if (__instance.currentLevel.daytimeEnemySpawnChanceThroughDay == null)
             {
                 return false;
@@ -99,6 +104,7 @@ namespace LethalExpansion.Patches
         [HarmonyPrefix]
         public static bool AdvanceHourAndSpawnNewBatchOfEnemies_Prefix(RoundManager __instance)
         {
+            //fix a divide by 0 issue when quota is 0
             if (TimeOfDay.Instance.profitQuota == 0)
             {
                 TimeOfDay.Instance.profitQuota = 1;
@@ -114,6 +120,7 @@ namespace LethalExpansion.Patches
         [HarmonyPostfix]
         public static void AdvanceHourAndSpawnNewBatchOfEnemies_Postfix(RoundManager __instance)
         {
+            //reverb the quota to 0 after division, see AdvanceHourAndSpawnNewBatchOfEnemies_Prefix
             if (zeroQuotaWorkaround)
             {
                 TimeOfDay.Instance.profitQuota = 0;
