@@ -78,6 +78,10 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.19
+	- Added a blacklist field for custom scraps and moons. (Need testing)
+	- Added a security against embed modules overwriting.
+	- Fixed custom Whoopie Cushions.
 - 1.3.18
 	- Finally fixed shovels.
 - 1.3.17

@@ -234,6 +234,16 @@ namespace LethalExpansion.Patches
                                                 {
                                                     wci.whoopieCushionAudio = newScrap.prefab.AddComponent<AudioSource>();
                                                 }
+                                                Transform triggerObject = newScrap.prefab.transform.Find("Trigger");
+                                                if(triggerObject == null)
+                                                {
+                                                    triggerObject = new GameObject("Trigger").transform;
+                                                    triggerObject.SetParent(newScrap.prefab.transform);
+                                                    BoxCollider triggerObjectCollider = triggerObject.gameObject.AddComponent<BoxCollider>();
+                                                    triggerObjectCollider.isTrigger = true;
+                                                    WhoopieCushionTrigger trigger = triggerObject.gameObject.AddComponent<WhoopieCushionTrigger>();
+                                                    trigger.itemScript = wci;
+                                                }
                                                 break;
                                         }
 

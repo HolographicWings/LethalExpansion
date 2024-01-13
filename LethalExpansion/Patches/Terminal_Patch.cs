@@ -420,7 +420,10 @@ namespace LethalExpansion.Patches
                                                     itemRarity.rarity = newScrap.globalSpawnWeight;
                                                     foreach (SelectableLevel level in __instance.moonsCatalogueList)
                                                     {
-                                                        level.spawnableScrap.Add(itemRarity);
+                                                        if(!newScrap.playetSpawnBlacklist.Any(l => l == level.PlanetName))
+                                                        {
+                                                            level.spawnableScrap.Add(itemRarity);
+                                                        }
                                                     }
                                                 }
                                                 else
@@ -430,7 +433,7 @@ namespace LethalExpansion.Patches
                                                     {
                                                         try
                                                         {
-                                                            if (chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others"))
+                                                            if ((chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others")) && !newScrap.playetSpawnBlacklist.Any(l => l == level.PlanetName))
                                                             {
                                                                 ScrapSpawnChancePerScene chance = new ScrapSpawnChancePerScene(string.Empty, 0);
                                                                 try
@@ -510,7 +513,6 @@ namespace LethalExpansion.Patches
                                             string[] vanillaBlacklist = new string[] { "41 Experimentation", "220 Assurance", "56 Vow", "21 Offense", "61 March", "85 Rend", "7 Dine", "8 Titan"};
 
                                             Item tmpItem = null;
-                                            object physicsProp = null;
                                             switch (newScrap.scrapType)
                                             {
                                                 case ScrapType.Normal:
@@ -558,7 +560,12 @@ namespace LethalExpansion.Patches
                                                     itemRarity.rarity = newScrap.globalSpawnWeight;
                                                     foreach (SelectableLevel level in __instance.moonsCatalogueList)
                                                     {
-                                                        if (!vanillaBlacklist.Contains(level.PlanetName))
+                                                        string[] moonScrapBlacklist = new string[0];
+                                                        if (newMoons.Any(m => m.Value.PlanetName == level.PlanetName))
+                                                        {
+                                                            moonScrapBlacklist = newMoons.First(m => m.Value.PlanetName == level.PlanetName).Value.spawnableScrapBlacklist;
+                                                        }
+                                                        if (!vanillaBlacklist.Contains(level.PlanetName) && !newScrap.playetSpawnBlacklist.Any(l => l == level.PlanetName) && !moonScrapBlacklist.Any(s => s == newScrap.itemName))
                                                         {
                                                             level.spawnableScrap.Add(itemRarity);
                                                         }
@@ -571,7 +578,12 @@ namespace LethalExpansion.Patches
                                                     {
                                                         try
                                                         {
-                                                            if (!vanillaBlacklist.Contains(level.PlanetName))
+                                                            string[] moonScrapBlacklist = new string[0];
+                                                            if (newMoons.Any(m => m.Value.PlanetName == level.PlanetName))
+                                                            {
+                                                                moonScrapBlacklist = newMoons.First(m => m.Value.PlanetName == level.PlanetName).Value.spawnableScrapBlacklist;
+                                                            }
+                                                            if (!vanillaBlacklist.Contains(level.PlanetName) && !newScrap.playetSpawnBlacklist.Any(l => l == level.PlanetName) && !moonScrapBlacklist.Any(s => s == newScrap.itemName))
                                                             {
                                                                 if (chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others"))
                                                                 {

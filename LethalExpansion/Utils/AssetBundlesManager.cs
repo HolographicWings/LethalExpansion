@@ -28,7 +28,8 @@ namespace LethalExpansion.Utils
         public readonly string[] forcedNative = new string[]
         {
             "templatemod",
-            "oldseaport"
+            "oldseaport",
+            "lethalexpansion"
         };
         public (AssetBundle, ModManifest) Load(string name)
         {
@@ -71,7 +72,7 @@ namespace LethalExpansion.Utils
         {
             if (forcedNative.Contains(Path.GetFileNameWithoutExtension(file)) && !file.Contains(modDirectory.FullName))
             {
-                LethalExpansion.Log.LogWarning($"Illegal use of reserved Asset Bundle name: {Path.GetFileNameWithoutExtension(file)} at: {file}.");
+                LethalExpansion.Log.LogWarning($"Illegal usage of reserved Asset Bundle name: {Path.GetFileNameWithoutExtension(file)} at: {file}.");
                 return;
             }
             if (Path.GetFileName(file) != "lethalexpansion.lem")
@@ -97,21 +98,30 @@ namespace LethalExpansion.Utils
                         ModManifest modManifest = loadedBundle.LoadAsset<ModManifest>(manifestPath);
                         if (modManifest != null)
                         {
-                            if(!assetBundles.Any(b => b.Value.Item2.modName == modManifest.modName))
+                            if (forcedNative.Contains(modManifest.modName.ToLower()) && !file.Contains(modDirectory.FullName))
                             {
-                                LethalExpansion.Log.LogInfo($"Module found: {modManifest.modName} v{(modManifest.GetVersion() != null ? modManifest.GetVersion().ToString() : "0.0.0.0" )} Loaded in {stopwatch.ElapsedMilliseconds}ms");
-                                if(modManifest.GetVersion() == null || modManifest.GetVersion().ToString() == "0.0.0.0")
-                                {
-                                    LethalExpansion.Log.LogWarning($"Module {modManifest.modName} have no version number, this is unsafe!");
-                                }
-
-                                assetBundles.Add(Path.GetFileNameWithoutExtension(file).ToLower(), (loadedBundle, modManifest));
+                                LethalExpansion.Log.LogWarning($"Illegal usage of reserved Mod name: {modManifest.modName}");
+                                loadedBundle.Unload(true);
+                                LethalExpansion.Log.LogInfo($"AssetBundle unloaded: {Path.GetFileName(file)}");
                             }
                             else
                             {
-                                LethalExpansion.Log.LogWarning($"Another mod with same name is already loaded: {modManifest.modName}");
-                                loadedBundle.Unload(true);
-                                LethalExpansion.Log.LogInfo($"AssetBundle unloaded: {Path.GetFileName(file)}");
+                                if (!assetBundles.Any(b => b.Value.Item2.modName == modManifest.modName))
+                                {
+                                    LethalExpansion.Log.LogInfo($"Module found: {modManifest.modName} v{(modManifest.GetVersion() != null ? modManifest.GetVersion().ToString() : "0.0.0.0")} Loaded in {stopwatch.ElapsedMilliseconds}ms");
+                                    if (modManifest.GetVersion() == null || modManifest.GetVersion().ToString() == "0.0.0.0")
+                                    {
+                                        LethalExpansion.Log.LogWarning($"Module {modManifest.modName} have no version number, this is unsafe!");
+                                    }
+
+                                    assetBundles.Add(Path.GetFileNameWithoutExtension(file).ToLower(), (loadedBundle, modManifest));
+                                }
+                                else
+                                {
+                                    LethalExpansion.Log.LogWarning($"Another mod with same name is already loaded: {modManifest.modName}");
+                                    loadedBundle.Unload(true);
+                                    LethalExpansion.Log.LogInfo($"AssetBundle unloaded: {Path.GetFileName(file)}");
+                                }
                             }
                         }
                         else
