@@ -14,7 +14,7 @@
  - Compatible with vanilla players. (Follow the "Vanilla Compatibility" section)
  - Settings to display the clock in 24H format and carried weight in KG.
 
-# ! Looking for a successor !
+# Looking for a successor !
 
 ### Looking for a successor to keep LethalExpansion and LethalSDK alife.
 
