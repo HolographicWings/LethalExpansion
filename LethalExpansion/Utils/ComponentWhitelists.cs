@@ -178,7 +178,10 @@ namespace LethalExpansion.Utils
             typeof(ParticleSystemRenderer),
             typeof(ParticleSystemForceField),
             //Video
-            typeof(VideoPlayer)
+            typeof(VideoPlayer),
+            //LethalSDK
+            typeof(SI_DamagePlayer),
+            typeof(SI_AudioOutputInterface)
         };
     }
 }
