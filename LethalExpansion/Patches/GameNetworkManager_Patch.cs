@@ -219,6 +219,7 @@ namespace LethalExpansion.Patches
                                                 np.noiseRange = newScrap.noiseRange;
                                                 np.maxLoudness = newScrap.maxLoudness;
                                                 np.minLoudness = newScrap.minLoudness;
+                                                np.minPitch = newScrap.minPitch;
                                                 np.maxPitch = newScrap.maxPitch;
                                                 np.triggerAnimator = newScrap.triggerAnimator;
                                                 break;

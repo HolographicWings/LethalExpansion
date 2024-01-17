@@ -88,6 +88,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.21
+	- Fixed a missing field in custom Noisemakers scraps.
 - 1.3.20
 	- Added DamagePlayer and AudioOutputInterface to scrap components whitelist.
 - 1.3.19
