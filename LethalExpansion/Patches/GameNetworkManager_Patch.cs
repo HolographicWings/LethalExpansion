@@ -72,6 +72,10 @@ namespace LethalExpansion.Patches
                                 {
                                     if (newScrap != null && newScrap.prefab != null && (newScrap.RequiredBundles == null || AssetBundlesManager.Instance.BundlesLoaded(newScrap.RequiredBundles)) && (newScrap.IncompatibleBundles == null || !AssetBundlesManager.Instance.IncompatibleBundlesLoaded(newScrap.IncompatibleBundles)))
                                     {
+                                        AudioSource audioSource = newScrap.prefab.AddComponent<AudioSource>();
+                                        audioSource.playOnAwake = false;
+                                        audioSource.spatialBlend = 1f;
+                                        
                                         Item tmpItem = ScriptableObject.CreateInstance<Item>();
 
                                         tmpItem.name = newScrap.name;
@@ -210,18 +214,57 @@ namespace LethalExpansion.Patches
                                                 np.itemProperties = tmpItem;
                                                 np.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
 
-                                                np.noiseAudio = newScrap.noiseAudio != null ? newScrap.noiseAudio : newScrap.prefab.GetComponent<AudioSource>();
+                                                np.noiseAudio = newScrap.noiseAudio;
                                                 if (np.noiseAudio == null)
                                                 {
                                                     np.noiseAudio = newScrap.prefab.AddComponent<AudioSource>();
+                                                
+                                                    // Configure AudioSource
+                                                    np.noiseAudio.playOnAwake = false;
+                                                    np.noiseAudio.priority = 128;
+                                                    np.noiseAudio.pitch = 1f;
+                                                    np.noiseAudio.panStereo = 0f;
+                                                    np.noiseAudio.spatialBlend = 1f;
+                                                    np.noiseAudio.reverbZoneMix = 1f;
+                                                
+                                                    // Configure 3D Sound Settings
+                                                    np.noiseAudio.dopplerLevel = 4;
+                                                    np.noiseAudio.spread = 26;
+                                                    np.noiseAudio.minDistance = 4;
+                                                    np.noiseAudio.maxDistance = 21;
+                                                    np.noiseAudio.rolloffMode = AudioRolloffMode.Linear;
                                                 }
                                                 np.noiseAudioFar = newScrap.noiseAudioFar;
+                                                if (np.noiseAudioFar == null)
+                                                {
+                                                    np.noiseAudioFar = newScrap.prefab.AddComponent<AudioSource>();
+                                                
+                                                    // Configure AudioSource
+                                                    np.noiseAudioFar.playOnAwake = true;
+                                                    np.noiseAudioFar.priority = 128;
+                                                    np.noiseAudioFar.pitch = 1f;
+                                                    np.noiseAudioFar.panStereo = 0f;
+                                                    np.noiseAudioFar.spatialBlend = 1f;
+                                                    np.noiseAudioFar.reverbZoneMix = 1f;
+                                                
+                                                    // Configure 3D Sound Settings
+                                                    np.noiseAudioFar.dopplerLevel = 1.4f;
+                                                    np.noiseAudioFar.spread = 87;
+                                                    np.noiseAudioFar.rolloffMode = AudioRolloffMode.Custom;
+                                                    np.noiseAudioFar.maxDistance = 75;
+                                                    np.noiseAudioFar.SetCustomCurve(AudioSourceCurveType.CustomRolloff, new AnimationCurve(new Keyframe[] {
+                                                        new Keyframe(18f, 0f, 0f, 0.065f),
+                                                        new Keyframe(25.59f, 0.866f, -0.01f, -0.01f),
+                                                        new Keyframe(87f, 0f, -0.018f, 0f)
+                                                    }));
+                                                }
                                                 np.noiseRange = newScrap.noiseRange;
                                                 np.maxLoudness = newScrap.maxLoudness;
                                                 np.minLoudness = newScrap.minLoudness;
                                                 np.minPitch = newScrap.minPitch;
                                                 np.maxPitch = newScrap.maxPitch;
                                                 np.triggerAnimator = newScrap.triggerAnimator;
+                                                np.itemProperties.syncUseFunction = true;
                                                 break;
                                             case ScrapType.WhoopieCushion:
                                                 WhoopieCushionItem wci = newScrap.prefab.AddComponent<WhoopieCushionItem>();
@@ -247,10 +290,6 @@ namespace LethalExpansion.Patches
                                                 }
                                                 break;
                                         }
-
-                                        AudioSource audioSource = newScrap.prefab.AddComponent<AudioSource>();
-                                        audioSource.playOnAwake = false;
-                                        audioSource.spatialBlend = 1f;
 
                                         Transform scanNodeObject = newScrap.prefab.transform.Find("ScanNode");
                                         if (scanNodeObject != null)

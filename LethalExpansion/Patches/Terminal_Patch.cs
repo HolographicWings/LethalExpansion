@@ -408,6 +408,11 @@ namespace LethalExpansion.Patches
                                                     audioSource.outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                                                 }
 
+                                                if (newScrap.noiseAudio != null && newScrap.scrapType == ScrapType.Noisemaker)
+                                                {
+                                                    newScrap.noiseAudio.outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
+                                                }
+
                                                 AudioClip _tpmGrabSFX = null;
                                                 if (newScrap.grabSFX.Length > 0 && AssetGather.Instance.audioClips.ContainsKey(newScrap.grabSFX))
                                                 {
