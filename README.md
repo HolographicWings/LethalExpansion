@@ -93,6 +93,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.22
+	- Fixed issue where Noisemakers wouldn't play for other players
+	- Added a lot more support for contributing
 - 1.3.21
 	- Fixed a missing field in custom Noisemakers scraps.
 - 1.3.20

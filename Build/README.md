@@ -1,11 +1,11 @@
 # LethalExpansion
 
  This mod is an expansion project to add several settings and features, it come with an SDK to add new Scraps and Moons yourself.  
- [Github repository](https://github.com/HolographicWings/LethalExpansion)
+ [Thunderstore.io link](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/)
 
  Features :
  - A mod menu with 28 settings to customize your game.
- - A support to load modules made with [my SDK](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalSDK/) to add new Scraps and Moons. (More soon)
+ - A support to load modules made with [my SDK](https://github.com/HolographicWings/LethalSDK-Unity-Project) to add new Scraps and Moons. (More soon)
  - A new Moon Catalogue ready for modded moons.
  - A Landmine extension to finally allow players to drop heavy items on them to avoid explosion, based on the weight of the items. (Disabled by default)
  - An optional automatic deadline system that increase the lenght of the expedition as much as the quota increase. (Disabled by default)
@@ -26,6 +26,11 @@ If you are ever interested, invite me on discord with my username HolographicWin
 Thanks you for supporting me during this project, i hope the LC modding will become even greater.
 
 ## Download and description :
+
+If you have any issue, please read the "Report a bug" section
+
+[Download it on the Thunderstore](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/)
+<!--[![Downloads badge](https://img.shields.io/github/downloads/HolographicWings/LethalExpansion/total.svg?style=for-the-badge)](https://github.com/HolographicWings/LethalExpansion/releases) -->
 
 If you have any issue, please read the "Report a bug" section
 
@@ -88,6 +93,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Kicking a client after timeout is not working.
 
 ## Changes :
+- 1.3.22
+	- Fixed issue where Noisemakers wouldn't play for other players
+	- Added a lot more support for contributing
 - 1.3.21
 	- Fixed a missing field in custom Noisemakers scraps.
 - 1.3.20
@@ -120,7 +128,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 	- Fixed tiny issue with compatibility patches.
 - 1.3.12
 	- Added a compatibility patch for MoreMoneyStart.
-	- Removed Christmas village and moved it to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/ChristmasVillage_Legacy).
+	- Removed Christmas village and moved it to an [independent mod](https://github.com/HolographicWings/ChristmasVillage_LethalCompany).
 	- Added a setting to roll back to Synchronous custom moon loading.
 - 1.3.11
 	- Fixed multiple firexists wasn't working since the moon loading became asynchronous.
@@ -129,7 +137,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 	- Reduced spawn luck of Christmas Star in Christmas Village.
 - 1.3.9
 	- Attempt to fix a crash that happen on certain setups when loading a custom moon.
-	- Increased AutomaticDeadlineStage cap to 3000 (from 1000).
+	- Increased AutomaticDeadlineStage cap to 3000 (from 1000)
 	- Slighty improved Compatibility logging.
 - 1.3.8
 	- Fixed a critical bug with SDK's character validator.
@@ -355,3 +363,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 ![MoonCatalogue](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/MoonCatalogue.png "MoonCatalogue")
 ![NewMoon1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/NewMoon1.png "NewMoon1")
 ![NewMoon2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/NewMoon2.png "NewMoon2")
+
+## Contribution
+If you would like to contribute to the project, please take a look at [CONTRIBUTING.md](https://github.com/HolographicWings/LethalExpansion/blob/main/CONTRIBUTING.md) for details!
+Thank you to user [Panthr75](https://github.com/Panthr75) for writing most of this very helpful document.
