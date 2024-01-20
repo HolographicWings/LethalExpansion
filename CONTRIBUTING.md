@@ -18,6 +18,8 @@ To fix this, go to the folder that this solution is in and create a new file nam
     <BepInExCorePath>C:/SteamLibrary/steamapps/common/Lethal Company/BepInEx/core</BepInExCorePath>
     <LethalSDKPath>C:/SteamLibrary/steamapps/common/Lethal Company/BepInEx/plugins/HolographicWings-LethalExpansion/LethalSDK.dll</LethalSDKPath>
     <MoreCompanyPath>C:/SteamLibrary/steamapps/common/Lethal Company/BepInEx/plugins/notnotnotswipez-MoreCompany/MoreCompany.dll</MoreCompanyPath>
+    <DebugDirectory>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins</DebugDirectory>
+	<LethalModulesPath>C:\Users\fearf\AppData\Roaming\Thunderstore Mod Manager\DataFolder\LethalCompany\profiles\More\BepInEx\plugins\HolographicWings-LethalExpansion</LethalModulesPath>
   </PropertyGroup>
 </Project>
 ```
@@ -32,6 +34,8 @@ Here's an empty `Paths.props` template:
     <BepInExCorePath></BepInExCorePath>
     <LethalSDKPath></LethalSDKPath>
     <MoreCompanyPath></MoreCompanyPath>
+    <DebugDirectory></DebugDirectory>
+    <LethalModulesPath></LethalModulesPath>
   </PropertyGroup>
 </Project>
 ```
@@ -45,7 +49,7 @@ Below are the properties that are required inside `Paths.props`.
 This is the path to the Lethal Company game assemblies directory.
 
 You can find this by doing the following
-- Go to Stream
+- Go to Steam
 - Right click on Lethal Company
 - Click on `Properties`
 - Click on `Installed Files`
@@ -63,7 +67,7 @@ Finding this will depend on how you are installing mods. Follow the instructions
 Paste that path in `Paths.props` in-between `<BepInExCorePath>` and `</BepInExCorePath>`.
 
 ##### Manual Installation
-- Go to Stream
+- Go to Steam
 - Right click on Lethal Company
 - Click on `Properties`
 - Click on `Installed Files`
@@ -89,7 +93,7 @@ Since `LethalSDK` is not included in this solution, referencing it is a little w
 Paste that path in `Paths.props` in-between `<LethalSDKPath>` and `</LethalSDKPath>`.
 
 ##### Manual Installation
-- Go to Stream
+- Go to Steam
 - Right click on Lethal Company
 - Click on `Properties`
 - Click on `Installed Files`
@@ -116,7 +120,7 @@ Finding this will depend on how you are installing mods. Follow the instructions
 Paste that path in `Paths.props` in-between `<MoreCompanyPath>` and `</MoreCompanyPath>`.
 
 ##### Manual Installation
-- Go to Stream
+- Go to Steam
 - Right click on Lethal Company
 - Click on `Properties`
 - Click on `Installed Files`
@@ -134,3 +138,19 @@ Paste that path in `Paths.props` in-between `<MoreCompanyPath>` and `</MoreCompa
 - Navigate to the `plugins` folder
 - Navigate to the `notnotnotswipez-MoreCompany` folder
 - Find `MoreCompany.dll` and copy the path to it
+
+### DebugDirectory
+This is the directory that all of your built files will be put in after the project is done compiling. This should point to your BepInEx\plugins directory where you intend to test the mod.
+
+For example, if you want to have your built version of the mod automatically loaded into your modded client that is in Steam's default location, this path should be:
+`C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins`
+When building, the project will automatically tag `LethalExpansion` to the end of the above directory.
+
+
+### LethalModulesPath
+This is the location where the default asset bundle modules for LethalExpansion are located. This path should be a directory that includes both `oldseaport.lem` and `templatemod.lem`.
+
+Please note that all of the `.lem` files in this repository are symbolic links, which will not work correctly, so try to avoid using those when considering the correct path.
+
+If you have LethalExpansion installed already in Steam's default location, then this path should look something like:
+`C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\HolographicWings-LethalExpansion`

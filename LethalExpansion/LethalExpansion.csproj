@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)/Dependencies.props"/>
+  <Import Project="$(SolutionDir)/Dependencies.props" />
   <PropertyGroup>
     <ProjectGuid>{F80EB3FD-9563-4F80-9FC7-3FCCE1655C13}</ProjectGuid>
     <RootNamespace>LethalExpansion</RootNamespace>
@@ -23,10 +23,15 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>mkdir "C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\$(TargetName)"
-xcopy /q/y/i "$(TargetPath)" "D:\Users\Holog\Documents\GitHub\LethalExpansion\Build" /E /H /C
-xcopy /q/y/i ".\lethalexpansion.lem" "D:\Users\Holog\Documents\GitHub\LethalExpansion\Build" /E /H /C
-xcopy /q/y/i ".\Modules\*" "D:\Users\Holog\Documents\GitHub\LethalExpansion\Build\Modules" /E /H /C
-xcopy /q/y/i "D:\Users\Holog\Documents\GitHub\LethalSDK\LethalSDK\bin\Debug\LethalSDK.dll" "D:\Users\Holog\Documents\GitHub\LethalExpansion\Build" /E /H /C</PostBuildEvent>
+    <Title>LethalExpansion</Title>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /q/y/i &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\Build&quot; /E&#xD;&#xA;xcopy /q/y/i &quot;$(LethalModulesPath)\lethalexpansion.lem&quot; &quot;$(ProjectDir)..\Build&quot; /E&#xD;&#xA;xcopy /q/y/i &quot;$(LethalModulesPath)\oldseaport.lem&quot; &quot;$(ProjectDir)..\Build\Modules&quot; /E&#xD;&#xA;xcopy /q/y/i &quot;$(LethalModulesPath)\templatemod.lem&quot; &quot;$(ProjectDir)..\Build\Modules&quot; /E&#xD;&#xA;xcopy /q/y/i &quot;$(LethalSDKPath)&quot; &quot;$(ProjectDir)..\Build&quot; /E&#xD;&#xA;if not exist &quot;$(DebugDirectory)\$(TargetName)&quot; mkdir &quot;$(DebugDirectory)\$(TargetName)&quot;&#xD;&#xA;xcopy /q/y/i &quot;$(ProjectDir)..\Build\*&quot; &quot;$(DebugDirectory)\$(TargetName)&quot;&#xD;&#xA;xcopy /q/y/i &quot;$(ProjectDir)..\Build\Modules\*&quot; &quot;$(DebugDirectory)\$(TargetName)&quot;" />
+  </Target>
 </Project>

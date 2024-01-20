@@ -360,3 +360,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 ![MoonCatalogue](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/MoonCatalogue.png "MoonCatalogue")
 ![NewMoon1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/NewMoon1.png "NewMoon1")
 ![NewMoon2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/NewMoon2.png "NewMoon2")
+
+## Contribution
+If you would like to contribute to the project, please take a look at ![CONTRIBUTING.md](https://github.com/HolographicWings/LethalExpansion/blob/main/CONTRIBUTING.md) for details!
+Thank you to user ![Panthr75](https://github.com/Panthr75) for writing most of this very helpful document.
