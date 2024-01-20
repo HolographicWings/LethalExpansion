@@ -1,0 +1,23 @@
+<Project InitialTargets="ValidatePaths">
+  <Import Project="$(MSBuildThisFileDirectory)/Paths.props" Condition="Exists('$(MSBuildThisFileDirectory)/Paths.props')"/>
+  
+  <Target Name="ValidatePaths">
+    <Error Text="No 'Paths.props' file detected. Please add one to the directory '$(MSBuildThisFileDirectory)'. For information on how to setup a 'Paths.props' file, look at CONTRIBUTING.md." Condition="!Exists('$(MSBuildThisFileDirectory)/Paths.props')"/>
+    <Error Text="No 'GameAssembliesPath' property was defined. Please add a property named 'GameAssembliesPath' into 'Paths.props' that points to Lethal Company's Managed folder. " Condition="'$(GameAssembliesPath)' == '' and Exists('$(MSBuildThisFileDirectory)/Paths.props')"/>
+    <Error Text="No 'BepInExCorePath' property was defined. Please add a property named 'BepInExCorePath' into 'Paths.props' that points to a BepInEx installation's 'core' folder. For more information, look at CONTRIBUTING.md." Condition="'$(BepInExCorePath)' == '' and Exists('$(MSBuildThisFileDirectory)/Paths.props')"/>
+    <Error Text="No 'LethalSDKPath' property was defined. Please add a property named 'LethalSDKPath' into 'Paths.props' that points to a 'LethalSDK.dll' file location. For more information, look at CONTRIBUTING.md." Condition="'$(LethalSDKPath)' == '' and Exists('$(MSBuildThisFileDirectory)/Paths.props')"/>
+    <Error Text="No 'MoreCompanyPath' property was defined. Please add a property named 'MoreCompanyPath' into 'Paths.props' that points to a 'MoreCompany.dll' file location. For more information, look at CONTRIBUTING.md." Condition="'$(MoreCompanyPath)' == '' and Exists('$(MSBuildThisFileDirectory)/Paths.props')"/>
+  </Target>
+
+  <ItemGroup>
+    <Reference Include="$(BepInExCorePath)/0Harmony.dll" Private="false"/>
+    <Reference Include="$(BepInExCorePath)/BepInEx.dll" Private="false"/>
+    <Reference Include="$(LethalSDKPath)" Private="false"/>
+    <Reference Include="$(MoreCompanyPath)" Private="false"/>
+    <Reference Include="$(GameAssembliesPath)/*.dll" Private="false"/>
+    <Reference Remove="$(GameAssembliesPath)/mscorlib.dll"/>
+    <Reference Remove="$(GameAssembliesPath)/netstandard.dll"/>
+    <Reference Remove="$(GameAssembliesPath)/System.dll"/>
+    <Reference Remove="$(GameAssembliesPath)/System.*.dll"/>
+  </ItemGroup>
+</Project>
