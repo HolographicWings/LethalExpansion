@@ -81,11 +81,10 @@ WriteUnityLog = true
 Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in the bug report.  
 
 ## Known issues :
-- Hoarding big killed when grabbed an item from a mine don't drop the item that make it irrecoverable.
-- When deadline remaining days is over 3 days, outside monsters spawn more.
+- Hoarding bug killed when grabbed an item from a mine don't drop the item that make it irrecoverable.
+- When deadline remaining days is over 3 days, outside monsters spawns more.
 - Landmines stills bip if a player walk on them when theres already an item placed on it.
-- Landmine instand explode when a player walk on them (Vanilla bug).
-- Kicking a client after timeout is not working.
+- Landmine instand explode when a player walk on them (Vanilla bug) use [LandmineFix](https://thunderstore.io/c/lethal-company/p/TheBeeTeam/LandmineFix/) by TheBeeTeam.
 
 ## Changes :
 - 1.3.22
