@@ -32,8 +32,6 @@ If you have any issue, please read the "Report a bug" section
 [Download it on the Thunderstore](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/)
 <!--[![Downloads badge](https://img.shields.io/github/downloads/HolographicWings/LethalExpansion/total.svg?style=for-the-badge)](https://github.com/HolographicWings/LethalExpansion/releases) -->
 
-If you have any issue, please read the "Report a bug" section
-
 ![Mod Menu](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings.png "Mod Menu")
 Settings list :
 - GlobalTimeSpeedMultiplier: Change the global time speed.

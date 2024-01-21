@@ -1,4 +1,11 @@
 ## Changes :
+- 1.3.22
+	- Fixed issue where Noisemakers wouldn't play for other players
+	- Added a lot more support for contributing
+- 1.3.21
+	- Fixed a missing field in custom Noisemakers scraps.
+- 1.3.20
+	- Added DamagePlayer and AudioOutputInterface to scrap components whitelist.
 - 1.3.19
 	- Added a blacklist field for custom scraps and moons. (Need testing)
 	- Added a security against embed modules overwriting.
@@ -27,7 +34,7 @@
 	- Fixed tiny issue with compatibility patches.
 - 1.3.12
 	- Added a compatibility patch for MoreMoneyStart.
-	- Removed Christmas village and moved it to an [independent mod](https://github.com/HolographicWings/ChristmasVillage_LethalCompany).
+	- Removed Christmas village and moved it to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/ChristmasVillage_Legacy).
 	- Added a setting to roll back to Synchronous custom moon loading.
 - 1.3.11
 	- Fixed multiple firexists wasn't working since the moon loading became asynchronous.
