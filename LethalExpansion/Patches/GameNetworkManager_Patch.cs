@@ -281,10 +281,10 @@ namespace LethalExpansion.Patches
                                                 Transform triggerObject = newScrap.prefab.transform.Find("Trigger");
                                                 if(triggerObject == null)
                                                 {
-                                                    triggerObject = new GameObject("Trigger").transform;
-                                                    triggerObject.SetParent(newScrap.prefab.transform);
-                                                    BoxCollider triggerObjectCollider = triggerObject.gameObject.AddComponent<BoxCollider>();
-                                                    triggerObjectCollider.isTrigger = true;
+                                                    LethalExpansion.Log.LogWarning($"{wci.itemProperties.name} Whoopie Cushion Trigger not found, please add one");
+                                                }
+                                                else if (triggerObject.gameObject.GetComponent<WhoopieCushionTrigger>() == null)
+                                                {
                                                     WhoopieCushionTrigger trigger = triggerObject.gameObject.AddComponent<WhoopieCushionTrigger>();
                                                     trigger.itemScript = wci;
                                                 }
