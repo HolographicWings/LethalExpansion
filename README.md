@@ -5,7 +5,7 @@
 
  Features :
  - A mod menu with 28 settings to customize your game.
- - A support to load modules made with [my SDK](https://github.com/HolographicWings/LethalSDK-Unity-Project) to add new Scraps and Moons. (More soon)
+ - A support to load modules made with [my SDK](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalSDK/) to add new Scraps and Moons. (More soon)
  - A new Moon Catalogue ready for modded moons.
  - A Landmine extension to finally allow players to drop heavy items on them to avoid explosion, based on the weight of the items. (Disabled by default)
  - An optional automatic deadline system that increase the lenght of the expedition as much as the quota increase. (Disabled by default)
@@ -28,9 +28,6 @@ Thanks you for supporting me during this project, i hope the LC modding will bec
 ## Download and description :
 
 If you have any issue, please read the "Report a bug" section
-
-[Download it on the Thunderstore](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/)
-<!--[![Downloads badge](https://img.shields.io/github/downloads/HolographicWings/LethalExpansion/total.svg?style=for-the-badge)](https://github.com/HolographicWings/LethalExpansion/releases) -->
 
 ![Mod Menu](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings.png "Mod Menu")
 Settings list :
@@ -90,6 +87,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmine instand explode when a player walk on them (Vanilla bug) use [LandmineFix](https://thunderstore.io/c/lethal-company/p/TheBeeTeam/LandmineFix/) by TheBeeTeam.
 
 ## Changes :
+- 1.3.23
+    - Fixed WhoopieCushion
 - 1.3.22
 	- Fixed issue where Noisemakers wouldn't play for other players
 	- Added a lot more support for contributing
@@ -125,7 +124,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 	- Fixed tiny issue with compatibility patches.
 - 1.3.12
 	- Added a compatibility patch for MoreMoneyStart.
-	- Removed Christmas village and moved it to an [independent mod](https://github.com/HolographicWings/ChristmasVillage_LethalCompany).
+	- Removed Christmas village and moved it to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/ChristmasVillage_Legacy).
 	- Added a setting to roll back to Synchronous custom moon loading.
 - 1.3.11
 	- Fixed multiple firexists wasn't working since the moon loading became asynchronous.

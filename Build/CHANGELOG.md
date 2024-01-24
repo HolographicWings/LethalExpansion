@@ -1,4 +1,6 @@
 ## Changes :
+- 1.3.23
+    - Fixed WhoopieCushion
 - 1.3.22
 	- Fixed issue where Noisemakers wouldn't play for other players
 	- Added a lot more support for contributing

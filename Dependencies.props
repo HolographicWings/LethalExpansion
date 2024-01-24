@@ -10,11 +10,12 @@
   </Target>
 
   <ItemGroup>
+	<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
     <Reference Include="$(BepInExCorePath)/0Harmony.dll" Private="false"/>
     <Reference Include="$(BepInExCorePath)/BepInEx.dll" Private="false"/>
     <Reference Include="$(LethalSDKPath)" Private="false"/>
     <Reference Include="$(MoreCompanyPath)" Private="false"/>
-    <Reference Include="$(GameAssembliesPath)/*.dll" Private="false"/>
+    <Reference Include="$(GameAssembliesPath)/*.dll" Private="false" Publicize="true" />
     <Reference Remove="$(GameAssembliesPath)/mscorlib.dll"/>
     <Reference Remove="$(GameAssembliesPath)/netstandard.dll"/>
     <Reference Remove="$(GameAssembliesPath)/System.dll"/>
