@@ -86,7 +86,7 @@ namespace LethalExpansion.Patches
                                         tmpItem.maxValue = newScrap.maxValue;
                                         tmpItem.weight = (float)newScrap.weight / 100 + 1;
 
-                                        CheckAndRemoveIllegalComponents(newScrap.prefab.transform, ComponentWhitelists.scrapWhitelist);
+                                        CheckRiskyComponents(newScrap.prefab.transform, ComponentWhitelists.scrapWhitelist, tmpItem.itemName, bundle2.Item2.modName);
                                         tmpItem.spawnPrefab = newScrap.prefab;
 
                                         tmpItem.twoHanded = newScrap.twoHanded;
@@ -326,7 +326,7 @@ namespace LethalExpansion.Patches
                                         if (networkprefab.PrefabPath != null && networkprefab.PrefabPath.Length > 0)
                                         {
                                             GameObject prefab = bundle.Value.Item1.LoadAsset<GameObject>(networkprefab.PrefabPath);
-                                            CheckAndRemoveIllegalComponents(bundle.Value.Item1.LoadAsset<GameObject>(networkprefab.PrefabPath).transform, ComponentWhitelists.scrapWhitelist);
+                                            CheckRiskyComponents(bundle.Value.Item1.LoadAsset<GameObject>(networkprefab.PrefabPath).transform, ComponentWhitelists.scrapWhitelist, networkprefab.PrefabName, bundle2.Item2.modName);
                                             __instance.GetComponent<NetworkManager>().PrefabHandler.AddNetworkPrefab(prefab);
                                             LethalExpansion.Log.LogInfo($"{networkprefab.PrefabName} Prefab registered.");
                                         }
@@ -342,7 +342,7 @@ namespace LethalExpansion.Patches
                 }
             }
         }
-        static void CheckAndRemoveIllegalComponents(Transform prefab, List<Type> whitelist)
+        static void CheckRiskyComponents(Transform prefab, List<Type> whitelist, string objname, string modulename)
         {
             try
             {
@@ -351,14 +351,13 @@ namespace LethalExpansion.Patches
                 {
                     if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
                     {
-                        LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
-                        GameObject.Destroy(component);
+                        LethalExpansion.Log.LogWarning($"{component.GetType().Name} component is not native of Unity or LethalSDK. It can contains malwares. From {objname}, {modulename} module.");
                     }
                 }
 
                 foreach (Transform child in prefab)
                 {
-                    CheckAndRemoveIllegalComponents(child, whitelist);
+                    CheckRiskyComponents(child, whitelist, objname, modulename);
                 }
             }
             catch (Exception ex)

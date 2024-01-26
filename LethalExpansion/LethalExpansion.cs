@@ -44,7 +44,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.23";
+        private const string VersionString = "1.3.24";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -539,7 +539,7 @@ namespace LethalExpansion
                     if (Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform != null)
                     {
                         //remove components that are not in the whitelist for safety of players (to avoid custom script importation)
-                        CheckAndRemoveIllegalComponents(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform);
+                        CheckRiskyComponents(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab.transform, Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MoonName);
                         //instantiate moon prefab
                         GameObject mainPrefab = GameObject.Instantiate(Terminal_Patch.newMoons[StartOfRound.Instance.currentLevelID].MainPrefab);
                         //old water manager, must be remade
@@ -662,7 +662,7 @@ namespace LethalExpansion
         }
 
         //remove components from a parent that are not in the whitelist for safety of players (to avoid custom script importation)
-        void CheckAndRemoveIllegalComponents(Transform root)
+        void CheckRiskyComponents(Transform root, string objname)
         {
             try
             {
@@ -671,14 +671,13 @@ namespace LethalExpansion
                 {
                     if (!ComponentWhitelists.moonPrefabWhitelist.Any(whitelistType => component.GetType() == whitelistType))
                     {
-                        LethalExpansion.Log.LogWarning($"Removed illegal {component.GetType().Name} component.");
-                        GameObject.Destroy(component);
+                        LethalExpansion.Log.LogWarning($"{component.GetType().Name} component is not native of Unity or LethalSDK. It can contains malwares. From {objname}.");
                     }
                 }
 
                 foreach (Transform child in root)
                 {
-                    CheckAndRemoveIllegalComponents(child);
+                    CheckRiskyComponents(child, objname);
                 }
             }
             catch (Exception ex)

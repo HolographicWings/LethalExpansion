@@ -90,11 +90,13 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmine instand explode when a player walk on them (Vanilla bug) use [LandmineFix](https://thunderstore.io/c/lethal-company/p/TheBeeTeam/LandmineFix/) by TheBeeTeam.
 
 ## Changes :
+- 1.3.24
+    - Allow custom scripts from a DLL.
 - 1.3.23
-    - Fixed WhoopieCushion
+    - Fixed WhoopieCushion.
 - 1.3.22
-	- Fixed issue where Noisemakers wouldn't play for other players
-	- Added a lot more support for contributing
+	- Fixed issue where Noisemakers wouldn't play for other players.
+	- Added a lot more support for contributing.
 - 1.3.21
 	- Fixed a missing field in custom Noisemakers scraps.
 - 1.3.20
