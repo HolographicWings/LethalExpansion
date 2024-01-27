@@ -67,7 +67,8 @@ namespace LethalExpansion
             { "CoomfyDungeon", compatibility.bad },
             { "BiggerLobby", compatibility.critical },
             { "KoderTech.BoomboxController", compatibility.good },
-            { "299792458.MoreMoneyStart", compatibility.good }
+            { "299792458.MoreMoneyStart", compatibility.good },
+            { "ExtraDaysToDeadline", compatibility.good },
         };
         private enum compatibility
         {
@@ -220,6 +221,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("MoreMoneyStartCompatibility", false, "Compatibility", "Let MoreMoneyStart control the Starting credits amount.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("SettingsDebug", false, "Debug", "Show an output of every settings in the Console. (The Console must listen Info messages)", sync: false));
             ConfigManager.Instance.AddItem(new ConfigItem("LegacyMoonLoading", false, "Modules", "Roll back to Synchronous moon loading. (Freeze the game longer and highter chance of crash)", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("ExtraDaysToDeadline", false, "Compatibility", "Leave ExtraDaysToDeadline control the deadline days amount (not effect automatic deadlines).", sync: true));
 
             ConfigManager.Instance.ReadConfig();
 
@@ -772,6 +774,10 @@ namespace LethalExpansion
             if (ConfigManager.Instance.FindItemValue<bool>("MoreMoneyStartCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "299792458.MoreMoneyStart"))
             {
                 patchStartingCredits = false;
+            }
+            if (ConfigManager.Instance.FindItemValue<bool>("ExtraDaysToDeadline") && loadedPlugins.Any(p => p.Metadata.GUID == "ExtraDaysToDeadline"))
+            {
+                patchDeadlineDaysAmount = false;
             }
 
             //apply the settings
