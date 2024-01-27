@@ -27,8 +27,6 @@ namespace LethalExpansion.Utils
         public Dictionary<String, (AssetBundle, ModManifest)> assetBundles = new Dictionary<String, (AssetBundle, ModManifest)>();
         public readonly string[] forcedNative = new string[]
         {
-            "templatemod",
-            "oldseaport",
             "lethalexpansion"
         };
         public (AssetBundle, ModManifest) Load(string name)

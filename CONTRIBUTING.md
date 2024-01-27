@@ -145,12 +145,3 @@ This is the directory that all of your built files will be put in after the proj
 For example, if you want to have your built version of the mod automatically loaded into your modded client that is in Steam's default location, this path should be:
 `C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins`
 When building, the project will automatically tag `LethalExpansion` to the end of the above directory.
-
-
-### LethalModulesPath
-This is the location where the default asset bundle modules for LethalExpansion are located. This path should be a directory that includes both `oldseaport.lem` and `templatemod.lem`.
-
-Please note that all of the `.lem` files in this repository are symbolic links, which will not work correctly, so try to avoid using those when considering the correct path.
-
-If you have LethalExpansion installed already in Steam's default location, then this path should look something like:
-`C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\HolographicWings-LethalExpansion`

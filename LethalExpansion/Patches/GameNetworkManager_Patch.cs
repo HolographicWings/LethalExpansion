@@ -349,7 +349,11 @@ namespace LethalExpansion.Patches
                 var components = prefab.GetComponents<Component>();
                 foreach (var component in components)
                 {
-                    if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
+                    if (component == null)
+                    {
+                        LethalExpansion.Log.LogWarning($"{objname} from the {modulename} module contains a component that is not native to Unity or LethalSDK. No associated script could be found from any dll, it will not be loaded.");
+                    }
+                    else if (!whitelist.Any(whitelistType => component.GetType() == whitelistType))
                     {
                         LethalExpansion.Log.LogWarning($"{component.GetType().Name} component is not native of Unity or LethalSDK. It can contains malwares. From {objname}, {modulename} module.");
                     }

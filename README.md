@@ -92,6 +92,7 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 ## Changes :
 - 1.3.24
     - Allow custom scripts from a DLL.
+	- Moved Wateridge and default scraps to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansionDefaultModules/).
 - 1.3.23
     - Fixed WhoopieCushion.
 - 1.3.22
