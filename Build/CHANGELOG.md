@@ -1,7 +1,9 @@
 ## Changes :
+- 1.3.25
+    - Fixed README link to default modules.
 - 1.3.24
     - Allow custom scripts from a DLL.
-	- Moved Wateridge and default scraps to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansionDefaultModules/).
+	- Moved Wateridge and default scraps to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/LEDefaultModules/).
 - 1.3.23
     - Fixed WhoopieCushion.
 - 1.3.22
