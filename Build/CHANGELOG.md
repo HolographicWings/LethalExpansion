@@ -1,4 +1,6 @@
 ## Changes :
+- 1.3.26
+    - Added a compatibility patch for ExtraDaysToDeadline by Ustaalon.
 - 1.3.25
     - Fixed README link to default modules.
 - 1.3.24
