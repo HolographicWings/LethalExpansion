@@ -69,6 +69,12 @@ namespace LethalExpansion.Patches
                 AssetGather.Instance.GetList();
             }
         }
+        public static void MainPatchPostConfig(Terminal __instance)
+        {
+            ResetMoonsRoutePrices();
+            UpdateMoonsRoutePrices();
+            UpdateMoonsCatalogue(__instance);
+        }
         private static void GatherAssets()
         {
             if (!assetsGotten)

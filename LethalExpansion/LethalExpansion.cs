@@ -718,24 +718,11 @@ namespace LethalExpansion
                 await Task.Delay(1000);
             }
 
-            //for clients, request the settings of the host
-            if (!ishost)
+            for (int i = 0; i < ConfigManager.Instance.GetAll().Count; i++)
             {
-                while (!sessionWaiting && hostDataWaiting)
+                if (ConfigManager.Instance.MustBeSync(i))
                 {
-                    NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "hostconfig", string.Empty, 0);
-                    await Task.Delay(3000);
-                }
-            }
-            else
-            {
-                //for host, get the settings from the config file and keep them in memory (client will do it when the host will send them it's settings)
-                for (int i = 0; i < ConfigManager.Instance.GetAll().Count; i++)
-                {
-                    if (ConfigManager.Instance.MustBeSync(i))
-                    {
-                        ConfigManager.Instance.SetItemValue(i, ConfigManager.Instance.FindEntryValue(i));
-                    }
+                    ConfigManager.Instance.SetItemValue(i, ConfigManager.Instance.FindEntryValue(i));
                 }
             }
 
@@ -810,6 +797,17 @@ namespace LethalExpansion
                 //begin to add the scraps and moons
                 Terminal_Patch.MainPatch(GameObject.Find("TerminalScript").GetComponent<Terminal>());
                 alreadypatched = true;
+            }
+
+            //for clients, request the settings of the host
+            if (!ishost)
+            {
+                while (!sessionWaiting && hostDataWaiting)
+                {
+                    NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "hostconfig", string.Empty, 0);
+                    await Task.Delay(3000);
+                }
+                Terminal_Patch.MainPatchPostConfig(GameObject.Find("TerminalScript").GetComponent<Terminal>());
             }
         }
         private void ConfigSettingChanged(object sender, EventArgs e)
