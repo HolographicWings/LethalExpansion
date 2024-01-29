@@ -1,6 +1,7 @@
 # LethalExpansion (PREVIEW VERSION)
 
- This mod is an expansion project to add several settings and features, it come with an SDK to add new Scraps and Moons yourself.  
+ This mod is the preview version of [LethalExpansion](https://thunderstore.io/c/lethal-company/p/HolographicWings/LethalExpansion/).   
+ Do not install both in same time.  
  [Github repository](https://github.com/HolographicWings/LethalExpansion)
 
  Features :
