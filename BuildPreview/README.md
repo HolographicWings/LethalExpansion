@@ -29,7 +29,7 @@ Thanks you for supporting me during this project, i hope the LC modding will bec
 
 If you have any issue, please read the "Report a bug" section
 
-![Mod Menu](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings.png "Mod Menu")
+![Mod Menu](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings.webp "Mod Menu")
 Settings list :
 - GlobalTimeSpeedMultiplier: Change the global time speed.
 - LengthOfHours: Change amount of seconds in one hour.
@@ -62,7 +62,7 @@ Settings list :
 
 ## Vanilla Compatibility :
 To make the mod compatible with vanilla players, keep default every setting that have "Mod required by client: Yes" in their description. (Keep mouse on a setting to see it's description)
-![Mod Menu 2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings2.png "Mod Menu 2")
+![Mod Menu 2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/ModSettings2.webp "Mod Menu 2")
 
 ## Recommended Mods :
 [LandmineFix](https://thunderstore.io/c/lethal-company/p/TheBeeTeam/LandmineFix/) by TheBeeTeam is recommended in order to use the PreventMineToExplodeWithItems setting.
@@ -364,11 +364,11 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 		- https://assetstore.unity.com/packages/3d/environments/old-sea-port-environment-36897
 
 ## More screenshots :
-![Scraps2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps2.png "Scraps2")
-![Scraps1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps1.png "Scraps1")
-![MoonCatalogue](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/MoonCatalogue.png "MoonCatalogue")
-![NewMoon1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/NewMoon1.png "NewMoon1")
-![NewMoon2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/NewMoon2.png "NewMoon2")
+![Scraps2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps2.webp "Scraps2")
+![Scraps1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/Scraps1.webp "Scraps1")
+![MoonCatalogue](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/MoonCatalogue.webp "MoonCatalogue")
+![NewMoon1](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/NewMoon1.webp "NewMoon1")
+![NewMoon2](https://raw.githubusercontent.com/HolographicWings/LethalExpansion/main/Screenshots/NewMoon2.webp "NewMoon2")
 
 ## Contribution
 If you would like to contribute to the project, please take a look at [CONTRIBUTING.md](https://github.com/HolographicWings/LethalExpansion/blob/main/CONTRIBUTING.md) for details!
