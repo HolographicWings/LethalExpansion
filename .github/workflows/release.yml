@@ -19,10 +19,22 @@ jobs:
     - name: Extract Version from Tag
       run: echo "VERSION=$(echo ${GITHUB_REF} | sed 's/refs\/tags\/v//')" >> $GITHUB_ENV
 
+    - name: Copy CHANGELOG.md to Build directory
+      run: |
+        mkdir -p Build BuildPreview
+        cp CHANGELOG.md Build/
+        cp CHANGELOG.md BuildPreview/
+
     - name: Zip files
+      if: github.event.release.prerelease == false
       run: 7z a -tzip -mx=9 ./Releases/LethalExpansion_v${{ env.VERSION }}.zip ./Build/*
+      
+    - name: Zip files
+      if: github.event.release.prerelease == true
+      run: 7z a -tzip -mx=9 ./Releases/LethalExpansion_v${{ env.VERSION }}_pre.zip ./BuildPreview/*
 
     - name: Upload Release Asset Zip
+      if: github.event.release.prerelease == false
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.LETHAL_EXPANSION_SECRET }}
@@ -30,6 +42,17 @@ jobs:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./Releases/LethalExpansion_v${{ env.VERSION }}.zip
         asset_name: LethalExpansion_v${{ env.VERSION }}.zip
+        asset_content_type: application/zip
+
+    - name: Upload Release Asset Zip
+      if: github.event.release.prerelease == true
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.LETHAL_EXPANSION_SECRET }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./Releases/LethalExpansion_v${{ env.VERSION }}_pre.zip
+        asset_name: LethalExpansion_v${{ env.VERSION }}_pre.zip
         asset_content_type: application/zip
 
     # - name: 7z files
@@ -46,6 +69,7 @@ jobs:
         # asset_content_type: application/x-7z-compressed
 
     - name: Upload Release Asset Zip
+      if: github.event.release.prerelease == false
       uses: GreenTF/upload-thunderstore-package@v4.3
       with:
         namespace: HolographicWings
@@ -68,3 +92,28 @@ jobs:
           BepInEx-BepInExPack@5.4.2100
         website: https://github.com/HolographicWings/LethalExpansion
         file: ./Releases/LethalExpansion_v${{ env.VERSION }}.zip
+
+    - name: Upload Release Asset Zip
+      if: github.event.release.prerelease == true
+      uses: GreenTF/upload-thunderstore-package@v4.3
+      with:
+        namespace: HolographicWings
+        description: Preview version of LethalExpansion.
+        token: ${{ secrets.THUNDERSTORE_TOKEN }}
+        name: LethalExpansion_Preview
+        version: ${{ env.VERSION }}
+        community: lethal-company
+        repo: thunderstore.io
+        categories: |
+          bepinex
+          clientside
+          serverside
+          items
+          moons
+          mods
+          audio
+          misc
+        deps: |
+          BepInEx-BepInExPack@5.4.2100
+        website: https://github.com/HolographicWings/LethalExpansion
+        file: ./Releases/LethalExpansion_v${{ env.VERSION }}_pre.zip
