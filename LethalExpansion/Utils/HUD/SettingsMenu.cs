@@ -29,6 +29,7 @@ namespace LethalExpansion.Utils.HUD
         }
         private bool initialized = false;
         private List<HUDSettingEntry> entries = new List<HUDSettingEntry> ();
+        private GameObject ModSettingsPanel;
         public void InitSettingsMenu()
         {
             entries = new List<HUDSettingEntry>();
@@ -39,28 +40,43 @@ namespace LethalExpansion.Utils.HUD
                 LethalExpansion.Log.LogError("MenuContainer not found in the scene!");
                 return;
             }
+            GameObject ModSettings = null;
+            if (!ConfigManager.Instance.FindItemValue<bool>("HideModSettingsMenu"))
+            {
+                menuContainer.transform.Find("MainButtons/HostButton").GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 38.5f);
+                menuContainer.transform.Find("MainButtons/JoinACrew").GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 38.5f);
+                menuContainer.transform.Find("MainButtons/StartLAN").GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 38.5f);
+                GameObject SettingsButton = menuContainer.transform.Find("MainButtons/SettingsButton").gameObject;
+                SettingsButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 38.5f);
+                ModSettings = GameObject.Instantiate(SettingsButton, menuContainer.transform);
+                ModSettings.transform.SetParent(menuContainer.transform.Find("MainButtons"));
+                ModSettings.name = "ModSettingsButton";
+                ModSettings.transform.Find("Text (TMP)").GetComponent<TMP_Text>().text = "> Mod Settings";
+                ModSettings.GetComponent<RectTransform>().anchoredPosition = SettingsButton.GetComponent<RectTransform>().anchoredPosition - new Vector2(0, 38.5f);
+            }
 
-            menuContainer.transform.Find("MainButtons/HostButton").GetComponent<RectTransform>().anchoredPosition += new Vector2(0,38.5f);
-            menuContainer.transform.Find("MainButtons/JoinACrew").GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 38.5f);
-            menuContainer.transform.Find("MainButtons/StartLAN").GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 38.5f);
-            GameObject SettingsButton = menuContainer.transform.Find("MainButtons/SettingsButton").gameObject;
-            SettingsButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 38.5f);
-            GameObject ModSettings = GameObject.Instantiate(SettingsButton, menuContainer.transform);
-            ModSettings.transform.SetParent(menuContainer.transform.Find("MainButtons"));
-            ModSettings.name = "ModSettingsButton";
-            ModSettings.transform.Find("Text (TMP)").GetComponent<TMP_Text>().text = "> Mod Settings";
-            ModSettings.GetComponent<RectTransform>().anchoredPosition = SettingsButton.GetComponent<RectTransform>().anchoredPosition - new Vector2(0, 38.5f);
-
-            GameObject ModSettingsPanel = GameObject.Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Settings/ModSettings.prefab"));
+            ModSettingsPanel = GameObject.Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Settings/ModSettings.prefab"));
             GameObject ModSettingsEntry = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Settings/SettingEntry.prefab");
             GameObject ModSettingsCategory = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/HUD/Settings/SettingCategory.prefab");
             ModSettingsPanel.transform.SetParent(menuContainer.transform);
             ModSettingsPanel.transform.localPosition = Vector3.zero;
             ModSettingsPanel.transform.localScale = Vector3.one;
 
-            Button ModSettingsButton = ModSettings.GetComponent<Button>();
-            ModSettingsButton.onClick = new Button.ButtonClickedEvent();
-            ModSettingsButton.onClick.AddListener(() => { ModSettingsPanel.SetActive(true); GetSettings(); });
+            if (!ConfigManager.Instance.FindItemValue<bool>("HideModSettingsMenu") && ModSettings != null)
+            {
+                Button ModSettingsButton = ModSettings.GetComponent<Button>();
+                ModSettingsButton.onClick = new Button.ButtonClickedEvent();
+                ModSettingsButton.onClick.AddListener(() => {
+                    if (!GetSettingsMenuActive())
+                    {
+                        ShowSettingsMenu();
+                    }
+                    else
+                    {
+                        HideSettingsMenu();
+                    }
+                });
+            }
 
 
             SettingMenu_DragAndDrop ModSettingsDragAndDropSurface = ModSettingsPanel.transform.Find("DragAndDropSurface").gameObject.AddComponent<SettingMenu_DragAndDrop>();
@@ -68,9 +84,9 @@ namespace LethalExpansion.Utils.HUD
             Button ModSettingsCloseButton = ModSettingsPanel.transform.Find("CloseButton").GetComponent<Button>();
             Button ModSettingsApplyButton = ModSettingsPanel.transform.Find("ApplyButton").GetComponent<Button>();
             Button ModSettingsCancelButton = ModSettingsPanel.transform.Find("CancelButton").GetComponent<Button>();
-            ModSettingsCloseButton.onClick.AddListener(() => { ModSettingsPanel.SetActive(false); });
-            ModSettingsApplyButton.onClick.AddListener(() => { ApplySettings(); ModSettingsPanel.SetActive(false); });
-            ModSettingsCancelButton.onClick.AddListener(() => { ModSettingsPanel.SetActive(false); });
+            ModSettingsCloseButton.onClick.AddListener(() => { HideSettingsMenu(); });
+            ModSettingsApplyButton.onClick.AddListener(() => { ApplySettings(); HideSettingsMenu(); });
+            ModSettingsCancelButton.onClick.AddListener(() => { HideSettingsMenu(); });
             GameObject ModSettingsContent = ModSettingsPanel.transform.Find("Scroll View/Viewport/ModSettingsContent").gameObject;
             Button ModSettingsAllDefaultButton = ModSettingsContent.transform.Find("AllDefaultButton").GetComponent<Button>();
             ModSettingsAllDefaultButton.onClick.AddListener(() => { ResetAllSettings(); });
@@ -278,6 +294,22 @@ namespace LethalExpansion.Utils.HUD
         private float RoundToNearest(float number, float increment)
         {
             return (float)(Math.Round(number / increment) * increment);
+        }
+        public void ShowSettingsMenu()
+        {
+            if (!ModSettingsPanel.activeSelf)
+            {
+                GetSettings();
+                ModSettingsPanel.SetActive(true);
+            }
+        }
+        public void HideSettingsMenu()
+        {
+            ModSettingsPanel.SetActive(false);
+        }
+        public bool GetSettingsMenuActive()
+        {
+            return ModSettingsPanel.activeSelf;
         }
     }
     class HUDSettingEntry

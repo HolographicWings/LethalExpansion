@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using LethalExpansion.Utils;
+using LethalExpansion.Utils.HUD;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace LethalExpansion.Patches
@@ -47,5 +49,25 @@ namespace LethalExpansion.Patches
             }
             return true;
         }
+        [HarmonyPatch(nameof(MenuManager.Update))]
+        [HarmonyPrefix]
+        static void Update_Postfix(MenuManager __instance)
+        {
+            if (SceneManager.GetActiveScene().name == "MainMenu")
+            {
+                if (Keyboard.current.oKey.wasPressedThisFrame)
+                {
+                    if (!SettingsMenu.Instance.GetSettingsMenuActive())
+                    {
+                        SettingsMenu.Instance.ShowSettingsMenu();
+                    }
+                    else
+                    {
+                        SettingsMenu.Instance.HideSettingsMenu();
+                    }
+                }
+            }
+        }
+
     }
 }

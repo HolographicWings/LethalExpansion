@@ -221,7 +221,8 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("MoreMoneyStartCompatibility", false, "Compatibility", "Let MoreMoneyStart control the Starting credits amount.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("SettingsDebug", false, "Debug", "Show an output of every settings in the Console. (The Console must listen Info messages)", sync: false));
             ConfigManager.Instance.AddItem(new ConfigItem("LegacyMoonLoading", false, "Modules", "Roll back to Synchronous moon loading. (Freeze the game longer and highter chance of crash)", sync: true));
-            ConfigManager.Instance.AddItem(new ConfigItem("ExtraDaysToDeadline", false, "Compatibility", "Leave ExtraDaysToDeadline control the deadline days amount (not effect automatic deadlines).", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("ExtraDaysToDeadline", false, "Compatibility", "Leave ExtraDaysToDeadline control the deadline days amount. (not effect automatic deadlines)", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("HideModSettingsMenu", false, "HUD", "Hide the ModSettings menu from the Main Menu, you still can open the menu by pressing O in Main Menu. (Restart Required)", sync: false));
 
             ConfigManager.Instance.ReadConfig();
 
@@ -557,7 +558,7 @@ namespace LethalExpansion
                                 DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                             }
                             //get all terrains
-                            Terrain[] Terrains = mainPrefab.GetComponentsInChildren<Terrain>();
+                            /*Terrain[] Terrains = mainPrefab.GetComponentsInChildren<Terrain>();
                             if (Terrains != null && Terrains.Length > 0)
                             {
                                 foreach (Terrain terrain in Terrains)
@@ -565,7 +566,7 @@ namespace LethalExpansion
                                     //enable the GPU Instancing on every terrain (fixed crashes on some setups)
                                     terrain.drawInstanced = true;
                                 }
-                            }
+                            }*/
                         }
                     }
                 }

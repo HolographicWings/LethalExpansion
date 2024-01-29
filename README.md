@@ -91,6 +91,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 
 ## Changes :
 - 1.3.26
+    - Added a Hide ModSettings Menu setting and press O to open the ModSettings menu in main menu.
+    - Tiny tweak in Terrains.
     - Added a compatibility patch for ExtraDaysToDeadline by Ustaalon.
     - Tweaks in the setting sync for compatibility with other mods.
 - 1.3.25
