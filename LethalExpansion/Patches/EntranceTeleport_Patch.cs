@@ -31,6 +31,13 @@ namespace LethalExpansion.Patches
             return true;
         }
         [HarmonyPatch(nameof(EntranceTeleport.TeleportPlayer))]
+        [HarmonyPrefix]
+        public static bool TeleportPlayer_Prefix(EntranceTeleport __instance)
+        {
+            GameNetworkManager.Instance.localPlayerController.isInsideFactory = __instance.isEntranceToBuilding;
+            return true;
+        }
+        [HarmonyPatch(nameof(EntranceTeleport.TeleportPlayer))]
         [HarmonyPostfix]
         public static void TeleportPlayer_Postfix(EntranceTeleport __instance)
         {

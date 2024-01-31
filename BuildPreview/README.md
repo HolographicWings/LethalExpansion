@@ -88,6 +88,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmine instand explode when a player walk on them (Vanilla bug) use [LandmineFix](https://thunderstore.io/c/lethal-company/p/TheBeeTeam/LandmineFix/) by TheBeeTeam.
 
 ## Changes :
+- 1.3.27
+    - Possibility to make a custom animation on the moon orbit prefabs.
+    - Test to fix the Coil head who don't attack non-host players without changing the entrances.
 - 1.3.26
     - Added a Hide ModSettings Menu setting and press O to open the ModSettings menu in main menu.
     - Tiny tweak in Terrains.

@@ -208,8 +208,8 @@ namespace LethalExpansion.Patches
                                     if (prefab.GetComponent<Animator>() == null)
                                     {
                                         animator = prefab.AddComponent<Animator>();
+                                        animator = AssetGather.Instance.planetPrefabs.First().Value.GetComponent<Animator>();
                                     }
-                                    animator = AssetGather.Instance.planetPrefabs.First().Value.GetComponent<Animator>();
                                     AssetGather.Instance.AddPlanetPrefabs(prefab);
                                 }
                             }
