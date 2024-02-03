@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using LethalExpansion.Extenders;
 
 namespace LethalExpansion.Patches
 {
@@ -31,13 +32,6 @@ namespace LethalExpansion.Patches
             return true;
         }
         [HarmonyPatch(nameof(EntranceTeleport.TeleportPlayer))]
-        [HarmonyPrefix]
-        public static bool TeleportPlayer_Prefix(EntranceTeleport __instance)
-        {
-            GameNetworkManager.Instance.localPlayerController.isInsideFactory = __instance.isEntranceToBuilding;
-            return true;
-        }
-        [HarmonyPatch(nameof(EntranceTeleport.TeleportPlayer))]
         [HarmonyPostfix]
         public static void TeleportPlayer_Postfix(EntranceTeleport __instance)
         {
@@ -55,5 +49,21 @@ namespace LethalExpansion.Patches
                 }
             }
         }
+        /*[HarmonyPatch(nameof(EntranceTeleport.Awake))]
+        [HarmonyPrefix]
+        public static bool Awake_Prefix(EntranceTeleport __instance)
+        {
+            if (__instance.NetworkManager.IsHost)
+            {
+                __instance.SetNetEntranceID(__instance.entranceId);
+                __instance.SetNetAudioReverbPreset(__instance.audioReverbPreset);
+            }
+            else
+            {
+                __instance.entranceId = __instance.GetNetEntranceID();
+                __instance.audioReverbPreset = __instance.GetNetAudioReverbPreset();
+            }
+            return true;
+        }*/
     }
 }
