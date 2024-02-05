@@ -42,7 +42,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.29";
+        private const string VersionString = "1.3.30";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -670,7 +670,7 @@ namespace LethalExpansion
                 var components = root.GetComponents<Component>();
                 foreach (var component in components)
                 {
-                    if (!ComponentWhitelists.moonPrefabWhitelist.Any(whitelistType => component.GetType() == whitelistType))
+                    if (!ComponentWhitelists.mainWhitelist.Any(whitelistType => component.GetType() == whitelistType))
                     {
                         LethalExpansion.Log.LogWarning($"{component.GetType().Name} component is not native of Unity or LethalSDK. It can contains malwares. From {objname}.");
                     }

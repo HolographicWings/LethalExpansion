@@ -13,12 +13,13 @@ using UnityEngine.Rendering;
 using UnityEngine.Video;
 using UnityEngine;
 using LethalSDK.Utils;
+using LethalSDK.Editor;
 
 namespace LethalExpansion.Utils
 {
     public class ComponentWhitelists
     {
-        public static List<Type> moonPrefabWhitelist = new List<Type> {
+        public static List<Type> mainWhitelist = new List<Type> {
             //Base
             typeof(Transform),
             //Mesh
@@ -30,7 +31,6 @@ namespace LethalExpansion.Utils
             typeof(BoxCollider),
             typeof(SphereCollider),
             typeof(CapsuleCollider),
-            typeof(SphereCollider),
             typeof(TerrainCollider),
             typeof(WheelCollider),
             typeof(ArticulationBody),
@@ -115,77 +115,8 @@ namespace LethalExpansion.Utils
             typeof(SI_AudioOutputInterface),
             typeof(SI_NetworkDataInterfacing),
             typeof(SI_NetworkData),
+            typeof(TerrainChecker),
             typeof(PlayerShip)
-        };
-        public static List<Type> scrapWhitelist = new List<Type> {
-            //Base
-            typeof(Transform),
-            //Mesh
-            typeof(MeshFilter),
-            typeof(MeshRenderer),
-            typeof(SkinnedMeshRenderer),
-            //Physics
-            typeof(MeshCollider),
-            typeof(BoxCollider),
-            typeof(SphereCollider),
-            typeof(CapsuleCollider),
-            typeof(SphereCollider),
-            typeof(TerrainCollider),
-            typeof(WheelCollider),
-            typeof(ArticulationBody),
-            typeof(ConstantForce),
-            typeof(ConfigurableJoint),
-            typeof(FixedJoint),
-            typeof(HingeJoint),
-            typeof(Cloth),
-            typeof(Rigidbody),
-            //Netcode
-            typeof(NetworkObject),
-            typeof(NetworkRigidbody),
-            typeof(NetworkTransform),
-            typeof(NetworkAnimator),
-            //Animation
-            typeof(Animator),
-            typeof(Animation),
-            //Rendering
-            typeof(DecalProjector),
-            typeof(LODGroup),
-            typeof(Light),
-            typeof(HDAdditionalLightData),
-            typeof(LightProbeGroup),
-            typeof(LightProbeProxyVolume),
-            typeof(LocalVolumetricFog),
-            typeof(OcclusionArea),
-            typeof(OcclusionPortal),
-            typeof(ReflectionProbe),
-            typeof(PlanarReflectionProbe),
-            typeof(HDAdditionalReflectionData),
-            typeof(SortingGroup),
-            typeof(SpriteRenderer),
-            //Audio
-            typeof(AudioSource),
-            typeof(AudioReverbZone),
-            typeof(AudioReverbFilter),
-            typeof(AudioChorusFilter),
-            typeof(AudioDistortionFilter),
-            typeof(AudioEchoFilter),
-            typeof(AudioHighPassFilter),
-            typeof(AudioLowPassFilter),
-            typeof(AudioListener),
-            //Effect
-            typeof(LensFlare),
-            typeof(TrailRenderer),
-            typeof(LineRenderer),
-            typeof(ParticleSystem),
-            typeof(ParticleSystemRenderer),
-            typeof(ParticleSystemForceField),
-            //Video
-            typeof(VideoPlayer),
-            //LethalSDK
-            typeof(SI_DamagePlayer),
-            typeof(SI_AudioOutputInterface),
-            typeof(SI_NetworkDataInterfacing),
-            typeof(SI_NetworkData)
         };
     }
 }

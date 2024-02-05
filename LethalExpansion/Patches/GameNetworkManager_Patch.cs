@@ -86,7 +86,7 @@ namespace LethalExpansion.Patches
                                         tmpItem.maxValue = newScrap.maxValue;
                                         tmpItem.weight = (float)newScrap.weight / 100 + 1;
 
-                                        CheckRiskyComponents(newScrap.prefab.transform, ComponentWhitelists.scrapWhitelist, tmpItem.itemName, bundle2.Item2.modName);
+                                        CheckRiskyComponents(newScrap.prefab.transform, ComponentWhitelists.mainWhitelist, tmpItem.itemName, bundle2.Item2.modName);
                                         tmpItem.spawnPrefab = newScrap.prefab;
 
                                         tmpItem.twoHanded = newScrap.twoHanded;
@@ -326,7 +326,7 @@ namespace LethalExpansion.Patches
                                         if (networkprefab.PrefabPath != null && networkprefab.PrefabPath.Length > 0)
                                         {
                                             GameObject prefab = bundle.Value.Item1.LoadAsset<GameObject>(networkprefab.PrefabPath);
-                                            CheckRiskyComponents(bundle.Value.Item1.LoadAsset<GameObject>(networkprefab.PrefabPath).transform, ComponentWhitelists.scrapWhitelist, networkprefab.PrefabName, bundle2.Item2.modName);
+                                            CheckRiskyComponents(bundle.Value.Item1.LoadAsset<GameObject>(networkprefab.PrefabPath).transform, ComponentWhitelists.mainWhitelist, networkprefab.PrefabName, bundle2.Item2.modName);
                                             __instance.GetComponent<NetworkManager>().PrefabHandler.AddNetworkPrefab(prefab);
                                             LethalExpansion.Log.LogInfo($"{networkprefab.PrefabName} Prefab registered.");
                                         }

@@ -1,4 +1,6 @@
 ## Changes :
+- 1.3.30
+    - Whitelisted a new terrain helper for the SDK.
 - 1.3.29
     - Tiny hotfix for retro-compatibility with moons made with post-1.3.28 SDK.
 - 1.3.28
