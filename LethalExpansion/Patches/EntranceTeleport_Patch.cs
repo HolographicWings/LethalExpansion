@@ -58,7 +58,7 @@ namespace LethalExpansion.Patches
         [HarmonyPostfix]
         public static void Awake_Postfix(EntranceTeleport __instance)
         {
-            if(__instance.NetworkObject.GetComponent<SI_NetworkData>() != null)
+            if(__instance.NetworkObject != null && __instance.NetworkObject.GetComponent<SI_NetworkData>() != null)
             {
                 __instance.gameObject.AddComponent<EntranceTeleport_Extension>();
             }
