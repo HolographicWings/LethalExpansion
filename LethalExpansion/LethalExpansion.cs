@@ -34,12 +34,10 @@ using UnityEngine.Events;
 namespace LethalExpansion
 {
     [BepInPlugin(PluginGUID, PluginName, VersionString)]
-    //soft dependencies to ajust the load order, some may be removed
+    //soft dependencies to ajust the load order
     [BepInDependency("me.swipez.melonloader.morecompany", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("BrutalCompanyPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("MoonOfTheDay", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("beeisyou.LandmineFix", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("LethalAdjustments", BepInDependency.DependencyFlags.SoftDependency)]
     public class LethalExpansion : BaseUnityPlugin
     {
         private const string PluginGUID = "LethalExpansion";
