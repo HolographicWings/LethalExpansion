@@ -1,8 +1,10 @@
-﻿using LethalExpansion.Patches;
+﻿using HarmonyLib;
+using LethalExpansion.Patches;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEngine.Rendering.HighDefinition;
 using static LethalExpansion.Utils.NetworkPacketManager;
 
 namespace LethalExpansion.Utils
@@ -81,7 +83,10 @@ namespace LethalExpansion.Utils
                             {
                                 configPacket += $"{bundle.Key}v{bundle.Value.Item2.GetVersion().ToString()}&";
                             }
-                            configPacket = configPacket.Remove(configPacket.Length - 1);
+                            if (configPacket.EndsWith('&'))
+                            {
+                                configPacket = configPacket.Remove(configPacket.Length - 1);
+                            }
                             NetworkPacketManager.Instance.sendPacket(packetType.data, "clientinfo", configPacket, 0);
                         }
                         break;
@@ -99,8 +104,43 @@ namespace LethalExpansion.Utils
                             {
                                 weathers += weather + "&";
                             }
-                            weathers = weathers.Remove(weathers.Length - 1);
+                            if (weathers.EndsWith('&'))
+                            {
+                                weathers = weathers.Remove(weathers.Length - 1);
+                            }
                             NetworkPacketManager.Instance.sendPacket(packetType.data, "hostweathers", weathers, (long)sender, false);
+                        }
+                        break;
+                    case "networkobjectdata": //host receive network object data request from client
+                        if (LethalExpansion.ishost && sender != 0)
+                        {
+                            string data = string.Empty;
+                            if(packet.Length > 0 && packet.Contains(','))
+                            {
+                                try
+                                {
+                                    ulong[] objectids = Array.ConvertAll(packet.Split(','), ulong.Parse);
+                                    foreach (ulong id in objectids)
+                                    {
+                                        data += $"{id}${LethalSDK.Utils.NetworkDataManager.NetworkData[id].serializedData}&";
+                                    }
+                                    if (data.EndsWith('&'))
+                                    {
+                                        data = data.Remove(data.Length - 1);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    LethalExpansion.Log.LogError(ex);
+                                    data = "error";
+                                }
+                                NetworkPacketManager.Instance.sendPacket(packetType.data, "networkobjectdata", data, (long)sender, false);
+                            }
+                            else
+                            {
+                                LethalExpansion.Log.LogError("networkobjectdata packet error");
+                                data = "packet error";
+                            }
                         }
                         break;
                     default:
@@ -137,7 +177,7 @@ namespace LethalExpansion.Utils
                             {
                                 bundles += $"{bundle.Key}v{bundle.Value.Item2.GetVersion().ToString()}&";
                             }
-                            if (bundles.Length > 0)
+                            if (bundles.Length > 0 && bundles.EndsWith('&'))
                             {
                                 bundles = bundles.Remove(bundles.Length - 1);
                             }
@@ -164,7 +204,7 @@ namespace LethalExpansion.Utils
                             }
 
                             string config = string.Empty;
-                            foreach (var item in ConfigManager.Instance.GetAll())
+                            foreach (ConfigItem item in ConfigManager.Instance.GetAll())
                             {
                                 switch (item.type.Name)
                                 {
@@ -185,7 +225,10 @@ namespace LethalExpansion.Utils
                                 }
                                 config += "&";
                             }
-                            config = config.Remove(config.Length - 1);
+                            if (config.EndsWith('&'))
+                            {
+                                config = config.Remove(config.Length - 1);
+                            }
                             NetworkPacketManager.Instance.sendPacket(packetType.data, "hostconfig", config, (long)sender);
                         }
                         break;
@@ -227,6 +270,48 @@ namespace LethalExpansion.Utils
                                     StartOfRound_Patch.currentWeathers[i] = tmp;
                                     StartOfRound.Instance.levels[i].currentWeather = (LevelWeatherType)tmp;
                                 }
+                            }
+                        }
+                        break;
+                    case "networkobjectdata": //client receive network object data from host
+                        if (!LethalExpansion.ishost && sender == 0)
+                        {
+                            string[] datas;
+                            if (packet.Contains('&'))
+                            {
+                                datas = packet.Split('&');
+                            }
+                            else
+                            {
+                                datas = new string[1] { packet };
+                            }
+                            try
+                            {
+                                foreach (string data in datas)
+                                {
+                                    if (data.Contains('$'))
+                                    {
+                                        string[] tmp = data.Split('$');
+                                        ulong id = 0;
+                                        if (tmp.Length >= 2 && ulong.TryParse(tmp[0], out id) && tmp[1].Contains(','))
+                                        {
+                                            LethalSDK.Utils.NetworkDataManager.NetworkData[id].serializedData = tmp[1];
+                                            LethalExpansion.Log.LogDebug($"networkobjectdata: {tmp[0]} data received {tmp[1]}");
+                                        }
+                                        else
+                                        {
+                                            LethalExpansion.Log.LogError("networkobjectdata error " + packet);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        LethalExpansion.Log.LogError("networkobjectdata error " + packet);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LethalExpansion.Log.LogError(ex);
                             }
                         }
                         break;

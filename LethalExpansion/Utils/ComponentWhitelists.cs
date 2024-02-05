@@ -12,6 +12,7 @@ using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Video;
 using UnityEngine;
+using LethalSDK.Utils;
 
 namespace LethalExpansion.Utils
 {
@@ -113,6 +114,7 @@ namespace LethalExpansion.Utils
             typeof(SI_SoundYDistance),
             typeof(SI_AudioOutputInterface),
             typeof(SI_NetworkDataInterfacing),
+            typeof(SI_NetworkData),
             typeof(PlayerShip)
         };
         public static List<Type> scrapWhitelist = new List<Type> {
@@ -181,7 +183,9 @@ namespace LethalExpansion.Utils
             typeof(VideoPlayer),
             //LethalSDK
             typeof(SI_DamagePlayer),
-            typeof(SI_AudioOutputInterface)
+            typeof(SI_AudioOutputInterface),
+            typeof(SI_NetworkDataInterfacing),
+            typeof(SI_NetworkData)
         };
     }
 }

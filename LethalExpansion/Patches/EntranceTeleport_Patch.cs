@@ -8,6 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using LethalExpansion.Extenders;
+using GameNetcodeStuff;
+using DunGen;
+using AsmResolver.PE.DotNet.Metadata;
+using LethalExpansion.Utils;
+using static Netcode.Transports.Facepunch.FacepunchTransport;
 
 namespace LethalExpansion.Patches
 {
@@ -49,21 +54,62 @@ namespace LethalExpansion.Patches
                 }
             }
         }
-        /*[HarmonyPatch(nameof(EntranceTeleport.Awake))]
-        [HarmonyPrefix]
-        public static bool Awake_Prefix(EntranceTeleport __instance)
+        [HarmonyPatch(nameof(EntranceTeleport.Awake))]
+        [HarmonyPostfix]
+        public static void Awake_Postfix(EntranceTeleport __instance)
         {
-            if (__instance.NetworkManager.IsHost)
+            if(__instance.NetworkObject.GetComponent<SI_NetworkData>() != null)
             {
-                __instance.SetNetEntranceID(__instance.entranceId);
-                __instance.SetNetAudioReverbPreset(__instance.audioReverbPreset);
+                __instance.gameObject.AddComponent<EntranceTeleport_Extension>();
             }
-            else
+        }
+    }
+    public class EntranceTeleport_Extension : MonoBehaviour
+    {
+        private EntranceTeleport entrance;
+        private SI_NetworkData netdata;
+        private void Awake()
+        {
+            entrance = this.GetComponent<EntranceTeleport>();
+            if(entrance != null && entrance.NetworkObject != null)
             {
-                __instance.entranceId = __instance.GetNetEntranceID();
-                __instance.audioReverbPreset = __instance.GetNetAudioReverbPreset();
+                netdata = entrance.NetworkObject.GetComponent<SI_NetworkData>();
             }
-            return true;
-        }*/
+        }
+        private void Start()
+        {
+            if (netdata != null)
+            {
+                Debug.Log(netdata.IsServer);
+                netdata.dataChangeEvent.AddListener(UpdateEntrance);
+                if (netdata.IsServer)
+                {
+                    UpdateEntrance();
+                    netdata.datacache = netdata.serializedData;
+                }
+                else
+                {
+                    NetworkPacketManager.Instance.sendPacket(NetworkPacketManager.packetType.request, "networkobjectdata", string.Join(",", NetworkDataManager.NetworkData.Select(x => x.Key.ToString()).ToArray()), (long)0);
+                }
+            }
+        }
+        private void UpdateEntrance()
+        {
+            if (netdata != null)
+            {
+                if (netdata.serializedData != null && netdata.serializedData.Length > 0 && netdata.serializedData.Contains(','))
+                {
+                    StringStringPair[] data = netdata.getData();
+                    if (data.Any(e => e._string1.ToLower() == "entranceid"))
+                    {
+                        int.TryParse(data.First(e => e._string1.ToLower() == "entranceid")._string2, out entrance.entranceId);
+                    }
+                    if (data.Any(e => e._string1.ToLower() == "audioreverbpreset"))
+                    {
+                        int.TryParse(data.First(e => e._string1.ToLower() == "audioreverbpreset")._string2, out entrance.audioReverbPreset);
+                    }
+                }
+            }
+        }
     }
 }
