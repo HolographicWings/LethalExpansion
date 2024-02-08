@@ -10,4 +10,3 @@
     - Test moon orbit prefab custom animation.
 
 ## Changes & Additions :
-- change ResetTerminalKeywords into a more precise cleaner to avoid keyword doublons when returning to main menu.

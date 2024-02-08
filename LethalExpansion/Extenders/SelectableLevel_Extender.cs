@@ -36,9 +36,31 @@ namespace LethalExpansion.Patches
             return 0;
         }
 
+        public static void SetIsFromLE(this SelectableLevel level, bool value)
+        {
+            if (!extention.TryGetValue(level, out var data))
+            {
+                data = new SelectableLevelExtention();
+                extention.Add(level, data);
+            }
+
+            data.isFromLE = value;
+        }
+
+        public static bool GetIsFromLE(this SelectableLevel level)
+        {
+            if (extention.TryGetValue(level, out var data))
+            {
+                return data.isFromLE;
+            }
+
+            return false;
+        }
+
         private class SelectableLevelExtention
         {
             public int FireExitAmountOverwrite { get; set; }
+            public bool isFromLE { get; set; } = false;
         }
     }
 }

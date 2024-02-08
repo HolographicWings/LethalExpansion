@@ -1,4 +1,7 @@
 ## Changes :
+- 1.3.34
+    - Added more fields for compatibility. (for Item and Selectable Level classes)
+    - Added back the normal item dropship in SDK.
 - 1.3.33
     - Added a field in Terminal Nodes for compatibility.
 - 1.3.32

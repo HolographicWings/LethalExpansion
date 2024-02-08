@@ -702,6 +702,8 @@ namespace LethalExpansion.Patches
 
                                                 SelectableLevel newLevel = ScriptableObject.CreateInstance<SelectableLevel>();
 
+                                                newLevel.SetIsFromLE(true);
+
                                                 newLevel.name = newMoon.PlanetName;
                                                 newLevel.PlanetName = newMoon.PlanetName;
                                                 newLevel.sceneName = "InitSceneLaunchOptions";
