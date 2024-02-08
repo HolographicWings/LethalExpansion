@@ -1,4 +1,6 @@
 ## Changes :
+- 1.3.31
+    - Compatibility patch on terminal Keyword cleaning.
 - 1.3.30
     - Whitelisted a new terrain helper for the SDK.
 - 1.3.29

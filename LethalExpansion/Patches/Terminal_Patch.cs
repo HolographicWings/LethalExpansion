@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 namespace LethalExpansion.Patches
 {
@@ -16,7 +17,6 @@ namespace LethalExpansion.Patches
     public class Terminal_Patch
     {
         private static int[] defaultMoonRoutePrices = null;
-        private static TerminalKeyword[] defaultTerminalKeywords;
         public static bool scrapsPatched = false;
         public static bool scrapsRecursivelyPatched = false;
         public static bool moonsPatched = false;
@@ -843,6 +843,7 @@ namespace LethalExpansion.Patches
                                                 __instance.moonsCatalogueList = __instance.moonsCatalogueList.AddItem(newLevel).ToArray();
 
                                                 TerminalKeyword moonKeyword = ScriptableObject.CreateInstance<TerminalKeyword>();
+                                                moonKeyword.SetIsFromLE(true);
                                                 moonKeyword.word = newMoon.RouteWord != null || newMoon.RouteWord.Length >= 3 ? newMoon.RouteWord.ToLower() : Regex.Replace(newMoon.MoonName, @"\s", "").ToLower();
                                                 moonKeyword.name = newMoon.MoonName;
                                                 moonKeyword.defaultVerb = routeKeyword;
@@ -984,13 +985,12 @@ namespace LethalExpansion.Patches
         {
             try
             {
-                if (defaultTerminalKeywords == null || defaultTerminalKeywords.Length == 0)
+                foreach(var keyword in __instance.terminalNodes.allKeywords)
                 {
-                    defaultTerminalKeywords = __instance.terminalNodes.allKeywords;
-                }
-                else
-                {
-                    __instance.terminalNodes.allKeywords = defaultTerminalKeywords;
+                    if (keyword.GetIsFromLE())
+                    {
+                        __instance.terminalNodes.allKeywords = __instance.terminalNodes.allKeywords.Remove(keyword);
+                    }
                 }
                 LethalExpansion.Log.LogInfo("Terminal reset.");
             }
