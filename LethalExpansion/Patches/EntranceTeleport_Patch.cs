@@ -80,7 +80,6 @@ namespace LethalExpansion.Patches
         {
             if (netdata != null)
             {
-                Debug.Log(netdata.IsServer);
                 netdata.dataChangeEvent.AddListener(UpdateEntrance);
                 if (netdata.IsServer)
                 {
