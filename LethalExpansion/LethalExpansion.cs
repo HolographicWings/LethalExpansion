@@ -42,7 +42,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.34";
+        private const string VersionString = "1.3.35";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -67,6 +67,7 @@ namespace LethalExpansion
             { "KoderTech.BoomboxController", compatibility.good },
             { "299792458.MoreMoneyStart", compatibility.good },
             { "ExtraDaysToDeadline", compatibility.good },
+            { "AdvancedCompany", compatibility.unknown },
         };
         private enum compatibility
         {
@@ -77,7 +78,7 @@ namespace LethalExpansion
             bad = 4,
             critical = 5
         }
-        List<PluginInfo> loadedPlugins = new List<PluginInfo>();
+        public static List<PluginInfo> loadedPlugins = new List<PluginInfo>();
 
         //this flag gets false when joined a lobby either as host or client
         public static bool sessionWaiting = true;
@@ -221,6 +222,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("LegacyMoonLoading", false, "Modules", "Roll back to Synchronous moon loading. (Freeze the game longer and highter chance of crash)", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("ExtraDaysToDeadline", false, "Compatibility", "Leave ExtraDaysToDeadline control the deadline days amount. (not effect automatic deadlines)", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("HideModSettingsMenu", false, "HUD", "Hide the ModSettings menu from the Main Menu, you still can open the menu by pressing O in Main Menu. (Restart Required)", sync: false));
+            ConfigManager.Instance.AddItem(new ConfigItem("AdvancedCompanyCompatibility", false, "Compatibility", "Let AdvancedCompany control some settings.", sync: true));
 
             ConfigManager.Instance.ReadConfig();
 
@@ -764,6 +766,14 @@ namespace LethalExpansion
             if (ConfigManager.Instance.FindItemValue<bool>("ExtraDaysToDeadline") && loadedPlugins.Any(p => p.Metadata.GUID == "ExtraDaysToDeadline"))
             {
                 patchDeadlineDaysAmount = false;
+            }
+            if (ConfigManager.Instance.FindItemValue<bool>("AdvancedCompanyCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "AdvancedCompany"))
+            {
+                patchGlobalTimeSpeedMultiplier = false;
+                patchStartingCredits = false;
+                patchScrapValueMultiplier = false;
+                patchScrapAmountMultiplier = false;
+                patchMapSizeMultiplier = false;
             }
 
             //apply the settings

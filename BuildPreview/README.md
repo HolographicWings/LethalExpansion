@@ -88,6 +88,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmine instand explode when a player walk on them (Vanilla bug) use [LandmineFix](https://thunderstore.io/c/lethal-company/p/TheBeeTeam/LandmineFix/) by TheBeeTeam.
 
 ## Changes :
+- 1.3.35
+    - Added a compatibility patch for AdvancedCompany.
 - 1.3.34
     - Added more fields for compatibility. (for Item and Selectable Level classes)
     - Added back the normal item dropship in SDK.

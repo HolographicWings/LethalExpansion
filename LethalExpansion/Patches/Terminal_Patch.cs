@@ -943,15 +943,24 @@ namespace LethalExpansion.Patches
         {
             try
             {
-                for (int i = 0; i < routeKeyword.compatibleNouns.Length; i++)
+                bool patchMoonsRoutePricesMultiplier = true;
+                if (ConfigManager.Instance.FindItemValue<bool>("AdvancedCompanyCompatibility") && LethalExpansion.loadedPlugins.Any(p => p.Metadata.GUID == "AdvancedCompany"))
                 {
-                    TerminalNode routeConfirmNode = routeKeyword.compatibleNouns[i].result.terminalOptions.First(t => t.noun.name == "Confirm").result;
-                    int nounPrompt = routeKeyword.compatibleNouns[i].result.itemCost;
-                    int nounPromptConfirm = routeConfirmNode.itemCost;
-                    routeKeyword.compatibleNouns[i].result.itemCost = (int)(nounPrompt * ConfigManager.Instance.FindItemValue<float>("MoonsRoutePricesMultiplier"));
-                    routeConfirmNode.itemCost = (int)(nounPromptConfirm * ConfigManager.Instance.FindItemValue<float>("MoonsRoutePricesMultiplier"));
+                    patchMoonsRoutePricesMultiplier = false;
                 }
-                LethalExpansion.Log.LogInfo("Moon route price updated.");
+                if (patchMoonsRoutePricesMultiplier)
+                {
+                    for (int i = 0; i < routeKeyword.compatibleNouns.Length; i++)
+                    {
+                        TerminalNode routeConfirmNode = routeKeyword.compatibleNouns[i].result.terminalOptions.First(t => t.noun.name == "Confirm").result;
+                        int nounPrompt = routeKeyword.compatibleNouns[i].result.itemCost;
+                        int nounPromptConfirm = routeConfirmNode.itemCost;
+
+                        routeKeyword.compatibleNouns[i].result.itemCost = (int)(nounPrompt * ConfigManager.Instance.FindItemValue<float>("MoonsRoutePricesMultiplier"));
+                        routeConfirmNode.itemCost = (int)(nounPromptConfirm * ConfigManager.Instance.FindItemValue<float>("MoonsRoutePricesMultiplier"));
+                    }
+                    LethalExpansion.Log.LogInfo("Moon route price updated.");
+                }
             }
             catch (Exception ex)
             {
