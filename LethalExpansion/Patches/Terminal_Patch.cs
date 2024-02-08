@@ -850,6 +850,7 @@ namespace LethalExpansion.Patches
                                                 __instance.terminalNodes.allKeywords = __instance.terminalNodes.allKeywords.AddItem(moonKeyword).ToArray();
 
                                                 TerminalNode moonRouteConfirm = ScriptableObject.CreateInstance<TerminalNode>();
+                                                moonRouteConfirm.SetIsFromLE(true);
                                                 moonRouteConfirm.name = newMoon.MoonName.ToLower() + "RouteConfirm";
                                                 moonRouteConfirm.displayText = $"Routing autopilot to {newMoon.PlanetName}.\r\nYour new balance is [playerCredits].\r\n\r\n{newMoon.BoughtComment}\r\n\r\n";
                                                 moonRouteConfirm.clearPreviousText = true;
@@ -858,6 +859,7 @@ namespace LethalExpansion.Patches
                                                 moonRouteConfirm.itemCost = newMoon.RoutePrice;
 
                                                 TerminalNode moonRoute = ScriptableObject.CreateInstance<TerminalNode>();
+                                                moonRoute.SetIsFromLE(true);
                                                 moonRoute.name = newMoon.MoonName.ToLower() + "Route";
                                                 moonRoute.displayText = $"The cost to route to {newMoon.PlanetName} is [totalCost]. It is \r\ncurrently [currentPlanetTime] on this moon.\r\n\r\nPlease CONFIRM or DENY.\r\n\r\n\r\n";
                                                 moonRoute.clearPreviousText = true;

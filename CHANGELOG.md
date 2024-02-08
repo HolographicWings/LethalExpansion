@@ -1,4 +1,6 @@
 ## Changes :
+- 1.3.33
+    - Added a field in Terminal Nodes for compatibility.
 - 1.3.32
     - Fix a mistake in 1.3.31.
 - 1.3.31
