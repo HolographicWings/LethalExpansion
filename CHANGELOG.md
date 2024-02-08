@@ -1,4 +1,6 @@
 ## Changes :
+- 1.3.36
+	- Added moon info. (by MegaPiggy)
 - 1.3.35
     - Added a compatibility patch for AdvancedCompany.
 - 1.3.34
