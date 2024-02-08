@@ -32,7 +32,7 @@ namespace LethalExpansion.Extenders
 
         private class TerminalKeywordExtention
         {
-            public bool isFromLE { get; set; }
+            public bool isFromLE { get; set; } = false;
         }
     }
 }
