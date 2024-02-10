@@ -42,7 +42,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.36";
+        private const string VersionString = "1.3.37";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -558,7 +558,7 @@ namespace LethalExpansion
                                 DiageticBackground.GetComponent<AudioSource>().outputAudioMixerGroup = AssetGather.Instance.audioMixers.ContainsKey("Diagetic") ? AssetGather.Instance.audioMixers["Diagetic"].Item2.First(a => a.name == "Master") : null;
                             }
                             //get all terrains
-                            /*Terrain[] Terrains = mainPrefab.GetComponentsInChildren<Terrain>();
+                            Terrain[] Terrains = mainPrefab.GetComponentsInChildren<Terrain>();
                             if (Terrains != null && Terrains.Length > 0)
                             {
                                 foreach (Terrain terrain in Terrains)
@@ -566,7 +566,7 @@ namespace LethalExpansion
                                     //enable the GPU Instancing on every terrain (fixed crashes on some setups)
                                     terrain.drawInstanced = true;
                                 }
-                            }*/
+                            }
                         }
                     }
                 }

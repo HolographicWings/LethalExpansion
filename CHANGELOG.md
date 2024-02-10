@@ -1,4 +1,6 @@
 ## Changes :
+- 1.3.37
+	- Reversed terrain tweak of 1.3.26.
 - 1.3.36
 	- Added moon info. (by MegaPiggy)
 - 1.3.35
