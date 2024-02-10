@@ -10,3 +10,5 @@
     - Test moon orbit prefab custom animation.
 
 ## Changes & Additions :
+- Add manual placed scrap support.
+- Add custom spawnable outside and inside objects support.
