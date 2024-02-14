@@ -442,7 +442,7 @@ namespace LethalExpansion.Patches
                                                     itemRarity.rarity = newScrap.globalSpawnWeight;
                                                     foreach (SelectableLevel level in __instance.moonsCatalogueList)
                                                     {
-                                                        if(!newScrap.playetSpawnBlacklist.Any(l => l == level.PlanetName))
+                                                        if(!newScrap.planetSpawnBlacklist.Any(l => l == level.PlanetName))
                                                         {
                                                             level.spawnableScrap.Add(itemRarity);
                                                         }
@@ -455,7 +455,7 @@ namespace LethalExpansion.Patches
                                                     {
                                                         try
                                                         {
-                                                            if ((chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others")) && !newScrap.playetSpawnBlacklist.Any(l => l == level.PlanetName))
+                                                            if ((chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others")) && !newScrap.planetSpawnBlacklist.Any(l => l == level.PlanetName))
                                                             {
                                                                 ScrapSpawnChancePerScene chance = new ScrapSpawnChancePerScene(string.Empty, 0);
                                                                 try
@@ -587,7 +587,7 @@ namespace LethalExpansion.Patches
                                                         {
                                                             moonScrapBlacklist = newMoons.First(m => m.Value.PlanetName == level.PlanetName).Value.spawnableScrapBlacklist;
                                                         }
-                                                        if (!vanillaBlacklist.Contains(level.PlanetName) && !newScrap.playetSpawnBlacklist.Any(l => l == level.PlanetName) && !moonScrapBlacklist.Any(s => s == newScrap.itemName))
+                                                        if (!vanillaBlacklist.Contains(level.PlanetName) && !newScrap.planetSpawnBlacklist.Any(l => l == level.PlanetName) && !moonScrapBlacklist.Any(s => s == newScrap.itemName))
                                                         {
                                                             level.spawnableScrap.Add(itemRarity);
                                                         }
@@ -605,7 +605,7 @@ namespace LethalExpansion.Patches
                                                             {
                                                                 moonScrapBlacklist = newMoons.First(m => m.Value.PlanetName == level.PlanetName).Value.spawnableScrapBlacklist;
                                                             }
-                                                            if (!vanillaBlacklist.Contains(level.PlanetName) && !newScrap.playetSpawnBlacklist.Any(l => l == level.PlanetName) && !moonScrapBlacklist.Any(s => s == newScrap.itemName))
+                                                            if (!vanillaBlacklist.Contains(level.PlanetName) && !newScrap.planetSpawnBlacklist.Any(l => l == level.PlanetName) && !moonScrapBlacklist.Any(s => s == newScrap.itemName))
                                                             {
                                                                 if (chances.Any(l => l.SceneName == level.PlanetName) || chances.Any(l => l.SceneName == "Others"))
                                                                 {
