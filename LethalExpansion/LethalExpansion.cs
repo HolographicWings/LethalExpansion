@@ -38,6 +38,8 @@ namespace LethalExpansion
     [BepInDependency("me.swipez.melonloader.morecompany", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("MoonOfTheDay", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("beeisyou.LandmineFix", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("SpaceSunShine", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("Nie_SpaceShipDoor", BepInDependency.DependencyFlags.SoftDependency)]
     public class LethalExpansion : BaseUnityPlugin
     {
         private const string PluginGUID = "LethalExpansion";
@@ -63,11 +65,13 @@ namespace LethalExpansion
             { "beeisyou.LandmineFix",compatibility.perfect },
             { "LethalAdjustments",compatibility.good },
             { "CoomfyDungeon", compatibility.bad },
-            { "BiggerLobby", compatibility.critical },
+            { "BiggerLobby", compatibility.good },
             { "KoderTech.BoomboxController", compatibility.good },
             { "299792458.MoreMoneyStart", compatibility.good },
             { "ExtraDaysToDeadline", compatibility.good },
             { "AdvancedCompany", compatibility.unknown },
+            { "SpaceSunShine", compatibility.good },
+            { "Nie_SpaceShipDoor", compatibility.good },
         };
         private enum compatibility
         {
@@ -224,6 +228,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("HideModSettingsMenu", false, "HUD", "Hide the ModSettings menu from the Main Menu, you still can open the menu by pressing O in Main Menu. (Restart Required)", sync: false));
             ConfigManager.Instance.AddItem(new ConfigItem("AdvancedCompanyCompatibility", false, "Compatibility", "Let AdvancedCompany control some settings.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("HideVersionNumberInMainMenu", false, "HUD", "Hide the LE version number in the main menu.", sync: false));
+            ConfigManager.Instance.AddItem(new ConfigItem("DisableSpaceLightInOrbit", false, "Expeditions", "Disable the SpaceLight out of the ship. (Automatically apply if the SpaceSunShine mod is installed)", sync: false));
 
             ConfigManager.Instance.ReadConfig();
 
@@ -350,17 +355,6 @@ namespace LethalExpansion
                         contentsize:18
                         );
                 }
-                //BiggerLobby compatibility popup
-                if (loadedPlugins.Any(p => p.Metadata.GUID == "BiggerLobby"))
-                {
-                    PopupManager.Instance.InstantiatePopup(scene,
-                        "BiggerLobby mod found",
-                        "Warning: BiggerLobby is incompatible with LethalExpansion, host/client synchronization will break and dungeon generation Desync may occurs!",
-                        button2: "Ignore",
-                        titlesize:20,
-                        contentsize:18
-                        );
-                }
             }
             if (scene.name == "CompanyBuilding")
             {
@@ -377,10 +371,19 @@ namespace LethalExpansion
             }
             if (scene.name == "SampleSceneRelay")
             {
-                //instantiate the spacelight
-                SpaceLight = Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/SpaceLight.prefab"));
-                //move the spacelight to SampleSceneRelay
-                SceneManager.MoveGameObjectToScene(SpaceLight, scene);
+                //check if the SpaceSunShine is enabled or if the DisableSpaceLightInOrbit setting is used
+                bool useSpaceLight = true;
+                if (ConfigManager.Instance.FindItemValue<bool>("DisableSpaceLightInOrbit") || loadedPlugins.Any(p => p.Metadata.GUID == "SpaceSunShine"))
+                {
+                    useSpaceLight = false;
+                }
+                if (useSpaceLight)
+                {
+                    //instantiate the spacelight
+                    SpaceLight = Instantiate(AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Prefabs/SpaceLight.prefab"));
+                    //move the spacelight to SampleSceneRelay
+                    SceneManager.MoveGameObjectToScene(SpaceLight, scene);
+                }
 
                 //instantiate the fixed monitor wall and save it's mesh (this is a modifier version of the 8x monitor mesh, with an independant material on each one to allow to customize it's behaviour)
                 Mesh FixedMonitorWallMesh = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Meshes/MonitorWall.fbx").GetComponent<MeshFilter>().mesh;

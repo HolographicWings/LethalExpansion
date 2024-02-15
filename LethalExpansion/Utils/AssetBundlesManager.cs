@@ -63,7 +63,14 @@ namespace LethalExpansion.Utils
 
             foreach (string file in Directory.GetFiles(pluginsDirectory.FullName, "*.lem", SearchOption.AllDirectories))
             {
-                LoadBundle(file);
+                if (!(LethalExpansion.loadedPlugins.Any(p => p.Metadata.GUID == "SpaceSunShine") && Path.GetFileNameWithoutExtension(file).ToLower() == "spacesunshine"))
+                {
+                    LoadBundle(file);
+                }
+                else
+                {
+                    LethalExpansion.Log.LogInfo($"SpaceSunShine mod is found, skipping it's lem file.");
+                }
             }
         }
         public void LoadBundle(string file)

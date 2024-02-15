@@ -2,6 +2,9 @@
 - 1.3.39
 	- Added a setting to hide the version number of LE in the main menu.
 	- Added spaces to settings entries in the settings menu.
+	- Added a compatibility with SpaceSunShine by CatsArmy.
+	- Added a compatibility rank for SpaceShipDoor by Wolf11221/Nie.
+	- Changed the compatibility rank for BiggerLobby by Bizzlemip.
 - 1.3.38
 	- Fixed a typo in Scrap fields.
 - 1.3.37
