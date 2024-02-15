@@ -69,7 +69,7 @@ namespace LethalExpansion.Utils
                 }
                 else
                 {
-                    LethalExpansion.Log.LogInfo($"SpaceSunShine mod is found, skipping it's lem file.");
+                    LethalExpansion.Log.LogInfo($"SpaceSunShine mod is found, ignoring it's lem file.");
                 }
             }
         }
