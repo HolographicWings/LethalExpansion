@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 using static UnityEngine.EventSystems.EventTrigger;
 
 namespace LethalExpansion.Utils.HUD
@@ -119,7 +121,7 @@ namespace LethalExpansion.Utils.HUD
                 entry.SettingsEntry.GetComponent<RectTransform>().anchoredPosition = new Vector2(-100, y);
 
                 entry.ValueObject = null;
-                entry.ValueTypeName = item.type.Name;
+                entry.ValueTypeName = Regex.Replace(item.type.Name, "([a-z])([A-Z])", "$1 $2");
                 switch (entry.ValueTypeName)
                 {
                     case "Int32":

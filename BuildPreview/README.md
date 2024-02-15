@@ -88,6 +88,9 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmine instand explode when a player walk on them (Vanilla bug) use [LandmineFix](https://thunderstore.io/c/lethal-company/p/TheBeeTeam/LandmineFix/) by TheBeeTeam.
 
 ## Changes :
+- 1.3.39
+	- Added a setting to hide the version number of LE in the main menu.
+	- Added spaces to settings entries in the settings menu.
 - 1.3.38
 	- Fixed a typo in Scrap fields.
 - 1.3.37

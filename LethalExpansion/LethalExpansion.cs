@@ -42,7 +42,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.38";
+        private const string VersionString = "1.3.39";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -223,6 +223,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("ExtraDaysToDeadline", false, "Compatibility", "Leave ExtraDaysToDeadline control the deadline days amount. (not effect automatic deadlines)", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("HideModSettingsMenu", false, "HUD", "Hide the ModSettings menu from the Main Menu, you still can open the menu by pressing O in Main Menu. (Restart Required)", sync: false));
             ConfigManager.Instance.AddItem(new ConfigItem("AdvancedCompanyCompatibility", false, "Compatibility", "Let AdvancedCompany control some settings.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("HideVersionNumberInMainMenu", false, "HUD", "Hide the LE version number in the main menu.", sync: false));
 
             ConfigManager.Instance.ReadConfig();
 
