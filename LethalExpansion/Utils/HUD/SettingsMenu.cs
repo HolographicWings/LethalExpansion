@@ -117,11 +117,11 @@ namespace LethalExpansion.Utils.HUD
                 entry.SettingsEntry = GameObject.Instantiate(ModSettingsEntry, ModSettingsContent.transform);
                 entry.SettingsEntryKey = entry.SettingsEntry.transform.Find("Key").gameObject;
                 entry.SettingsEntryKeyTextComponent = entry.SettingsEntryKey.GetComponent<TMP_Text>();
-                entry.SettingsEntryKeyTextComponent.text = item.Key;
+                entry.SettingsEntryKeyTextComponent.text = Regex.Replace(item.Key, "([a-z])([A-Z])", "$1 $2");
                 entry.SettingsEntry.GetComponent<RectTransform>().anchoredPosition = new Vector2(-100, y);
 
                 entry.ValueObject = null;
-                entry.ValueTypeName = Regex.Replace(item.type.Name, "([a-z])([A-Z])", "$1 $2");
+                entry.ValueTypeName = item.type.Name;
                 switch (entry.ValueTypeName)
                 {
                     case "Int32":
