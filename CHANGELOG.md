@@ -1,4 +1,6 @@
 ## Changes :
+- 1.3.40
+	- Added a popup about incompatibility between LE and LLL 1.1.X.
 - 1.3.39
 	- Added a setting to hide the version number of LE in the main menu.
 	- Added spaces to settings entries in the settings menu.

@@ -27,6 +27,8 @@ namespace LethalExpansion.Patches
 
         public static TerminalKeyword routeKeyword;
         public static TerminalKeyword infoKeyword;
+        public static TerminalKeyword confirmKeyword;
+        public static TerminalKeyword denyKeyword;
 
         public static List<string> newScrapsNames = new List<string>();
         public static List<string> newMoonsNames = new List<string>();
@@ -41,6 +43,8 @@ namespace LethalExpansion.Patches
             //get the route terminal keyword for ulterior usage
             routeKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "route");
             infoKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "info");
+            confirmKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "confirm");
+            denyKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "deny");
             //RemoveMoon(__instance, "Experimentation");
             //remove duplicated moon routes
             Hotfix_DoubleRoutes();
@@ -690,8 +694,6 @@ namespace LethalExpansion.Patches
                                             }
                                             else
                                             {
-                                                TerminalKeyword confirmKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "confirm");
-                                                TerminalKeyword denyKeyword = __instance.terminalNodes.allKeywords.First(k => k.word == "deny");
                                                 TerminalNode cancelRouteNode = null;
                                                 foreach (CompatibleNoun option in routeKeyword.compatibleNouns[0].result.terminalOptions)
                                                 {

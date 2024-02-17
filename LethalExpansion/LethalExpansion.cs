@@ -44,7 +44,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.39";
+        private const string VersionString = "1.3.40";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -72,6 +72,7 @@ namespace LethalExpansion
             { "AdvancedCompany", compatibility.unknown },
             { "SpaceSunShine", compatibility.good },
             { "Nie_SpaceShipDoor", compatibility.good },
+            { "imabatby.lethallevelloader", compatibility.bad },
         };
         private enum compatibility
         {
@@ -354,6 +355,20 @@ namespace LethalExpansion
                         titlesize:20,
                         contentsize:18
                         );
+                }
+                //LethalLevelLoader compatibility popup
+                if (loadedPlugins.Any(p => p.Metadata.GUID == "imabatby.lethallevelloader"))
+                {
+                    if(loadedPlugins.First(p => p.Metadata.GUID == "imabatby.lethallevelloader").Metadata.Version.Minor == 1)
+                    {
+                        PopupManager.Instance.InstantiatePopup(scene,
+                            "LethalLevelLoader 1.1.X mod found",
+                            "Warning: LethalLevelLoader 1.1.X is incompatible with LethalExpansion, please use LethalLevelLoader 1.0.7 untill a patch is done.",
+                            button2: "Ignore",
+                            titlesize: 20,
+                            contentsize: 18
+                            );
+                    }
                 }
             }
             if (scene.name == "CompanyBuilding")
