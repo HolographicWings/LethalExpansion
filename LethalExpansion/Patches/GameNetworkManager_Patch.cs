@@ -144,6 +144,7 @@ namespace LethalExpansion.Patches
                                                 pp.grabbable = true;
                                                 pp.itemProperties = tmpItem;
                                                 pp.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
+                                                pp.useCooldown = newScrap.useCooldown;
                                                 break;
                                             case ScrapType.Shovel:
                                                 Shovel s = newScrap.prefab.AddComponent<Shovel>();
@@ -154,6 +155,7 @@ namespace LethalExpansion.Patches
                                                 s.itemProperties = tmpItem;
                                                 s.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
 
+                                                s.useCooldown = newScrap.useCooldown;
                                                 s.shovelHitForce = newScrap.shovelHitForce;
                                                 s.shovelAudio = newScrap.shovelAudio != null ? newScrap.shovelAudio : newScrap.prefab.GetComponent<AudioSource>();
                                                 if(s.shovelAudio == null)
@@ -172,6 +174,7 @@ namespace LethalExpansion.Patches
                                                 fi.itemProperties = tmpItem;
                                                 fi.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
 
+                                                fi.useCooldown = newScrap.useCooldown;
                                                 fi.usingPlayerHelmetLight = newScrap.usingPlayerHelmetLight;
                                                 fi.flashlightInterferenceLevel = newScrap.flashlightInterferenceLevel;
                                                 fi.flashlightBulb = newScrap.flashlightBulb;
@@ -216,6 +219,7 @@ namespace LethalExpansion.Patches
                                                 np.itemProperties = tmpItem;
                                                 np.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
 
+                                                np.useCooldown = newScrap.useCooldown;
                                                 np.noiseAudio = newScrap.noiseAudio;
                                                 if (np.noiseAudio == null)
                                                 {
@@ -275,6 +279,7 @@ namespace LethalExpansion.Patches
                                                 wci.itemProperties = tmpItem;
                                                 wci.mainObjectRenderer = newScrap.prefab.GetComponent<MeshRenderer>();
 
+                                                wci.useCooldown = newScrap.useCooldown;
                                                 wci.whoopieCushionAudio = newScrap.whoopieCushionAudio != null ? newScrap.whoopieCushionAudio : newScrap.prefab.GetComponent<AudioSource>();
                                                 if (wci.whoopieCushionAudio == null)
                                                 {
