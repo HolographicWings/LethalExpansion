@@ -1,4 +1,6 @@
 ## Changes :
+- 1.3.42
+	- Added some checkups to fix issues with custom scraps. (Missing NetworkObject, Missconfigured NetworkObject and Missing MeshFilter)
 - 1.3.41
 	- Added UseCooldown field to scraps. (Fix noisemaker spam issue)
 - 1.3.40

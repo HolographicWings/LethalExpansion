@@ -18,6 +18,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Video;
 using UnityEngine.SceneManagement;
 using LethalExpansion.Extenders;
+using Unity.Mathematics;
 
 namespace LethalExpansion.Patches
 {
@@ -72,10 +73,38 @@ namespace LethalExpansion.Patches
                                 {
                                     if (newScrap != null && newScrap.prefab != null && (newScrap.RequiredBundles == null || AssetBundlesManager.Instance.BundlesLoaded(newScrap.RequiredBundles)) && (newScrap.IncompatibleBundles == null || !AssetBundlesManager.Instance.IncompatibleBundlesLoaded(newScrap.IncompatibleBundles)))
                                     {
+                                        NetworkObject no = newScrap.prefab.GetComponent<NetworkObject>();
+
+                                        if (no == null)
+                                        {
+                                            LethalExpansion.Log.LogWarning(newScrap.itemName + " have no NetworkObject component, skipping...");
+                                            continue;
+                                        }
+
+                                        if (!checkScrapNetworkObjecValues(new bool[] {
+                                                no.AlwaysReplicateAsRoot,
+                                                no.SynchronizeTransform,
+                                                no.ActiveSceneSynchronization,
+                                                no.SceneMigrationSynchronization,
+                                                no.SpawnWithObservers,
+                                                no.DontDestroyWithOwner,
+                                                no.AutoObjectParentSync
+                                            }))
+                                        {
+                                            LethalExpansion.Log.LogWarning(newScrap.itemName + " NetworkObject component is missconfigured, skipping...");
+                                            continue;
+                                        }
+
+                                        if (newScrap.prefab.GetComponent<MeshFilter>() == null)
+                                        {
+                                            LethalExpansion.Log.LogWarning(newScrap.itemName + " have no MeshFilter, skipping...");
+                                            continue;
+                                        }
+
                                         AudioSource audioSource = newScrap.prefab.AddComponent<AudioSource>();
                                         audioSource.playOnAwake = false;
                                         audioSource.spatialBlend = 1f;
-                                        
+
                                         Item tmpItem = ScriptableObject.CreateInstance<Item>();
 
                                         tmpItem.SetIsFromLE(true);
@@ -158,11 +187,11 @@ namespace LethalExpansion.Patches
                                                 s.useCooldown = newScrap.useCooldown;
                                                 s.shovelHitForce = newScrap.shovelHitForce;
                                                 s.shovelAudio = newScrap.shovelAudio != null ? newScrap.shovelAudio : newScrap.prefab.GetComponent<AudioSource>();
-                                                if(s.shovelAudio == null)
+                                                if (s.shovelAudio == null)
                                                 {
                                                     s.shovelAudio = newScrap.prefab.AddComponent<AudioSource>();
                                                 }
-                                                if(newScrap.prefab.GetComponent<OccludeAudio>() == null)
+                                                if (newScrap.prefab.GetComponent<OccludeAudio>() == null)
                                                 {
                                                     newScrap.prefab.AddComponent<OccludeAudio>();
                                                 }
@@ -178,7 +207,7 @@ namespace LethalExpansion.Patches
                                                 fi.usingPlayerHelmetLight = newScrap.usingPlayerHelmetLight;
                                                 fi.flashlightInterferenceLevel = newScrap.flashlightInterferenceLevel;
                                                 fi.flashlightBulb = newScrap.flashlightBulb;
-                                                if(fi.flashlightBulb == null)
+                                                if (fi.flashlightBulb == null)
                                                 {
                                                     fi.flashlightBulb = new Light();
                                                     fi.flashlightBulb.intensity = 0;
@@ -224,7 +253,7 @@ namespace LethalExpansion.Patches
                                                 if (np.noiseAudio == null)
                                                 {
                                                     np.noiseAudio = newScrap.prefab.AddComponent<AudioSource>();
-                                                
+
                                                     // Configure AudioSource
                                                     np.noiseAudio.playOnAwake = false;
                                                     np.noiseAudio.priority = 128;
@@ -232,7 +261,7 @@ namespace LethalExpansion.Patches
                                                     np.noiseAudio.panStereo = 0f;
                                                     np.noiseAudio.spatialBlend = 1f;
                                                     np.noiseAudio.reverbZoneMix = 1f;
-                                                
+
                                                     // Configure 3D Sound Settings
                                                     np.noiseAudio.dopplerLevel = 4;
                                                     np.noiseAudio.spread = 26;
@@ -244,7 +273,7 @@ namespace LethalExpansion.Patches
                                                 if (np.noiseAudioFar == null)
                                                 {
                                                     np.noiseAudioFar = newScrap.prefab.AddComponent<AudioSource>();
-                                                
+
                                                     // Configure AudioSource
                                                     np.noiseAudioFar.playOnAwake = true;
                                                     np.noiseAudioFar.priority = 128;
@@ -252,7 +281,7 @@ namespace LethalExpansion.Patches
                                                     np.noiseAudioFar.panStereo = 0f;
                                                     np.noiseAudioFar.spatialBlend = 1f;
                                                     np.noiseAudioFar.reverbZoneMix = 1f;
-                                                
+
                                                     // Configure 3D Sound Settings
                                                     np.noiseAudioFar.dopplerLevel = 1.4f;
                                                     np.noiseAudioFar.spread = 87;
@@ -286,7 +315,7 @@ namespace LethalExpansion.Patches
                                                     wci.whoopieCushionAudio = newScrap.prefab.AddComponent<AudioSource>();
                                                 }
                                                 Transform triggerObject = newScrap.prefab.transform.Find("Trigger");
-                                                if(triggerObject == null)
+                                                if (triggerObject == null)
                                                 {
                                                     LethalExpansion.Log.LogWarning($"{wci.itemProperties.name} Whoopie Cushion Trigger not found, please add one");
                                                 }
@@ -348,6 +377,19 @@ namespace LethalExpansion.Patches
                     LethalExpansion.Log.LogError(ex.Message);
                 }
             }
+        }
+        static readonly bool[] requiredScrapNetworkObjectValues = { false, true, false, true, true, true, false };
+        static bool checkScrapNetworkObjecValues(bool[] current)
+        {
+            for (int i = 0; i < current.Length; i++)
+            {
+                if (current[i] != requiredScrapNetworkObjectValues[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
         static void CheckRiskyComponents(Transform prefab, List<Type> whitelist, string objname, string modulename)
         {
