@@ -95,9 +95,9 @@ namespace LethalExpansion.Patches
                                             continue;
                                         }
 
-                                        if (newScrap.prefab.GetComponent<MeshFilter>() == null)
+                                        if (newScrap.meshVariants != null && newScrap.meshVariants.Length > 0 && newScrap.prefab.GetComponent<MeshFilter>() == null)
                                         {
-                                            LethalExpansion.Log.LogWarning(newScrap.itemName + " have no MeshFilter, skipping...");
+                                            LethalExpansion.Log.LogWarning(newScrap.itemName + " have MeshVariants but no MeshFilter in it's parent Object, skipping...");
                                             continue;
                                         }
 
