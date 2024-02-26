@@ -1,6 +1,6 @@
 ## Changes :
 - 1.3.44
-	- Added a Compatibility setting for GeneralImprovements by ShaosilGaming.
+	- Added a Compatibility setting for General Improvements by ShaosilGaming.
 - 1.3.43
 	- Tweaked the previous MeshFilter checkup to only apply when the scrap have MeshVariants.
 - 1.3.42
