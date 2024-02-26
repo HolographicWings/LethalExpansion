@@ -87,6 +87,8 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 - Landmine instand explode when a player walk on them (Vanilla bug) use [LandmineFix](https://thunderstore.io/c/lethal-company/p/TheBeeTeam/LandmineFix/) by TheBeeTeam.
 
 ## Changes :
+- 1.3.44
+	- Added a Compatibility setting for GeneralImprovements by ShaosilGaming.
 - 1.3.43
 	- Tweaked the previous MeshFilter checkup to only apply when the scrap have MeshVariants.
 - 1.3.42

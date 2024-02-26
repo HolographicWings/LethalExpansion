@@ -44,7 +44,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.43";
+        private const string VersionString = "1.3.44";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -73,6 +73,7 @@ namespace LethalExpansion
             { "SpaceSunShine", compatibility.good },
             { "Nie_SpaceShipDoor", compatibility.good },
             { "imabatby.lethallevelloader", compatibility.bad },
+            { "ShaosilGaming.GeneralImprovements", compatibility.unknown },
         };
         private enum compatibility
         {
@@ -230,6 +231,7 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("AdvancedCompanyCompatibility", false, "Compatibility", "Let AdvancedCompany control some settings.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("HideVersionNumberInMainMenu", false, "HUD", "Hide the LE version number in the main menu. (Restart Required)", sync: false));
             ConfigManager.Instance.AddItem(new ConfigItem("DisableSpaceLightInOrbit", false, "Expeditions", "Disable the SpaceLight out of the ship. (Automatically apply if the SpaceSunShine mod is installed)", sync: false));
+            ConfigManager.Instance.AddItem(new ConfigItem("GeneralImprovementsCompatibility", false, "Compatibility", "Disable the patch for the 8-screen monitor in the ship.", sync: false));
 
             ConfigManager.Instance.ReadConfig();
 
@@ -400,16 +402,6 @@ namespace LethalExpansion
                     SceneManager.MoveGameObjectToScene(SpaceLight, scene);
                 }
 
-                //instantiate the fixed monitor wall and save it's mesh (this is a modifier version of the 8x monitor mesh, with an independant material on each one to allow to customize it's behaviour)
-                Mesh FixedMonitorWallMesh = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Meshes/MonitorWall.fbx").GetComponent<MeshFilter>().mesh;
-                //find the vanilla monitor wall
-                GameObject MonitorWall = GameObject.Find("Environment/HangarShip/ShipModels2b/MonitorWall/Cube");
-                //change the vanilla monitor wall mesh with the edited one
-                MonitorWall.GetComponent<MeshFilter>().mesh = FixedMonitorWallMesh;
-
-                //find the mesh renderer of the monitor wall
-                MeshRenderer MonitorWallMeshRenderer = MonitorWall.GetComponent<MeshRenderer>();
-
                 //instantiate the water surface from the Flooding weather
                 GameObject waterSurface = GameObject.Instantiate(GameObject.Find("Systems/GameSystems/TimeAndWeather/Flooding"));
                 //remove the FloodWeather component from the water surface
@@ -421,26 +413,45 @@ namespace LethalExpansion
                 //save the water surface in singleton
                 SpawnPrefab.Instance.waterSurface = waterSurface;
 
-                //create a new dark blue material
-                /*Material BlueScreenMaterial = new Material(MonitorWallMeshRenderer.materials[1]);
-                BlueScreenMaterial.SetColor("_BaseColor", new Color32(0,0,80, 255));*/
 
-                //define a material array for the edited monitor wall
-                Material[] materialArray = new Material[9];
-                materialArray[0] = MonitorWallMeshRenderer.materials[0];
-                materialArray[1] = MonitorWallMeshRenderer.materials[1];
-                materialArray[2] = MonitorWallMeshRenderer.materials[1];
-                //materialArray[2] = BlueScreenMaterial;
-                materialArray[3] = MonitorWallMeshRenderer.materials[1];
-                materialArray[4] = MonitorWallMeshRenderer.materials[1];
-                //materialArray[4] = BlueScreenMaterial;
-                materialArray[5] = MonitorWallMeshRenderer.materials[1];
-                materialArray[6] = MonitorWallMeshRenderer.materials[1];
-                materialArray[7] = MonitorWallMeshRenderer.materials[1];
-                materialArray[8] = MonitorWallMeshRenderer.materials[2];
+                bool patch8ScreenMonitor = true;
+                if (ConfigManager.Instance.FindItemValue<bool>("GeneralImprovementsCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "ShaosilGaming.GeneralImprovements"))
+                {
+                    patch8ScreenMonitor = false;
+                }
+                if (patch8ScreenMonitor)
+                {
+                    //instantiate the fixed monitor wall and save it's mesh (this is a modifier version of the 8x monitor mesh, with an independant material on each one to allow to customize it's behaviour)
+                    Mesh FixedMonitorWallMesh = AssetBundlesManager.Instance.mainAssetBundle.LoadAsset<GameObject>("Assets/Mods/LethalExpansion/Meshes/MonitorWall.fbx").GetComponent<MeshFilter>().mesh;
+                    //find the vanilla monitor wall
+                    GameObject MonitorWall = GameObject.Find("Environment/HangarShip/ShipModels2b/MonitorWall/Cube");
+                    //change the vanilla monitor wall mesh with the edited one
+                    MonitorWall.GetComponent<MeshFilter>().mesh = FixedMonitorWallMesh;
 
-                //set the monitor wall materials to the array made above
-                MonitorWallMeshRenderer.materials = materialArray;
+                    //find the mesh renderer of the monitor wall
+                    MeshRenderer MonitorWallMeshRenderer = MonitorWall.GetComponent<MeshRenderer>();
+
+                    //create a new dark blue material
+                    /*Material BlueScreenMaterial = new Material(MonitorWallMeshRenderer.materials[1]);
+                    BlueScreenMaterial.SetColor("_BaseColor", new Color32(0,0,80, 255));*/
+
+                    //define a material array for the edited monitor wall
+                    Material[] materialArray = new Material[9];
+                    materialArray[0] = MonitorWallMeshRenderer.materials[0];
+                    materialArray[1] = MonitorWallMeshRenderer.materials[1];
+                    materialArray[2] = MonitorWallMeshRenderer.materials[1];
+                    //materialArray[2] = BlueScreenMaterial;
+                    materialArray[3] = MonitorWallMeshRenderer.materials[1];
+                    materialArray[4] = MonitorWallMeshRenderer.materials[1];
+                    //materialArray[4] = BlueScreenMaterial;
+                    materialArray[5] = MonitorWallMeshRenderer.materials[1];
+                    materialArray[6] = MonitorWallMeshRenderer.materials[1];
+                    materialArray[7] = MonitorWallMeshRenderer.materials[1];
+                    materialArray[8] = MonitorWallMeshRenderer.materials[2];
+
+                    //set the monitor wall materials to the array made above
+                    MonitorWallMeshRenderer.materials = materialArray;
+                }
 
                 //apply the auto scroll patch to the main monitor text
                 StartOfRound.Instance.screenLevelDescription.gameObject.AddComponent<AutoScrollText>();
