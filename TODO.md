@@ -12,3 +12,4 @@
 ## Changes & Additions :
 - Add manual placed scrap support.
 - Add custom spawnable outside and inside objects support.
+- Add a Check for a LethalSDK_v1.3.43.zip file and warn about it is not a mod and should be removed from the plugins folder.
