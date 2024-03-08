@@ -1,134 +1,277 @@
 ## Changes :
-- 1.3.44
-	- Added a Compatibility setting for General Improvements by ShaosilGaming.
-- 1.3.43
-	- Tweaked the previous MeshFilter checkup to only apply when the scrap have MeshVariants.
-- 1.3.42
-	- Added some checkups to fix issues with custom scraps. (Missing NetworkObject, Missconfigured NetworkObject and Missing MeshFilter)
-- 1.3.41
-	- Added UseCooldown field to scraps. (Fix noisemaker spam issue)
-- 1.3.40
-	- Added a popup about incompatibility between LE and LLL 1.1.X.
-- 1.3.39
-	- Added a setting to hide the version number of LE in the main menu.
-	- Added spaces to settings entries in the settings menu.
-	- Added a compatibility with SpaceSunShine by CatsArmy.
-	- Added a compatibility rank for SpaceShipDoor by Wolf11221/Nie.
-	- Changed the compatibility rank for BiggerLobby by Bizzlemip.
-- 1.3.38
-	- Fixed a typo in Scrap fields.
-- 1.3.37
-	- Reversed terrain tweak of 1.3.26.
-- 1.3.36
-	- Added moon info. (by MegaPiggy)
-- 1.3.35
-    - Added a compatibility patch for AdvancedCompany.
-- 1.3.34
-    - Added more fields for compatibility. (for Item and Selectable Level classes)
-    - Added back the normal item dropship in SDK.
-- 1.3.33
-    - Added a field in Terminal Nodes for compatibility.
-- 1.3.32
-    - Fix a mistake in 1.3.31.
-- 1.3.31
-    - Compatibility patch on terminal Keyword cleaning.
-- 1.3.30
-    - Whitelisted a new terrain helper for the SDK.
-- 1.3.29
-    - Tiny hotfix for retro-compatibility with moons made with post-1.3.28 SDK.
-- 1.3.28
-    - Finally fixed the Coil-Head that don't attack clients.
-- 1.3.27
-    - Possibility to make a custom animation on the moon orbit prefabs.
-    - Test to fix the Coil head who don't attack non-host players without changing the entrances.
-- 1.3.26
-    - Added a Hide ModSettings Menu setting and press O to open the ModSettings menu in main menu.
-    - Tiny tweak in Terrains.
-    - Added a compatibility patch for ExtraDaysToDeadline by Ustaalon.
-    - Tweaks in the setting sync for compatibility with other mods.
-- 1.3.25
-    - Fixed README link to default modules.
-- 1.3.24
-    - Allow custom scripts from a DLL.
-	- Moved Wateridge and default scraps to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/LEDefaultModules/).
-- 1.3.23
-    - Fixed WhoopieCushion.
-- 1.3.22
-	- Fixed issue where Noisemakers wouldn't play for other players.
-	- Added a lot more support for contributing.
-- 1.3.21
-	- Fixed a missing field in custom Noisemakers scraps.
-- 1.3.20
-	- Added DamagePlayer and AudioOutputInterface to scrap components whitelist.
-- 1.3.19
-	- Added a blacklist field for custom scraps and moons. (Need testing)
-	- Added a security against embed modules overwriting.
-	- Fixed custom Whoopie Cushions.
-- 1.3.18
-	- Finally fixed shovels.
-- 1.3.17
-	- Added several experimental animations support for scraps made with SDK (may fix two handed animations).
-	- Fixed some issues with new Scrap types.
-	- Checked compatibility with v47.
-	- Added a locker to don't go on the Challenge moon with LethalExpansion which can be cheaty (Please do this gamemode on Vanilla to respect the Leaderboard).
-- 1.3.16
-	- Reversed networking change with Entrances that causing issues.
-- 1.3.15
-	- New experimental method to ensure the proper loading of the custom moons.
-	- Small networking fix with Entrances.
-	- Used the experimental recursive scrap patch to apply the template scraps to every moons (testing goal).
-	- Added very experimental Shovel support with SDK.
-	- Added very experimental Flashlight support with SDK.
-	- Added very experimental Noisemaker support with SDK.
-	- Added very experimental WhoopieCushion support with SDK.
-- 1.3.14
-	- Changed Boombox Controller compatibility note from critical to good.
-	- Added an experimental recursive scrap patch to add custom scraps on custom moons of other modules without dependency.
-- 1.3.13
-	- Fixed tiny issue with compatibility patches.
-- 1.3.12
-	- Added a compatibility patch for MoreMoneyStart.
-	- Removed Christmas village and moved it to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/ChristmasVillage_Legacy).
-	- Added a setting to roll back to Synchronous custom moon loading.
-- 1.3.11
-	- Fixed multiple firexists wasn't working since the moon loading became asynchronous.
-- 1.3.10
-	- Added incompatibility note about Boombox Controller Mod.
-	- Reduced spawn luck of Christmas Star in Christmas Village.
-- 1.3.9
-	- Attempt to fix a crash that happen on certain setups when loading a custom moon.
-	- Increased AutomaticDeadlineStage cap to 3000 (from 1000)
-	- Slighty improved Compatibility logging.
-- 1.3.8
-	- Fixed a critical bug with SDK's character validator.
-- 1.3.7
-	- Added Coomfy Dungeon Compatibility.
-- 1.3.6
-	- Added Lethal Adjustments Compatibility.
-- 1.3.5
-	- Fixed missing saplin star in Christmas Village. (This is extremely important right ? :P Thanks to MegaPiggy to noticed it was missing)
-- 1.3.4
-	- Tiny improvements and additions to Christmas Village.
-- 1.3.3
-	- Fixed Item Drop Ship dummy don't dispawn.
-	- Fixed mistake that concider the dungeons as outside.
-- 1.3.2
-	- Fixed new moon's Item Drop Ship doesn't unloads and keep it's position on the next moons.
-- 1.3.1
-	- Added Entrance ScanNode to Christmas village.
-- 1.3.0
-	- Fixed Item Drop Ship networking of new moons.
-	- Added Christmas Village Moon.
-	- Fixed clock doesn't showing when leaving dungeon.
-	- Fixed water sound don't stopping when entering dungeon.
-	- Fixed terrain crash with a lot of GPU Instanced details.
-	- Fixed terrain holes support.
-	- Improved water surface support.
-	- Fixed issue with host/client validation when no module are loaded.
-	- Fixed material issue with Eclipsed weather of new moons.
-	- Fixed error when looking at an opened Item Dropship.
-	- Fixed description error in QuotaSteepness setting.
-	- Added experimental Ladder support for new moons.
+<ul>
+	<li>1.3.45
+		<ul>
+			<li>Removed useless 8 screen monitor patch.</li>
+			<li>Added advanced settings to disable some patchs for compatibility with other mods.</li>
+		</ul>
+	</li>
+	<li>1.3.44
+		<ul>
+			<li>Added a Compatibility setting for General Improvements by ShaosilGaming.</li>
+		</ul>
+	</li>
+	<li>1.3.43
+		<ul>
+			<li>Tweaked the previous MeshFilter checkup to only apply when the scrap have MeshVariants.</li>
+		</ul>
+	</li>
+	<li>1.3.42
+		<ul>
+			<li>Added some checkups to fix issues with custom scraps. (Missing NetworkObject, Missconfigured NetworkObject and Missing MeshFilter)</li>
+		</ul>
+	</li>
+	<li>1.3.41
+		<ul>
+			<li>Added UseCooldown field to scraps. (Fix noisemaker spam issue)</li>
+		</ul>
+	</li>
+	<li>1.3.40
+		<ul>
+			<li>Added a popup about incompatibility between LE and LLL 1.1.X.</li>
+		</ul>
+	</li>
+	<li>1.3.39
+		<ul>
+			<li>Added a setting to hide the version number of LE in the main menu.</li>
+			<li>Added spaces to settings entries in the settings menu.</li>
+			<li>Added a compatibility with SpaceSunShine by CatsArmy.</li>
+			<li>Added a compatibility rank for SpaceShipDoor by Wolf11221/Nie.</li>
+			<li>Changed the compatibility rank for BiggerLobby by Bizzlemip.</li>
+		</ul>
+	</li>
+	<li>1.3.38
+		<ul>
+			<li>Fixed a typo in Scrap fields.</li>
+		</ul>
+	</li>
+	<li>1.3.37
+		<ul>
+			<li>Reversed terrain tweak of 1.3.26.</li>
+		</ul>
+	</li>
+	<li>1.3.36
+		<ul>
+			<li>Added moon info. (by MegaPiggy)</li>
+		</ul>
+	</li>
+	<li>1.3.35
+		<ul>
+			<li>Added a compatibility patch for AdvancedCompany.</li>
+		</ul>
+	</li>
+	<li>1.3.34
+		<ul>
+			<li>Added more fields for compatibility. (for Item and Selectable Level classes)</li>
+			<li>Added back the normal item dropship in SDK.</li>
+		</ul>
+	</li>
+	<li>1.3.33
+		<ul>
+			<li>Added a field in Terminal Nodes for compatibility.</li>
+		</ul>
+	</li>
+	<li>1.3.32
+		<ul>
+			<li>Fix a mistake in 1.3.31.</li>
+		</ul>
+	</li>
+	<li>1.3.31
+		<ul>
+			<li>Compatibility patch on terminal Keyword cleaning.</li>
+		</ul>
+	</li>
+	<li>1.3.30
+		<ul>
+			<li>Whitelisted a new terrain helper for the SDK.</li>
+		</ul>
+	</li>
+	<li>1.3.29
+		<ul>
+			<li>Tiny hotfix for retro-compatibility with moons made with post-1.3.28 SDK.</li>
+		</ul>
+	</li>
+	<li>1.3.28
+		<ul>
+			<li>Finally fixed the Coil-Head that don't attack clients.</li>
+		</ul>
+	</li>
+	<li>1.3.27
+		<ul>
+			<li>Possibility to make a custom animation on the moon orbit prefabs.</li>
+			<li>Test to fix the Coil head who don't attack non-host players without changing the entrances.</li>
+		</ul>
+	</li>
+	<li>1.3.26
+		<ul>
+			<li>Added a Hide ModSettings Menu setting and press O to open the ModSettings menu in main menu.</li>
+			<li>Tiny tweak in Terrains.</li>
+			<li>Added a compatibility patch for ExtraDaysToDeadline by Ustaalon.</li>
+			<li>Tweaks in the setting sync for compatibility with other mods.</li>
+		</ul>
+	</li>
+	<li>1.3.25
+		<ul>
+			<li>Fixed README link to default modules.</li>
+		</ul>
+	</li>
+	<li>1.3.24
+		<ul>
+			<li>Allow custom scripts from a DLL.</li>
+			<li>Moved Wateridge and default scraps to an [independent mod](https://thunderstore.io/c/lethal-company/p/HolographicWings/LEDefaultModules/).</li>
+		</ul>
+	</li>
+	<li>1.3.23
+		<ul>
+			<li>Fixed WhoopieCushion.</li>
+		</ul>
+	</li>
+	<li>1.3.22
+		<ul>
+			<li>Fixed issue where Noisemakers wouldn't play for other players.</li>
+			<li>Added a lot more support for contributing.</li>
+		</ul>
+	</li>
+	<li>1.3.21
+		<ul>
+			<li>Fixed a missing field in custom Noisemakers scraps.</li>
+		</ul>
+	</li>
+	<li>1.3.20
+		<ul>
+			<li>Added DamagePlayer and AudioOutputInterface to scrap components whitelist.</li>
+		</ul>
+	</li>
+	<li>1.3.19
+		<ul>
+			<li>Added a blacklist field for custom scraps and moons. (Need testing)</li>
+			<li>Added a security against embed modules overwriting.</li>
+			<li>Fixed custom Whoopie Cushions.</li>
+		</ul>
+	</li>
+	<li>1.3.18
+		<ul>
+			<li>Finally fixed shovels.</li>
+		</ul>
+	</li>
+	<li>1.3.17
+		<ul>
+			<li>Added several experimental animations support for scraps made with SDK (may fix two handed animations).</li>
+			<li>Fixed some issues with new Scrap types.</li>
+			<li>Checked compatibility with v47.</li>
+			<li>Added a locker to don't go on the Challenge moon with LethalExpansion which can be cheaty (Please do this gamemode on Vanilla to respect the Leaderboard).</li>
+		</ul>
+	</li>
+	<li>1.3.16
+		<ul>
+			<li>Reversed networking change with Entrances that causing issues.</li>
+		</ul>
+	</li>
+	<li>1.3.15
+		<ul>
+			<li>New experimental method to ensure the proper loading of the custom moons.</li>
+			<li>Small networking fix with Entrances.</li>
+			<li>Used the experimental recursive scrap patch to apply the template scraps to every moons (testing goal).</li>
+			<li>Added very experimental Shovel support with SDK.</li>
+			<li>Added very experimental Flashlight support with SDK.</li>
+			<li>Added very experimental Noisemaker support with SDK.</li>
+			<li>Added very experimental WhoopieCushion support with SDK.</li>
+		</ul>
+	</li>
+	<li>1.3.14
+		<ul>
+			<li>Changed Boombox Controller compatibility note from critical to good.</li>
+			<li>Added an experimental recursive scrap patch to add custom scraps on custom moons of other modules without dependency.</li>
+		</ul>
+	</li>
+	<li>1.3.13
+		<ul>
+			<li>Fixed tiny issue with compatibility patches.</li>
+		</ul>
+	</li>
+	<li>1.3.12
+		<ul>
+			<li>Added a compatibility patch for MoreMoneyStart.</li>
+			<li>Removed Christmas village and moved it to an [independent mod](https://github.com/HolographicWings/ChristmasVillage_LethalCompany).</li>
+			<li>Added a setting to roll back to Synchronous custom moon loading.</li>
+		</ul>
+	</li>
+	<li>1.3.11
+		<ul>
+			<li>Fixed multiple firexists wasn't working since the moon loading became asynchronous.</li>
+		</ul>
+	</li>
+	<li>1.3.10
+		<ul>
+			<li>Added incompatibility note about Boombox Controller Mod.</li>
+			<li>Reduced spawn luck of Christmas Star in Christmas Village.</li>
+		</ul>
+	</li>
+	<li>1.3.9
+		<ul>
+			<li>Attempt to fix a crash that happen on certain setups when loading a custom moon.</li>
+			<li>Increased AutomaticDeadlineStage cap to 3000 (from 1000)</li>
+			<li>Slighty improved Compatibility logging.</li>
+		</ul>
+	</li>
+	<li>1.3.8
+		<ul>
+			<li>Fixed a critical bug with SDK's character validator.</li>
+		</ul>
+	</li>
+	<li>1.3.7
+		<ul>
+			<li>Added Coomfy Dungeon Compatibility.</li>
+		</ul>
+	</li>
+	<li>1.3.6
+		<ul>
+			<li>Added Lethal Adjustments Compatibility.</li>
+		</ul>
+	</li>
+	<li>1.3.5
+		<ul>
+			<li>Fixed missing saplin star in Christmas Village. (This is extremely important right ? :P Thanks to MegaPiggy to noticed it was missing)</li>
+		</ul>
+	</li>
+	<li>1.3.4
+		<ul>
+			<li>Tiny improvements and additions to Christmas Village.</li>
+		</ul>
+	</li>
+	<li>1.3.3
+		<ul>
+			<li>Fixed Item Drop Ship dummy don't dispawn.</li>
+			<li>Fixed mistake that concider the dungeons as outside.</li>
+		</ul>
+	</li>
+	<li>1.3.2
+		<ul>
+			<li>Fixed new moon's Item Drop Ship doesn't unloads and keep it's position on the next moons.</li>
+		</ul>
+	</li>
+	<li>1.3.1
+		<ul>
+			<li>Added Entrance ScanNode to Christmas village.</li>
+		</ul>
+	</li>
+	<li>1.3.0
+		<ul>
+			<li>Fixed Item Drop Ship networking of new moons.</li>
+			<li>Added Christmas Village Moon.</li>
+			<li>Fixed clock doesn't showing when leaving dungeon.</li>
+			<li>Fixed water sound don't stopping when entering dungeon.</li>
+			<li>Fixed terrain crash with a lot of GPU Instanced details.</li>
+			<li>Fixed terrain holes support.</li>
+			<li>Improved water surface support.</li>
+			<li>Fixed issue with host/client validation when no module are loaded.</li>
+			<li>Fixed material issue with Eclipsed weather of new moons.</li>
+			<li>Fixed error when looking at an opened Item Dropship.</li>
+			<li>Fixed description error in QuotaSteepness setting.</li>
+			<li>Added experimental Ladder support for new moons.</li>
+		</ul>
+	</li>
+</ul>
 <details>
   <summary>Old updates:</summary>
 	<ul>

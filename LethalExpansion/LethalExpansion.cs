@@ -44,7 +44,7 @@ namespace LethalExpansion
     {
         private const string PluginGUID = "LethalExpansion";
         private const string PluginName = "LethalExpansion";
-        private const string VersionString = "1.3.44";
+        private const string VersionString = "1.3.45";
         public static readonly Version ModVersion = new Version(VersionString);
         /*private readonly Version[] CompatibleModVersions = {
             new Version(1, 3, 11)
@@ -231,7 +231,18 @@ namespace LethalExpansion
             ConfigManager.Instance.AddItem(new ConfigItem("AdvancedCompanyCompatibility", false, "Compatibility", "Let AdvancedCompany control some settings.", sync: true));
             ConfigManager.Instance.AddItem(new ConfigItem("HideVersionNumberInMainMenu", false, "HUD", "Hide the LE version number in the main menu. (Restart Required)", sync: false));
             ConfigManager.Instance.AddItem(new ConfigItem("DisableSpaceLightInOrbit", false, "Expeditions", "Disable the SpaceLight out of the ship. (Automatically apply if the SpaceSunShine mod is installed)", sync: false));
-            ConfigManager.Instance.AddItem(new ConfigItem("GeneralImprovementsCompatibility", false, "Compatibility", "Disable the patch for the 8-screen monitor in the ship.", sync: false));
+            //ConfigManager.Instance.AddItem(new ConfigItem("GeneralImprovementsCompatibility", false, "Compatibility", "Disable the patch for the 8-screen monitor in the ship.", sync: false));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchGlobalTimeSpeedMultiplier", false, "Compatibility Advanced", "Disable the patch of Global Time Speed Multiplier for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchNumberOfHours", false, "Compatibility Advanced", "Disable the patch of Number Of Hours for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchDeadlineDaysAmount", false, "Compatibility Advanced", "Disable the patch of Deadline Days Amount for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchStartingQuota", false, "Compatibility Advanced", "Disable the patch of Starting Quota for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchStartingCredits", false, "Compatibility Advanced", "Disable the patch of Starting Credits for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchBaseIncrease", false, "Compatibility Advanced", "Disable the patch of Quota Base Increase for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchIncreaseSteepness", false, "Compatibility Advanced", "Disable the patch of Quota Increase Steepness for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchScrapValueMultiplier", false, "Compatibility Advanced", "Disable the patch of Scrap Value Multiplier for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchScrapAmountMultiplier", false, "Compatibility Advanced", "Disable the patch of Scrap Amount Multiplier for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchMapSizeMultiplier", false, "Compatibility Advanced", "Disable the patch of Map Size Multiplier for Compatibility.", sync: true));
+            ConfigManager.Instance.AddItem(new ConfigItem("PatchMaxShipItemCapacity", false, "Compatibility Advanced", "Disable the patch of Max Ship Item Capacity for Compatibility.", sync: true));
 
             ConfigManager.Instance.ReadConfig();
 
@@ -414,7 +425,7 @@ namespace LethalExpansion
                 SpawnPrefab.Instance.waterSurface = waterSurface;
 
 
-                bool patch8ScreenMonitor = true;
+                /*bool patch8ScreenMonitor = true;
                 if (ConfigManager.Instance.FindItemValue<bool>("GeneralImprovementsCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "ShaosilGaming.GeneralImprovements"))
                 {
                     patch8ScreenMonitor = false;
@@ -432,8 +443,8 @@ namespace LethalExpansion
                     MeshRenderer MonitorWallMeshRenderer = MonitorWall.GetComponent<MeshRenderer>();
 
                     //create a new dark blue material
-                    /*Material BlueScreenMaterial = new Material(MonitorWallMeshRenderer.materials[1]);
-                    BlueScreenMaterial.SetColor("_BaseColor", new Color32(0,0,80, 255));*/
+                    //Material BlueScreenMaterial = new Material(MonitorWallMeshRenderer.materials[1]);
+                    //BlueScreenMaterial.SetColor("_BaseColor", new Color32(0,0,80, 255));
 
                     //define a material array for the edited monitor wall
                     Material[] materialArray = new Material[9];
@@ -451,7 +462,7 @@ namespace LethalExpansion
 
                     //set the monitor wall materials to the array made above
                     MonitorWallMeshRenderer.materials = materialArray;
-                }
+                }*/
 
                 //apply the auto scroll patch to the main monitor text
                 StartOfRound.Instance.screenLevelDescription.gameObject.AddComponent<AutoScrollText>();
@@ -769,6 +780,39 @@ namespace LethalExpansion
             bool patchScrapAmountMultiplier = true;
             bool patchMapSizeMultiplier = true;
             bool patchMaxShipItemCapacity = true;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchGlobalTimeSpeedMultiplier"))
+                patchGlobalTimeSpeedMultiplier = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchNumberOfHours"))
+                patchNumberOfHours = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchDeadlineDaysAmount"))
+                patchDeadlineDaysAmount = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchStartingQuota"))
+                patchStartingQuota = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchStartingCredits"))
+                patchStartingCredits = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchBaseIncrease"))
+                patchBaseIncrease = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchIncreaseSteepness"))
+                patchIncreaseSteepness = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchScrapValueMultiplier"))
+                patchScrapValueMultiplier = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchScrapAmountMultiplier"))
+                patchScrapAmountMultiplier = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchMapSizeMultiplier"))
+                patchMapSizeMultiplier = false;
+
+            if (ConfigManager.Instance.FindItemValue<bool>("PatchMaxShipItemCapacity"))
+                patchMaxShipItemCapacity = false;
 
             if (ConfigManager.Instance.FindItemValue<bool>("BrutalCompanyPlusCompatibility") && loadedPlugins.Any(p => p.Metadata.GUID == "BrutalCompanyPlus"))
             {
