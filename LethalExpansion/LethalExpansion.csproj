@@ -20,6 +20,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AsmResolver.PE" Version="5.5.1" />
+  </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy /q/y/i &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\Build&quot; /E&#xD;&#xA;xcopy /q/y/i &quot;$(LethalModulesPath)\lethalexpansion.lem&quot; &quot;$(ProjectDir)..\Build&quot; /E&#xD;&#xA;xcopy /q/y/i &quot;$(LethalSDKPath)&quot; &quot;$(ProjectDir)..\Build&quot; /E&#xD;&#xA;&#xD;&#xA;xcopy /q/y/i &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\BuildPreview&quot; /E&#xD;&#xA;xcopy /q/y/i &quot;$(LethalModulesPath)\lethalexpansion.lem&quot; &quot;$(ProjectDir)..\BuildPreview&quot; /E&#xD;&#xA;xcopy /q/y/i &quot;$(LethalSDKPath)&quot; &quot;$(ProjectDir)..\BuildPreview&quot; /E&#xD;&#xA;&#xD;&#xA;if not exist &quot;$(DebugDirectory)\$(TargetName)&quot; mkdir &quot;$(DebugDirectory)\$(TargetName)&quot;&#xD;&#xA;xcopy /q/y/i &quot;$(ProjectDir)..\Build\*&quot; &quot;$(DebugDirectory)\$(TargetName)&quot;" />
   </Target>
