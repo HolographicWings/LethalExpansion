@@ -660,12 +660,12 @@ namespace LethalExpansion
                     dungeonGenerator.tag = "DungeonGenerator";
                     dungeonGenerator.transform.position = new Vector3(0, -200, 0);
                     runtimeDungeon = dungeonGenerator.AddComponent<RuntimeDungeon>();
-                    runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
+                    runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0].dungeonFlow;
                     runtimeDungeon.Generator.LengthMultiplier = 0.8f;
                     runtimeDungeon.Generator.PauseBetweenRooms = 0.2f;
                     runtimeDungeon.GenerateOnStart = false;
                     runtimeDungeon.Root = dungeonGenerator;
-                    runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
+                    runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0].dungeonFlow;
                     UnityNavMeshAdapter dungeonNavMesh = dungeonGenerator.AddComponent<UnityNavMeshAdapter>();
                     dungeonNavMesh.BakeMode = UnityNavMeshAdapter.RuntimeNavMeshBakeMode.FullDungeonBake;
                     dungeonNavMesh.LayerMask = 35072; //256 + 2048 + 32768 = 35072
@@ -676,7 +676,7 @@ namespace LethalExpansion
                     //if the Dungeon generator have no dungeon flow, put the Facility as default one
                     if (runtimeDungeon.Generator.DungeonFlow == null)
                     {
-                        runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0];
+                        runtimeDungeon.Generator.DungeonFlow = RoundManager.Instance.dungeonFlowTypes[0].dungeonFlow;
                     }
                 }
                 //enable the flag to generate the dungeon if it exist

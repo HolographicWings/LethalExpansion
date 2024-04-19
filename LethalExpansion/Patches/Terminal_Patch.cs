@@ -1126,7 +1126,7 @@ namespace LethalExpansion.Patches
             {
                 if (!flowFireExitSaved)
                 {
-                    foreach (var flow in RoundManager.Instance.dungeonFlowTypes)
+                    foreach (var flow in RoundManager.Instance.dungeonFlowTypes.Select(t=>t.dungeonFlow))
                     {
                         flow.SetDefaultFireExitAmount(flow.GlobalProps.First(p => p.ID == 1231).Count.Min);
                     }
@@ -1144,7 +1144,7 @@ namespace LethalExpansion.Patches
             {
                 if (flowFireExitSaved)
                 {
-                    foreach (var flow in RoundManager.Instance.dungeonFlowTypes)
+                    foreach (var flow in RoundManager.Instance.dungeonFlowTypes.Select(t=>t.dungeonFlow))
                     {
                         flow.GlobalProps.First(p => p.ID == 1231).Count = new DunGen.IntRange(flow.GetDefaultFireExitAmount(), flow.GetDefaultFireExitAmount());
                     }
