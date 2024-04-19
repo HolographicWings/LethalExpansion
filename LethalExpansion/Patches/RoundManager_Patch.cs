@@ -173,7 +173,7 @@ namespace LethalExpansion.Patches
                     list.Add(__instance.currentLevel.dungeonFlowTypes[i].rarity);
                 }
                 int id = __instance.currentLevel.dungeonFlowTypes[__instance.GetRandomWeightedIndex(list.ToArray(), __instance.LevelRandom)].id;
-                __instance.dungeonGenerator.Generator.DungeonFlow = __instance.dungeonFlowTypes[id];
+                __instance.dungeonGenerator.Generator.DungeonFlow = __instance.dungeonFlowTypes[id].dungeonFlow;
 
                 if (RoundManager.Instance.currentLevel.GetFireExitAmountOverwrite() != 0)
                 {
