@@ -88,6 +88,11 @@ Then send the "LogOutput.log" file from the "Lethal Company\BepInEx\" folder in 
 
 ## Changes :
 <ul>
+	<li>1.3.46
+		<ul>
+			<li>Updated to v50 by NepNet.</li>
+		</ul>
+	</li>
 	<li>1.3.45
 		<ul>
 			<li>Removed useless 8 screen monitor patch.</li>
